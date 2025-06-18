@@ -6,6 +6,7 @@ function path(root: string, sublink: string) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_CUSTOMER = '/';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,28 @@ export const PATH_PAGE = {
   page404: '/404',
   page500: '/500',
   components: '/components',
+};
+
+export const PATH_CUSTOMER = {
+  root: ROOTS_CUSTOMER,
+  home: ROOTS_CUSTOMER,
+  about: path(ROOTS_CUSTOMER, '/about'),
+  contact: path(ROOTS_CUSTOMER, '/contact'),
+  faqs: path(ROOTS_CUSTOMER, '/faqs'),
+  pricing: path(ROOTS_CUSTOMER, '/pricing'),
+  terms: path(ROOTS_CUSTOMER, '/terms'),
+  privacyPolicy: path(ROOTS_CUSTOMER, '/privacy-policy'),
+  eCommerce: {
+    root: path(ROOTS_DASHBOARD, ''),
+    shop: path(ROOTS_DASHBOARD, '/shop'),
+    list: path(ROOTS_DASHBOARD, '/list'),
+    checkout: path(ROOTS_DASHBOARD, '/checkout'),
+    new: path(ROOTS_DASHBOARD, '/product/new'),
+    view: (name: string) => path(ROOTS_DASHBOARD, `/product/${name}`),
+    edit: (name: string) => path(ROOTS_DASHBOARD, `/product/${name}/edit`),
+    demoEdit: path(ROOTS_DASHBOARD, '/product/nike-blazer-low-77-vintage/edit'),
+    demoView: path(ROOTS_DASHBOARD, '/product/nike-air-force-1-ndestrukt'),
+  },
 };
 
 export const PATH_DASHBOARD = {
@@ -85,7 +108,7 @@ export const PATH_DASHBOARD = {
     edit: (id: string) => path(ROOTS_DASHBOARD, `/borrow-receipt/${id}/edit`),
     scan: (id: string) => path(ROOTS_DASHBOARD, `/borrow-receipt/${id}/scan`),
   },
-  transferReceipt:{
+  transferReceipt: {
     root: path(ROOTS_DASHBOARD, '/transfer-receipt'),
     list: path(ROOTS_DASHBOARD, '/transfer-receipt/list'),
     new: path(ROOTS_DASHBOARD, '/transfer-receipt/new'),

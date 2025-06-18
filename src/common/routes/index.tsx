@@ -169,6 +169,7 @@ export default function Router() {
       element: <MainLayout />,
       children: [
         { element: <HomePage />, index: true },
+        { path: 'shop', element: <Shop /> },
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
@@ -177,6 +178,11 @@ export default function Router() {
     { path: '*', element: <Navigate to="/404" replace /> },
   ]);
 }
+
+// CUSTOMER ROUTES
+const Shop = Loadable(lazy(() => import('../../shop')));
+
+// ----------------------------------------------------------------------
 
 // AUTHENTICATION
 const Login = Loadable(lazy(() => import('../../auth/login/Login')));
