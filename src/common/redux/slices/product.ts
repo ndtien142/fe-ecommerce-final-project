@@ -185,6 +185,12 @@ const slice = createSlice({
       state.checkout.shipping = shipping;
       state.checkout.total = state.checkout.subtotal - state.checkout.discount + shipping;
     },
+
+    // SET PRODUCTS DIRECTLY (for mock data)
+    setProducts(state, action) {
+      state.products = action.payload;
+      state.isLoading = false;
+    },
   },
 });
 
@@ -207,6 +213,7 @@ export const {
   decreaseQuantity,
   sortByProducts,
   filterProducts,
+  setProducts,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

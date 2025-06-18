@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Container, Typography, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../common/redux/store';
-import { getProducts, filterProducts } from '../common/redux/slices/product';
+import { getProducts, filterProducts, setProducts } from '../common/redux/slices/product';
 // routes
 import { PATH_CUSTOMER } from '../common/routes/paths';
 // @types
@@ -26,6 +26,7 @@ import {
   ShopProductSearch,
 } from './components';
 import CartWidget from '../common/sections/@dashboard/e-commerce/CartWidget';
+import { _products } from '../common/_mock/product/_product';
 
 // ----------------------------------------------------------------------
 
@@ -69,7 +70,9 @@ export default function HomeContainer() {
     values.category === 'All';
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(setProducts(_products));
+    // Optionally, you can remove the line below if you don't want to call the API
+    // dispatch(getProducts());
   }, [dispatch]);
 
   useEffect(() => {
