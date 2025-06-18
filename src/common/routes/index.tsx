@@ -180,6 +180,7 @@ export default function Router() {
 }
 
 // CUSTOMER ROUTES
+const HomePage = Loadable(lazy(() => import('../../home')));
 const Shop = Loadable(lazy(() => import('../../shop')));
 
 // ----------------------------------------------------------------------
@@ -244,7 +245,6 @@ const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 const PermissionDenied = Loadable(lazy(() => import('../pages/dashboard/PermissionDenied')));
 
 // MAIN
-const HomePage = Loadable(lazy(() => import('../pages/Home')));
 const About = Loadable(lazy(() => import('../pages/About')));
 const Contact = Loadable(lazy(() => import('../pages/Contact')));
 const Faqs = Loadable(lazy(() => import('../pages/Faqs')));
