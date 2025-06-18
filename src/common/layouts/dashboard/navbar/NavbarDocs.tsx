@@ -22,7 +22,7 @@ export default function NavbarDocs() {
     >
       <DocIllustration sx={{ width: 1 }} />
 
-      {/* <div>
+      <div>
         <Typography gutterBottom variant="subtitle1">
           {translate('docs.hi')}, {user?.displayName}
         </Typography>
@@ -33,7 +33,7 @@ export default function NavbarDocs() {
 
       <Button href={PATH_DOCS} target="_blank" rel="noopener" variant="contained">
         {translate('docs.documentation')}
-      </Button> */}
+      </Button>
     </Stack>
   );
 }

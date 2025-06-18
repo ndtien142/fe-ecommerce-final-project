@@ -110,13 +110,7 @@ function Searchbar() {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const reduceItems = NavConfig.map((list) => {
-    const patchedItems = list.items.map((item) => ({
-      ...item,
-      children: Array.isArray((item as any).children) ? (item as any).children : [],
-    }));
-    return handleLoop(patchedItems, list.subheader);
-  }).flat();
+  const reduceItems = NavConfig.map((list) => handleLoop(list.items, list.subheader)).flat();
 
   const allItems = flattenArray(reduceItems).map((option) => {
     const group = splitPath(reduceItems, option.path);
