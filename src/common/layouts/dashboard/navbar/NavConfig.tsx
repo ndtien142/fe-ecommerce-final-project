@@ -32,6 +32,7 @@ const ICONS = {
   repair: getIcon('ic_repair'),
   liquidation: getIcon('ic_liquidation'),
   transfer: getIcon('ic_transfer'),
+  brand: getIcon('ic_star'),
 };
 
 const navConfig = [
@@ -45,6 +46,30 @@ const navConfig = [
       { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
       { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
       { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
+    ],
+  },
+
+  {
+    subheader: 'Quản lý sản phẩm',
+    items: [
+      {
+        title: 'Sản phẩm',
+        path: PATH_DASHBOARD.product.root,
+        icon: ICONS.ecommerce,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.product.list },
+          { title: 'Tạo mới', path: PATH_DASHBOARD.product.new },
+        ],
+      },
+      {
+        title: 'Thương hiệu',
+        path: PATH_DASHBOARD.brand.root,
+        icon: ICONS.brand,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.brand.list },
+          { title: 'Tạo mới', path: PATH_DASHBOARD.brand.new },
+        ],
+      },
     ],
   },
 
