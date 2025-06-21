@@ -187,10 +187,10 @@ const Shop = Loadable(lazy(() => import('../../shop')));
 
 // AUTHENTICATION
 const Login = Loadable(lazy(() => import('../../auth/login/Login')));
-const Register = Loadable(lazy(() => import('../pages/auth/Register')));
+const Register = Loadable(lazy(() => import('../../auth/register')));
+const VerifyCode = Loadable(lazy(() => import('../../auth/verify-email-code')));
 const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
 const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
-const VerifyCode = Loadable(lazy(() => import('../pages/auth/VerifyCode')));
 
 // DASHBOARD
 

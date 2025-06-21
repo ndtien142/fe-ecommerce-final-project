@@ -34,12 +34,19 @@ export default function LoginForm() {
     formState: { isSubmitting },
   } = methods;
   const { enqueueSnackbar } = useSnackbar();
-  const onSuccess = () => {
+  const onSuccess = (response: any) => {
+    const roleName = response?.metadata?.user?.role?.name;
     enqueueSnackbar('Đăng nhập thành công', {
       variant: 'success',
       autoHideDuration: 1000,
     });
-    navigate(PATH_DASHBOARD.root);
+    if (roleName === 'admin') {
+      navigate(PATH_DASHBOARD.root);
+    } else if (roleName === 'customer') {
+      navigate('/');
+    } else {
+      navigate('/');
+    }
   };
   const onError = (message: string) => {
     enqueueSnackbar(message || 'Đăng nhập thất bại ! xin kiểm tra lại thông tin', {

@@ -8,20 +8,20 @@ export const fetchUsers = async (params: IParamsUser) => {
   return response;
 };
 
-export const fetchUser = async (userCode: string) => {
-  const response = await axiosInstance.get<unknown, IUserResponse>(`${API_USER}/${userCode}`);
+export const fetchUser = async (userId: string) => {
+  const response = await axiosInstance.get<unknown, IUserResponse>(`${API_USER}/${userId}`);
   return response;
 };
 
 export const markUserAsBlocked = async ({
-  userCode,
+  userId,
   isBlock,
 }: {
-  userCode: string;
+  userId: string;
   isBlock: boolean;
 }) => {
   const response = await axiosInstance.patch<unknown, IUserResponse>(
-    `${API_USER}/${userCode}/block`,
+    `${API_USER}/${userId}/block`,
     { isBlock }
   );
   return response;
@@ -29,15 +29,15 @@ export const markUserAsBlocked = async ({
 
 export const updateUser = async (data: IUpdateUserData) => {
   const response = await axiosInstance.put<unknown, IUserResponse>(
-    `${API_USER}/${data.userCode}`,
+    `${API_USER}/${data.userId}`,
     data
   );
   return response;
 };
 
-export const markUserAsDeleted = async (userCode: string) => {
+export const markUserAsDeleted = async (userId: string) => {
   const response = await axiosInstance.patch<unknown, IUserResponse>(
-    `${API_USER}/${userCode}/delete`
+    `${API_USER}/${userId}/delete`
   );
   return response;
 };

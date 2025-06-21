@@ -45,7 +45,7 @@ export interface IResInfo {
   metadata: {
     code: number;
     user: {
-      userCode: string;
+      userId: string;
       username: string;
       role: string;
       isActive: boolean;

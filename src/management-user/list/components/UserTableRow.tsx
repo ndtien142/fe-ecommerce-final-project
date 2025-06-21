@@ -24,7 +24,7 @@ export default function UserTableRow({
 }: Props) {
   const theme = useTheme();
 
-  const { userName, role, isActive, isBlock } = row;
+  const { username, role, isActive, isBlock } = row;
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
@@ -43,9 +43,9 @@ export default function UserTableRow({
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={userName} src={''} sx={{ mr: 2 }} />
+        <Avatar alt={username} src={''} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
-          {userName}
+          {username}
         </Typography>
       </TableCell>
 

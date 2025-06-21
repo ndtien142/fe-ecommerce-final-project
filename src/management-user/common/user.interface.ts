@@ -10,7 +10,7 @@ export interface ICreateUserData {
 }
 
 export interface IUpdateUserData {
-  userCode: string;
+  userId: string;
   username: string;
   roleId: number;
   isActive: boolean;
