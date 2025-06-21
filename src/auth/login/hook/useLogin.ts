@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { dispatch } from 'src/common/redux/store';
 import { setAccessToken, setLogin, setRefreshToken, setUser } from '../auth.slice';
-import { ILoginCallback, IAuth } from '../interface';
+import { IAuth } from '../interface';
 import { getAuth } from '../service';
+
+type ILoginCallback = {
+  onSuccess: (res: any) => void;
+  onError: (message: string) => void;
+};
 
 export const useAuthLogin = ({ onError, onSuccess }: ILoginCallback) => {
   const [loading, setLoading] = useState(false);
@@ -17,7 +22,7 @@ export const useAuthLogin = ({ onError, onSuccess }: ILoginCallback) => {
       dispatch(setUser(data?.metadata?.user));
       dispatch(setRefreshToken(data?.metadata?.tokens?.refreshToken));
       dispatch(setLogin(true));
-      onSuccess();
+      onSuccess(data);
     } catch (error) {
       // Pass error message to onError for toast
       console.error('Login error:', error);
