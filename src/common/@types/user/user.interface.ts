@@ -1,25 +1,25 @@
 import { PaginationMeta } from '../common.interface';
 
 export interface IUser {
-  userCode: string;
-  userName: string;
+  userId: number;
+  username: string;
   email: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
   address: string;
   role: {
-    id: string; // Unique identifier for the role
-    name: string; // Name of the role
-    description?: string; // Optional description of the role
-    permissions: string[]; // List of permissions associated with the role
+    id: string;
+    name: string;
+    description?: string;
+    permissions: string[];
   };
-  isBlock: boolean; // Indicates if the user is blocked
-  isDeleted: boolean; // Indicates if the user account is deleted
+  isBlock: boolean;
+  isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
-  isActive: boolean; // Indicates if the user account is active
-  profilePictureUrl?: string; // Optional field for user's profile picture
+  isActive: boolean;
+  profilePictureUrl?: string;
 }
 export interface ILoginResponse {
   token: {

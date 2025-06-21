@@ -42,14 +42,14 @@ axiosInstance.interceptors.response.use(
 
 axiosInstance.interceptors.request.use(async (config) => {
   const token = store.getState()?.auth.accessToken;
-  const userCode = store.getState()?.auth.user.userCode;
+  const userId = store.getState()?.auth.user.userId;
   if (token) {
     try {
       // @ts-ignore
       config.headers = {
         ...config.headers,
         authorization: token,
-        'x-user-code': userCode,
+        'x-user-id': userId,
       };
     } catch (e) {
       console.log(e);

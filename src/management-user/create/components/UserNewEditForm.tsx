@@ -71,7 +71,7 @@ export default function UserNewEditForm({ isEdit, currentUser }: Props) {
 
   const defaultValues = useMemo(
     () => ({
-      userCode: currentUser !== undefined ? currentUser.userCode : '',
+      userId: currentUser !== undefined ? currentUser.userId : undefined,
       // username: currentUser !== undefined ? currentUser.username : '',
       // firstName: currentUser !== undefined ? currentUser.profiles[0]?.firstName : '',
       // lastName: currentUser !== undefined ? currentUser.profiles[0]?.lastName : '',
@@ -116,7 +116,7 @@ export default function UserNewEditForm({ isEdit, currentUser }: Props) {
     //   updateImageUrl = await uploadImage(data.avatarUrl);
     // }
     // if (isEdit) {
-    //   updateUser({ userCode: data.userCode, isBlock: data.isBlock });
+    //   updateUser({ userId: data.userId, isBlock: data.isBlock });
     // }
   };
 

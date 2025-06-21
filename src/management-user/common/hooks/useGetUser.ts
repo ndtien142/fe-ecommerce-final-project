@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query';
 import { fetchUser } from '../user.service';
 
-const useGetUser = (userCode: string) =>
-  useQuery(['user', userCode], () => fetchUser(userCode), {
-    enabled: !!userCode,
+const useGetUser = (userId: string) =>
+  useQuery(['user', userId], () => fetchUser(userId), {
+    enabled: !!userId,
   });
 
 export default useGetUser;

@@ -94,14 +94,14 @@ export default function UserList() {
     setFilterRole(event.target.value);
   };
 
-  const handleDeleteRow = (userCode: string) => {
-    const deleteRow = tableData?.filter((row) => row.userCode !== userCode);
+  const handleDeleteRow = (userId: string) => {
+    const deleteRow = tableData?.filter((row) => String(row.userId) !== String(userId));
     setSelected([]);
     setTableData(deleteRow);
   };
 
   const handleDeleteRows = (selected: string[]) => {
-    const deleteRows = tableData?.filter((row) => !selected.includes(row.userCode));
+    const deleteRows = tableData?.filter((row) => !selected.includes(String(row.userId)));
     setSelected([]);
     setTableData(deleteRows);
   };
@@ -187,7 +187,7 @@ export default function UserList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.userCode)
+                      tableData.map((row) => String(row.userId))
                     )
                   }
                   actions={
@@ -211,7 +211,7 @@ export default function UserList() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.userCode)
+                      tableData.map((row) => String(row.userId))
                     )
                   }
                 />
@@ -221,12 +221,12 @@ export default function UserList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
                       <UserTableRow
-                        key={row.userCode}
+                        key={row.userId}
                         row={row}
-                        selected={selected.includes(row.userCode)}
-                        onSelectRow={() => onSelectRow(row.userCode)}
-                        onDeleteRow={() => handleDeleteRow(row.userCode)}
-                        onEditRow={() => handleEditRow(row.userCode)}
+                        selected={selected.includes(String(row.userId))}
+                        onSelectRow={() => onSelectRow(String(row.userId))}
+                        onDeleteRow={() => handleDeleteRow(String(row.userId))}
+                        onEditRow={() => handleEditRow(String(row.userId))}
                       />
                     ))}
 
