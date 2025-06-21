@@ -7,7 +7,7 @@ import useSettings from 'src/common/hooks/useSettings';
 // components
 import Page from 'src/common/components/Page';
 import HeaderBreadcrumbs from 'src/common/components/HeaderBreadcrumbs';
-import FormNewEditBrand from '../common/componenets/FormNewEditBrand';
+import FormNewEditBrand from '../common/components/FormNewEditBrand';
 // sections
 
 // ----------------------------------------------------------------------
