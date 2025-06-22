@@ -87,6 +87,7 @@ export default function Router() {
             { element: <Navigate to="/dashboard/product/list" replace />, index: true },
             // { path: 'list', element: <EcommerceProductList /> },
             { path: 'new', element: <ProductCreate /> },
+            { path: 'list', element: <ProductList /> },
             // { path: ':name', element: <EcommerceProductDetails /> },
           ],
         },
@@ -234,6 +235,7 @@ const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBoo
 
 // PRODUCT
 const ProductCreate = Loadable(lazy(() => import('../../management-product/create')));
+const ProductList = Loadable(lazy(() => import('../../management-product/list')));
 
 // BRAND
 const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));

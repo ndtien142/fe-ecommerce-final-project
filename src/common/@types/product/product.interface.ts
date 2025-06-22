@@ -1,5 +1,6 @@
 // ----------------------------------------------------------------------
 
+import { PaginationMeta } from '../common.interface';
 import { ICategory } from './category.interface';
 
 export type PaymentType = 'paypal' | 'credit_card' | 'cash';
@@ -31,10 +32,25 @@ export type ProductReview = {
   postedAt: Date | string | number;
 };
 
+export type ProductImage = {
+  id: number;
+  imageUrl: string;
+  isPrimary: boolean;
+  sortOrder: number;
+  createTime: string;
+  updateTime: string;
+  productId: number;
+};
+
 export type ProductMeta = {
   id: number;
   metaKey: string;
   metaValue: string;
+};
+
+export type ProductTag = {
+  id: number;
+  name: string;
 };
 
 export type ProductBrand = {
@@ -137,3 +153,41 @@ export type CardOption = {
   value: string;
   label: string;
 };
+
+export interface IProductApiResponse {
+  id: number;
+  name: string;
+  description: string;
+  productType: string | null;
+  thumbnail: string | null;
+  slug: string;
+  status: ProductStatus;
+  brandId: number;
+  price: string;
+  flag: ProductFlag;
+  stock: number;
+  minStock: number;
+  weight: string;
+  width: string;
+  height: string;
+  length: string;
+  priceSale: string;
+  sold: number;
+  inventoryType: ProductInventoryType;
+  createTime: string;
+  updateTime: string;
+  brand: ProductBrand;
+  images: ProductImage[];
+  categories: ICategory[];
+  meta: ProductMeta[];
+  tags: ProductTag[];
+}
+
+export interface IProductListResponse {
+  metadata: {
+    items: IProductApiResponse[];
+    meta: PaginationMeta;
+  };
+  status: string;
+  message: string;
+}
