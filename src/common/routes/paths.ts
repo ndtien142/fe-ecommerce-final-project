@@ -72,6 +72,7 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/categories'),
     new: path(ROOTS_DASHBOARD, '/categories/new'),
     list: path(ROOTS_DASHBOARD, '/categories/list'),
+    reorder: path(ROOTS_DASHBOARD, '/categories/reorder'),
     view: (name: string) => path(ROOTS_DASHBOARD, `/categories/${name}`),
     edit: (name: string) => path(ROOTS_DASHBOARD, `/categories/${name}/edit`),
   },
