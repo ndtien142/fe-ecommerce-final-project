@@ -108,6 +108,7 @@ export default function Router() {
             // { path: 'new', element: <CategoryCreate /> },
             { path: 'list', element: <CategoryList /> },
             { path: 'reorder', element: <ReorderCategories /> },
+            { path: 'new', element: <CategoryNew /> },
             // { path: ':name', element: <CategoryDetails /> },
           ],
         },
@@ -241,6 +242,7 @@ const BrandList = Loadable(lazy(() => import('../../management-brand/list')));
 // CATEGORY
 const CategoryList = Loadable(lazy(() => import('../../management-categories/list')));
 const ReorderCategories = Loadable(lazy(() => import('../../management-categories/reorder')));
+const CategoryNew = Loadable(lazy(() => import('../../management-categories/create')));
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));

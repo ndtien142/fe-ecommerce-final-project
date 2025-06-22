@@ -85,7 +85,7 @@ const ListCategoriesContainer = () => {
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
+              to={PATH_DASHBOARD.categories.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               Thêm mới danh mục
@@ -143,11 +143,6 @@ const ListCategoriesContainer = () => {
                     />
                   ))}
 
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, data?.metadata?.items?.length || 0)}
-                  />
-
                   <TableNoData isNotFound={data?.metadata?.items?.length === 0 || isLoading} />
                 </TableBody>
               </Table>
@@ -157,7 +152,7 @@ const ListCategoriesContainer = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={data?.metadata?.items?.length || 0}
+              count={data?.metadata?.meta?.totalItems || 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage}

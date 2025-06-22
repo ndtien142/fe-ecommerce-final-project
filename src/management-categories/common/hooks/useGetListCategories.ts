@@ -4,4 +4,4 @@ import { QUERY_KEYS } from 'src/common/constant/queryKeys.constant';
 import { getListCategories } from '../service';
 
 export const useGetListCategories = (params: ISimpleParams) =>
-  useQuery([QUERY_KEYS.LIST_CATEGORY], () => getListCategories(params));
+  useQuery([QUERY_KEYS.LIST_CATEGORY, params], () => getListCategories(params));

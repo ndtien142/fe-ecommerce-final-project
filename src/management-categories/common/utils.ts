@@ -91,3 +91,34 @@ export default function genNewItems(
 
   return insertActiveItem(items, activeId, activeIndex, overId, overIndex, insertFirst);
 }
+
+// Flatten categories for easier manipulation
+export type IFlattenedCategoryV2 = ICategory & { depth: number };
+
+export const flattenCategories = (
+  categories: ICategory[],
+  parentName: string = '',
+  depth: number = 0
+): IFlattenedCategoryV2[] => {
+  let result: IFlattenedCategoryV2[] = [];
+
+  for (const category of categories) {
+    const fullName = parentName ? `${parentName} > ${category.name}` : category.name;
+    result.push({
+      id: category.id,
+      name: fullName,
+      description: category.description ?? '',
+      slug: category.slug ?? '',
+      sortOrder: category.sortOrder ?? 0,
+      status: category.status ?? 'active',
+      children: category.children ?? [],
+      depth,
+    });
+
+    if (category.children?.length > 0) {
+      result = result.concat(flattenCategories(category.children, fullName, depth + 1));
+    }
+  }
+
+  return result;
+};
