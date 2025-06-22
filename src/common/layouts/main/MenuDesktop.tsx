@@ -1,6 +1,6 @@
 import { m } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { NavLink as RouterLink, useLocation, NavLinkProps } from 'react-router-dom';
+import { NavLink as RouterLink, useLocation, NavLinkProps, useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import {
@@ -121,6 +121,8 @@ function MenuDesktopItem({
 }: MenuDesktopItemProps) {
   const { pathname } = useLocation();
 
+  const navigate = useNavigate();
+
   const { title, path, children } = item;
 
   const isActive = (path: string) => pathname === path;
@@ -134,7 +136,7 @@ function MenuDesktopItem({
             display: 'flex',
             cursor: 'pointer',
             alignItems: 'center',
-            ...(isHome && { color: 'common.white' }),
+            ...(isHome && { color: 'common.black' }),
             ...(isOffset && { color: 'text.primary' }),
             ...(isOpen && { opacity: 0.48 }),
           }}
@@ -182,6 +184,13 @@ function MenuDesktopItem({
                         alignItems: 'center',
                         color: 'text.primary',
                         typography: 'overline',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          color: 'primary.main',
+                        },
+                      }}
+                      onClick={() => {
+                        navigate(item.path);
                       }}
                     >
                       <IconBullet type="subheader" /> {subheader}
@@ -198,11 +207,11 @@ function MenuDesktopItem({
                           }),
                         }}
                       >
-                        {item.title === 'Dashboard' ? (
+                        {item.title === 'Trang quản trị' ? (
                           <CardActionArea
                             sx={{
-                              py: 5,
-                              px: 10,
+                              // py: 5,
+                              // px: 10,
                               borderRadius: 2,
                               color: 'primary.main',
                               bgcolor: 'background.neutral',
