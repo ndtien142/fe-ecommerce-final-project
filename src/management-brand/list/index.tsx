@@ -93,7 +93,7 @@ const ListBrandContainer = () => {
               to={PATH_DASHBOARD.user.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
-              New User
+              Thêm mới thương hiệu
             </Button>
           }
         />

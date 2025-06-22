@@ -24,7 +24,7 @@ export default function BrandCreate() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Quản lý thương hiệu',
-              href: PATH_DASHBOARD.eCommerce.root,
+              href: PATH_DASHBOARD.brand.root,
             },
             { name: 'Tạo mới thương hiệu' },
           ]}

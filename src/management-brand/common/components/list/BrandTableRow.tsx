@@ -42,10 +42,10 @@ const BrandTableRow = ({ row, selected, onEditRow, onSelectRow, onDeleteRow }: P
         </Typography>
       </TableCell>
 
-      <TableCell align="left">{description}</TableCell>
+      {/* <TableCell align="left">{description}</TableCell> */}
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {status}
+        {description}
       </TableCell>
 
       <TableCell align="left">
