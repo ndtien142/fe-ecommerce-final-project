@@ -33,6 +33,7 @@ const ICONS = {
   liquidation: getIcon('ic_liquidation'),
   transfer: getIcon('ic_transfer'),
   brand: getIcon('ic_star'),
+  categories: getIcon('ic_categories'),
 };
 
 const navConfig = [
@@ -68,6 +69,15 @@ const navConfig = [
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.brand.list },
           { title: 'Tạo mới', path: PATH_DASHBOARD.brand.new },
+        ],
+      },
+      {
+        title: 'Danh mục',
+        path: PATH_DASHBOARD.categories.root,
+        icon: ICONS.categories,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.categories.list },
+          { title: 'Tạo mới', path: PATH_DASHBOARD.categories.new },
         ],
       },
     ],

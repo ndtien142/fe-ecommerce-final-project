@@ -96,6 +96,7 @@ export default function Router() {
           children: [
             { element: <Navigate to="/dashboard/brand/list" replace />, index: true },
             { path: 'new', element: <BrandCreate /> },
+            { path: 'list', element: <BrandList /> },
             // { path: ':name', element: <BrandDetails /> },
           ],
         },
@@ -224,6 +225,7 @@ const ProductCreate = Loadable(lazy(() => import('../../management-product/creat
 
 // BRAND
 const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));
+const BrandList = Loadable(lazy(() => import('../../management-brand/list')));
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
