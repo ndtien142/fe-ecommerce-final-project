@@ -1,42 +1,37 @@
-import React from 'react';
-// Mui
 import {
   Button,
+  Card,
   Container,
+  FormControlLabel,
   Table,
+  TableBody,
   TableContainer,
   Tooltip,
   IconButton,
-  TableBody,
-  Card,
   Box,
   TablePagination,
   Switch,
-  FormControlLabel,
 } from '@mui/material';
-// Components
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import HeaderBreadcrumbs from 'src/common/components/HeaderBreadcrumbs';
-import Page from 'src/common/components/Page';
 import Iconify from 'src/common/components/Iconify';
-import Scrollbar from 'src/common/components/Scrollbar';
-// Hooks
+import Page from 'src/common/components/Page';
 import useSettings from 'src/common/hooks/useSettings';
 import useTable, { emptyRows } from 'src/common/hooks/useTable';
-// Router
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useGetListBrand } from '../common/hooks/useGetListBrand';
+import { useGetListCategories } from '../common/hooks/useGetListCategories';
+import { paramCase } from 'change-case';
+import Scrollbar from 'src/common/components/Scrollbar';
 import {
   TableEmptyRows,
   TableHeadCustom,
   TableNoData,
   TableSelectedActions,
 } from 'src/common/components/table';
-import { TABLE_BRAND_HEAD } from '../common/constant';
-import BrandTableRow from '../common/components/list/BrandTableRow';
-import { paramCase } from 'change-case';
+import { CATEGORY_TABLE_HEAD } from '../common/constant';
+import CategoryTableRow from '../common/components/list/CategoryTableRow';
 
-const ListBrandContainer = () => {
+const ListCategoriesContainer = () => {
   const { themeStretch } = useSettings();
   const navigate = useNavigate();
 
@@ -61,7 +56,7 @@ const ListBrandContainer = () => {
 
   const denseHeight = dense ? 52 : 72;
 
-  const { data, isLoading } = useGetListBrand({
+  const { data, isLoading } = useGetListCategories({
     limit: rowsPerPage,
     page: page + 1,
   });
@@ -77,23 +72,23 @@ const ListBrandContainer = () => {
   };
 
   return (
-    <Page title="Quản lý: Danh sách thương hiệu">
+    <Page title="Quản lý: Danh sách danh mục">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Danh sách thương hiệu"
+          heading="Danh sách danh mục"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Thương hiệu', href: PATH_DASHBOARD.brand.root },
-            { name: 'Danh sách' },
+            { name: 'Danh mục', href: PATH_DASHBOARD.categories.root },
+            { name: 'Danh sách danh mục' },
           ]}
           action={
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.brand.new}
+              to={PATH_DASHBOARD.user.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
-              Thêm mới thương hiệu
+              Thêm mới danh mục
             </Button>
           }
         />
@@ -124,7 +119,7 @@ const ListBrandContainer = () => {
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
-                  headLabel={TABLE_BRAND_HEAD}
+                  headLabel={CATEGORY_TABLE_HEAD}
                   rowCount={data?.metadata?.items?.length || 0}
                   numSelected={selected.length}
                   onSort={onSort}
@@ -138,7 +133,7 @@ const ListBrandContainer = () => {
 
                 <TableBody>
                   {data?.metadata?.items?.map((row) => (
-                    <BrandTableRow
+                    <CategoryTableRow
                       key={row.id}
                       row={row}
                       selected={selected.includes(String(row.id))}
@@ -181,4 +176,4 @@ const ListBrandContainer = () => {
   );
 };
 
-export default ListBrandContainer;
+export default ListCategoriesContainer;

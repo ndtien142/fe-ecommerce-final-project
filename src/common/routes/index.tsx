@@ -102,6 +102,16 @@ export default function Router() {
         },
 
         {
+          path: 'categories',
+          children: [
+            { element: <Navigate to="/dashboard/categories/list" replace />, index: true },
+            // { path: 'new', element: <CategoryCreate /> },
+            { path: 'list', element: <CategoryList /> },
+            // { path: ':name', element: <CategoryDetails /> },
+          ],
+        },
+
+        {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
@@ -226,6 +236,9 @@ const ProductCreate = Loadable(lazy(() => import('../../management-product/creat
 // BRAND
 const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));
 const BrandList = Loadable(lazy(() => import('../../management-brand/list')));
+
+// CATEGORY
+const CategoryList = Loadable(lazy(() => import('../../management-categories/list')));
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));

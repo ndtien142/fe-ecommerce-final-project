@@ -9,4 +9,6 @@ export const QUERY_KEYS = Object.freeze({
   LIST_BRAND: 'LIST_BRAND',
   // PRODUCT
   LIST_PRODUCT: 'LIST_PRODUCT',
+  // CATEGORY
+  LIST_CATEGORY: 'LIST_CATEGORY',
 });

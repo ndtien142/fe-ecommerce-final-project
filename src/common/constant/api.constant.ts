@@ -25,3 +25,6 @@ export const API_PRODUCT_BRAND = '/product-brand';
 
 // BRAND API CONSTANTS
 export const API_BRAND = '/brand';
+
+// CATEGORY API CONSTANTS
+export const API_CATEGORY = '/categories';
