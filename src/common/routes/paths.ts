@@ -59,6 +59,30 @@ export const PATH_CUSTOMER = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
+  product: {
+    root: path(ROOTS_DASHBOARD, '/product'),
+    new: path(ROOTS_DASHBOARD, '/product/new'),
+    list: path(ROOTS_DASHBOARD, '/product/list'),
+    view: (name: string) => path(ROOTS_DASHBOARD, `/product/${name}`),
+    edit: (name: string) => path(ROOTS_DASHBOARD, `/product/${name}/edit`),
+    demoEdit: path(ROOTS_DASHBOARD, '/product/nike-blazer-low-77-vintage/edit'),
+    demoView: path(ROOTS_DASHBOARD, '/product/nike-air-force-1-ndestrukt'),
+  },
+  categories: {
+    root: path(ROOTS_DASHBOARD, '/categories'),
+    new: path(ROOTS_DASHBOARD, '/categories/new'),
+    list: path(ROOTS_DASHBOARD, '/categories/list'),
+    reorder: path(ROOTS_DASHBOARD, '/categories/reorder'),
+    view: (name: string) => path(ROOTS_DASHBOARD, `/categories/${name}`),
+    edit: (name: string) => path(ROOTS_DASHBOARD, `/categories/${name}/edit`),
+  },
+  brand: {
+    root: path(ROOTS_DASHBOARD, '/brand'),
+    new: path(ROOTS_DASHBOARD, '/brand/new'),
+    list: path(ROOTS_DASHBOARD, '/brand/list'),
+    view: (name: string) => path(ROOTS_DASHBOARD, `/brand/${name}`),
+    edit: (name: string) => path(ROOTS_DASHBOARD, `/brand/${name}/edit`),
+  },
   role: {
     root: path(ROOTS_DASHBOARD, '/role'),
     list: path(ROOTS_DASHBOARD, '/role/list'),

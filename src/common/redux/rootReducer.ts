@@ -10,6 +10,8 @@ import kanbanReducer from './slices/kanban';
 // auth
 import authReducer from 'src/auth/login/auth.slice';
 import loginReducer from 'src/auth/login/login.slice';
+// Categories
+import categoryReducer from 'src/management-categories/common/category.slice';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -30,6 +32,8 @@ const rootReducer = combineReducers({
   // Auth
   auth: authReducer,
   login: loginReducer,
+  // Categories
+  categories: categoryReducer,
   // Other slices
   mail: mailReducer,
   chat: chatReducer,

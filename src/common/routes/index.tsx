@@ -1,7 +1,6 @@
 import { Suspense, lazy, ElementType } from 'react';
 import { Navigate, useRoutes, useLocation } from 'react-router-dom';
 // hooks
-import useAuth from '../hooks/useAuth';
 // layouts
 import MainLayout from '../layouts/main';
 import DashboardLayout from '../layouts/dashboard';
@@ -81,6 +80,39 @@ export default function Router() {
         { path: 'analytics', element: <GeneralAnalytics /> },
         { path: 'banking', element: <GeneralBanking /> },
         { path: 'booking', element: <GeneralBooking /> },
+
+        {
+          path: 'product',
+          children: [
+            { element: <Navigate to="/dashboard/product/list" replace />, index: true },
+            // { path: 'list', element: <EcommerceProductList /> },
+            { path: 'new', element: <ProductCreate /> },
+            { path: 'list', element: <ProductList /> },
+            // { path: ':name', element: <EcommerceProductDetails /> },
+          ],
+        },
+
+        {
+          path: 'brand',
+          children: [
+            { element: <Navigate to="/dashboard/brand/list" replace />, index: true },
+            { path: 'new', element: <BrandCreate /> },
+            { path: 'list', element: <BrandList /> },
+            // { path: ':name', element: <BrandDetails /> },
+          ],
+        },
+
+        {
+          path: 'categories',
+          children: [
+            { element: <Navigate to="/dashboard/categories/list" replace />, index: true },
+            // { path: 'new', element: <CategoryCreate /> },
+            { path: 'list', element: <CategoryList /> },
+            { path: 'reorder', element: <ReorderCategories /> },
+            { path: 'new', element: <CategoryNew /> },
+            // { path: ':name', element: <CategoryDetails /> },
+          ],
+        },
 
         {
           path: 'e-commerce',
@@ -200,6 +232,19 @@ const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralE
 const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
 const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
 const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
+
+// PRODUCT
+const ProductCreate = Loadable(lazy(() => import('../../management-product/create')));
+const ProductList = Loadable(lazy(() => import('../../management-product/list')));
+
+// BRAND
+const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));
+const BrandList = Loadable(lazy(() => import('../../management-brand/list')));
+
+// CATEGORY
+const CategoryList = Loadable(lazy(() => import('../../management-categories/list')));
+const ReorderCategories = Loadable(lazy(() => import('../../management-categories/reorder')));
+const CategoryNew = Loadable(lazy(() => import('../../management-categories/create')));
 
 // ECOMMERCE
 const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));

@@ -57,3 +57,13 @@ export function isValidURL(url: string) {
   ); // fragment locator
   return !!pattern.test(url);
 }
+
+export function slugify(str: string) {
+  return str
+    .toLowerCase()
+    .normalize('NFD') // split accented letters
+    .replace(/[\u0300-\u036f]/g, '') // remove accents
+    .replace(/[^a-z0-9]+/g, '-') // replace non-alphanumeric with -
+    .replace(/^-+|-+$/g, '') // trim -
+    .replace(/-+/g, '-'); // collapse multiple -
+}

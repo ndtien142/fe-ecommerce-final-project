@@ -17,3 +17,14 @@ export const API_USER_PROFILE = '/user-profile';
 export const API_USER_GROUP = '/user-group';
 // USER GROUP PERMISSION API CONSTANTS
 export const API_USER_GROUP_PERMISSION = '/user-group-permission';
+
+// PRODUCT API CONSTANTS
+export const API_PRODUCT = '/product';
+export const API_PRODUCT_CATEGORY = '/product-category';
+export const API_PRODUCT_BRAND = '/product-brand';
+
+// BRAND API CONSTANTS
+export const API_BRAND = '/brand';
+
+// CATEGORY API CONSTANTS
+export const API_CATEGORY = '/categories';
