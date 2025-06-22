@@ -10,7 +10,6 @@ import {
 } from 'src/common/components/hook-form';
 import { default as useMessage } from 'src/common/hooks/useMessage';
 import useUploadImage from 'src/common/hooks/useUploadImage';
-import { useCreateNewBrand } from 'src/management-brand/common/hooks/useCreateNewBrand';
 import { styled } from '@mui/material/styles';
 import { Card, Grid, Stack, Typography, MenuItem, Box } from '@mui/material';
 import { fData } from 'src/common/utils/formatNumber';
@@ -23,6 +22,7 @@ import { useGetCategoriesTree } from '../hooks/useGetCategoriesTree';
 import { flattenCategories } from '../utils';
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
 import { useCreateNewCategory } from '../hooks/useCreateNewCategory';
+import { slugify } from 'src/common/utils/common.util';
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -53,15 +53,6 @@ const STATUS_OPTIONS = [
 ];
 
 // Add a simple slugify function
-function slugify(str: string) {
-  return str
-    .toLowerCase()
-    .normalize('NFD') // split accented letters
-    .replace(/[\u0300-\u036f]/g, '') // remove accents
-    .replace(/[^a-z0-9]+/g, '-') // replace non-alphanumeric with -
-    .replace(/^-+|-+$/g, '') // trim -
-    .replace(/-+/g, '-'); // collapse multiple -
-}
 
 const FormNewEditCategory = ({ isEdit, currentCategory }: Props) => {
   const { showErrorSnackbar, showSuccessSnackbar } = useMessage();

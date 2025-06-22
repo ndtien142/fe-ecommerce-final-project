@@ -8,16 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { styled } from '@mui/material/styles';
 import { LoadingButton } from '@mui/lab';
-import {
-  Card,
-  Chip,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-  Autocomplete,
-  InputAdornment,
-} from '@mui/material';
+import { Card, Grid, Stack, Typography, InputAdornment, MenuItem } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
 // @types
@@ -30,38 +21,33 @@ import {
   RHFSelect,
   RHFEditor,
   RHFTextField,
-  RHFRadioGroup,
   RHFUploadMultiFile,
 } from 'src/common/components/hook-form';
+import { slugify } from 'src/common/utils/common.util';
+import { useGetListBrand } from 'src/management-brand/common/hooks/useGetListBrand';
+import { useGetCategoriesTree } from 'src/management-categories/common/hooks/useGetCategoriesTree';
+import { ICategory } from 'src/common/@types/product/category.interface';
+import { flattenCategories } from 'src/management-categories/common/utils';
+import { useCreateNewProduct } from './hooks/useCreateNewProduct';
+import useUploadMultiImage from 'src/common/hooks/useUploadMultiImage';
 
+// Utility type to omit recursive properties from ICategory
+type ICategoryForm = Omit<ICategory, 'children' | 'parent'>;
 // ----------------------------------------------------------------------
 
-const GENDER_OPTION = [
-  { label: 'Men', value: 'Men' },
-  { label: 'Women', value: 'Women' },
-  { label: 'Kids', value: 'Kids' },
+const STATUS_OPTIONS = [
+  { value: 'active', label: 'Hoạt động' },
+  { value: 'inactive', label: 'Không hoạt động' },
+  { value: 'draft', label: 'Nháp' },
+  { value: 'archived', label: 'Lưu trữ' },
 ];
 
-const CATEGORY_OPTION = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
-];
-
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
+const FLAG_OPTIONS = [
+  { value: 'new', label: 'Mới' },
+  { value: 'popular', label: 'Phổ biến' },
+  { value: 'featured', label: 'Nổi bật' },
+  { value: 'on_sale', label: 'Đang giảm giá' },
+  { value: 'none', label: 'Không có nhãn' },
 ];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
@@ -69,13 +55,11 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(1),
 }));
-
-// ----------------------------------------------------------------------
-
-interface FormValuesProps extends Omit<Product, 'images'> {
+interface FormValuesProps extends Omit<Product, 'images' | 'brand' | 'categories'> {
   taxes: boolean;
   inStock: boolean;
   images: (CustomFile | string)[];
+  categories: ICategoryForm['id'][];
 }
 
 type Props = {
@@ -88,36 +72,84 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const { data: listBrand } = useGetListBrand({ page: 1, limit: 50 });
+  const { data: categoriesTree } = useGetCategoriesTree();
+
+  const { mutate } = useCreateNewProduct();
+
+  const { uploadImages } = useUploadMultiImage();
+
   const NewProductSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    description: Yup.string().required('Description is required'),
-    images: Yup.array().min(1, 'Images is required'),
-    price: Yup.number().moreThan(0, 'Price should not be $0.00'),
+    name: Yup.string().required('Tên sản phẩm là bắt buộc'),
+    description: Yup.string().required('Mô tả sản phẩm là bắt buộc'),
+    images: Yup.array().min(1, 'Cần ít nhất 1 hình ảnh'),
+    price: Yup.number()
+      .typeError('Giá phải là số')
+      .moreThan(0, 'Giá phải lớn hơn 0')
+      .required('Giá là bắt buộc'),
+    priceSale: Yup.number()
+      .typeError('Giá khuyến mãi phải là số')
+      .min(0, 'Giá khuyến mãi không được nhỏ hơn 0')
+      .max(Yup.ref('price'), 'Giá khuyến mãi không được lớn hơn giá thường')
+      .nullable(),
+    stock: Yup.number()
+      .typeError('Số lượng phải là số')
+      .min(0, 'Số lượng không được nhỏ hơn 0')
+      .required('Số lượng là bắt buộc'),
+    minStock: Yup.number()
+      .typeError('Số lượng tối thiểu phải là số')
+      .min(0, 'Số lượng tối thiểu không được nhỏ hơn 0')
+      .nullable(),
+    brandId: Yup.mixed().required('Thương hiệu là bắt buộc'),
+    status: Yup.string()
+      .oneOf(['active', 'inactive', 'draft', 'archived', ''], 'Trạng thái không hợp lệ')
+      .required('Trạng thái là bắt buộc'),
+    categories: Yup.array().of(Yup.number()).min(1, 'Chọn ít nhất 1 danh mục'),
+    weight: Yup.number()
+      .typeError('Cân nặng phải là số')
+      .min(0, 'Cân nặng không được nhỏ hơn 0')
+      .nullable(),
+    width: Yup.number()
+      .typeError('Chiều rộng phải là số')
+      .min(0, 'Chiều rộng không được nhỏ hơn 0')
+      .nullable(),
+    height: Yup.number()
+      .typeError('Chiều cao phải là số')
+      .min(0, 'Chiều cao không được nhỏ hơn 0')
+      .nullable(),
+    length: Yup.number()
+      .typeError('Chiều dài phải là số')
+      .min(0, 'Chiều dài không được nhỏ hơn 0')
+      .nullable(),
+    slug: Yup.string().required('Slug là bắt buộc'),
   });
 
   const defaultValues = useMemo(
     () => ({
       name: currentProduct?.name || '',
       description: currentProduct?.description || '',
-      images: currentProduct?.images || [],
-      code: currentProduct?.code || '',
-      sku: currentProduct?.sku || '',
+      images: (currentProduct as any)?.images || [],
       price: currentProduct?.price || 0,
       priceSale: currentProduct?.priceSale || 0,
-      tags: currentProduct?.tags || [TAGS_OPTION[0]],
       inStock: true,
       taxes: true,
-      gender: currentProduct?.gender || GENDER_OPTION[2].value,
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
-      status: currentProduct?.status || undefined,
+      flag: (currentProduct?.flag as Product['flag']) ?? '',
+      status: (currentProduct?.status as Product['status']) ?? null,
       stock: currentProduct?.stock || 0,
       minStock: currentProduct?.minStock || 0,
       weight: currentProduct?.weight || 0,
       width: currentProduct?.width || 0,
       height: currentProduct?.height || 0,
       length: currentProduct?.length || 0,
-      inventoryType: (currentProduct?.inventoryType as Product['inventoryType']) || undefined,
-      categories: currentProduct?.categories || [],
+      inventoryType: (currentProduct?.inventoryType as Product['inventoryType']) ?? '',
+      categories: (currentProduct as any)?.categories?.map((cat: any) => cat.id) || [],
+      brandId:
+        typeof currentProduct?.brandId === 'number'
+          ? currentProduct.brandId
+          : currentProduct?.brandId
+          ? Number(currentProduct.brandId)
+          : null,
+      slug: currentProduct?.slug || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
@@ -140,6 +172,12 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
   const values = watch();
 
+  // Watch name and update slug
+  const nameValue = watch('name');
+  useEffect(() => {
+    setValue('slug', slugify(nameValue || ''));
+  }, [nameValue, setValue]);
+
   useEffect(() => {
     if (isEdit && currentProduct) {
       reset(defaultValues);
@@ -151,40 +189,34 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
   }, [isEdit, currentProduct]);
 
   const onSubmit = async (data: FormValuesProps) => {
-    try {
-      const payload = {
-        name: data.name,
-        description: data.description,
-        thumbnail:
-          typeof data.images[0] === 'string' ? data.images[0] : data.images[0]?.preview || '',
-        slug: data.name.toLowerCase().replace(/\s+/g, '-'),
-        status: '',
-        brand: {
-          id: 0,
-          name: '',
-          description: '',
-          logoUrl: '',
-          status: '',
-        },
-        price: data.price,
-        stock: 0,
-        minStock: 0,
-        weight: 0,
-        width: 0,
-        height: 0,
-        length: 0,
-        priceSale: data.priceSale,
-        tags: Array.isArray(data.tags) ? data.tags.map(() => 0) : [],
-        meta: [],
-        categories: [],
-      };
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.eCommerce.list);
-    } catch (error) {
-      console.error(error);
+    let urls: string[] = [];
+    if (data?.images && data.images.length > 0) {
+      const filesToUpload = data.images.filter((img: any) => !img.url);
+      // Upload images if they are new files
+      urls = await uploadImages(filesToUpload as File[]);
+      data.images = [...data.images.filter((img) => typeof img === 'string')];
     }
+
+    const payload = {
+      ...data,
+      inventoryType: data.inStock ? 'in_stock' : 'out_of_stock',
+      brandId: data.brandId ? Number(data.brandId) : null,
+      images: urls,
+    };
+
+    mutate(payload, {
+      onSuccess: () => {
+        enqueueSnackbar(!isEdit ? 'Tạo sản phẩm thành công!' : 'Cập nhật sản phẩm thành công!', {
+          variant: 'success',
+        });
+        navigate(PATH_DASHBOARD.product.list);
+      },
+      onError: (error: any) => {
+        enqueueSnackbar(error?.message || 'Đã có lỗi xảy ra!', { variant: 'error' });
+      },
+    });
+    console.log('Submitted Data:', data);
+    console.log('images:', data.images);
   };
 
   const handleDrop = useCallback(
@@ -213,6 +245,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
     setValue('images', filteredItems);
   };
 
+  const flattendCategories = flattenCategories(categoriesTree?.metadata || []);
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -221,7 +255,12 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <RHFTextField name="name" label="Tên sản phẩm" />
-                <RHFTextField name="slug" label="Slug" />
+                <RHFTextField
+                  name="slug"
+                  label="Slug"
+                  InputLabelProps={{ shrink: true }}
+                  disabled
+                />
                 <div>
                   <LabelStyle>Mô tả sản phẩm</LabelStyle>
                   <RHFEditor simple name="description" />
@@ -260,66 +299,78 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
           <Stack spacing={3}>
             <Card sx={{ p: 3 }}>
               <RHFSwitch name="inStock" label="Còn hàng" />
-
               <Stack spacing={3} mt={2}>
                 <RHFTextField name="stock" label="Số lượng" type="number" />
-
                 <RHFTextField name="minStock" label="Số lượng tối thiểu" type="number" />
               </Stack>
             </Card>
 
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <RHFSelect name="brand" label="Thương hiệu">
-                  {CATEGORY_OPTION.map((category) => (
-                    <optgroup key={category.group} label={category.group}>
-                      {category.classify.map((classify) => (
-                        <option key={classify} value={classify}>
-                          {classify}
-                        </option>
-                      ))}
-                    </optgroup>
+                <RHFSelect
+                  name="brandId"
+                  label="Thương hiệu"
+                  InputLabelProps={{ shrink: true }}
+                  SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                >
+                  <MenuItem value="">Chọn thương hiệu</MenuItem>
+                  {listBrand?.metadata?.items?.map((brand) => (
+                    <MenuItem key={brand.id} value={brand.id}>
+                      {brand.name}
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
+                <RHFSelect
+                  name="status"
+                  label="Trạng thái"
+                  InputLabelProps={{ shrink: true }}
+                  SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                >
+                  <MenuItem value="">Chọn trạng thái</MenuItem>
+                  {STATUS_OPTIONS.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
+                <RHFSelect
+                  name="flag"
+                  label="Nhãn sản phẩm"
+                  InputLabelProps={{ shrink: true }}
+                  SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                >
+                  <MenuItem value="">Chọn nhãn sản phẩm</MenuItem>
+                  {FLAG_OPTIONS.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
                   ))}
                 </RHFSelect>
 
-                <RHFTextField name="status" label="Trạng thái" />
-
-                <RHFSelect name="category" label="Danh mục">
-                  {CATEGORY_OPTION.map((category) => (
-                    <optgroup key={category.group} label={category.group}>
-                      {category.classify.map((classify) => (
-                        <option key={classify} value={classify}>
-                          {classify}
-                        </option>
-                      ))}
-                    </optgroup>
+                {/* Category select */}
+                <RHFSelect
+                  name="categories"
+                  label="Danh mục"
+                  InputLabelProps={{ shrink: true }}
+                  SelectProps={{
+                    multiple: true,
+                    renderValue: (selected) =>
+                      flattendCategories
+                        .filter((cat) => (selected as ICategoryForm['id'][]).includes(cat.id))
+                        .map((cat) => cat.name)
+                        .join(', '),
+                  }}
+                >
+                  {flattendCategories.map((cat) => (
+                    <MenuItem
+                      key={cat.id}
+                      value={cat.id}
+                      sx={{ fontWeight: cat.depth === 0 ? 'bold' : 'normal', fontSize: 14 }}
+                    >
+                      {cat.name}
+                    </MenuItem>
                   ))}
                 </RHFSelect>
-
-                <Controller
-                  name="tags"
-                  control={control}
-                  render={({ field }) => (
-                    <Autocomplete
-                      {...field}
-                      multiple
-                      freeSolo
-                      onChange={(event, newValue) => field.onChange(newValue)}
-                      options={TAGS_OPTION.map((option) => option)}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            {...getTagProps({ index })}
-                            key={option}
-                            size="small"
-                            label={option}
-                          />
-                        ))
-                      }
-                      renderInput={(params) => <TextField label="Tags" {...params} />}
-                    />
-                  )}
-                />
               </Stack>
             </Card>
 
@@ -343,7 +394,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
                   label="Giá khuyến mãi"
                   placeholder="0.00"
                   value={getValues('priceSale') === 0 ? '' : getValues('priceSale')}
-                  onChange={(event) => setValue('price', Number(event.target.value))}
+                  onChange={(event) => setValue('priceSale', Number(event.target.value))}
                   InputLabelProps={{ shrink: true }}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,

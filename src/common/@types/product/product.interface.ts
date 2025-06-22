@@ -1,14 +1,16 @@
 // ----------------------------------------------------------------------
 
+import { ICategory } from './category.interface';
+
 export type PaymentType = 'paypal' | 'credit_card' | 'cash';
 
-export type ProductStatus = 'sale' | 'new' | '';
+export type ProductType = 'simple' | 'product_variants';
+
+export type ProductStatus = 'active' | 'inactive' | 'archived' | 'draft';
+
+export type ProductFlag = 'new' | 'popular' | 'featured' | 'none' | 'on_sale';
 
 export type ProductInventoryType = 'in_stock' | 'out_of_stock' | 'low_stock';
-
-export type ProductCategory = 'Accessories' | 'Apparel' | 'Shoes' | string;
-
-export type ProductGender = 'Men' | 'Women' | 'Kids' | string;
 
 export type OnCreateBilling = (address: BillingAddress) => void;
 
@@ -44,42 +46,26 @@ export type ProductBrand = {
 };
 
 export type Product = {
-  id: string;
-  cover: string;
-  images: string[];
+  id: number;
   name: string;
+  description: string | null;
+  productType: ProductType | null;
+  thumbnail: string | null;
+  slug: string | null;
+  status: ProductStatus | null;
+  brandId?: number | null;
   price: number;
-  code: string;
-  sku: string;
-  tags: (string | number)[];
-  priceSale: number | null;
-  totalRating: number;
-  totalReview: number;
-  ratings: ProductRating[];
-  reviews: ProductReview[];
-  colors: string[];
-  status: ProductStatus;
+  flag: ProductFlag;
+  stock: number;
+  minStock?: number | null;
+  weight?: number | null;
+  width?: number | null;
+  height?: number | null;
+  length?: number | null;
+  priceSale?: number | null;
+  sold?: number | null;
+  categories: ICategory[] | null;
   inventoryType: ProductInventoryType;
-  sizes: string[];
-  available: number;
-  description: string;
-  sold: number;
-  createdAt: Date | string | number;
-  category: ProductCategory;
-  gender: ProductGender;
-  // Added fields for backend schema
-  thumbnail?: string;
-  slug?: string;
-  brandId?: number;
-  brand?: ProductBrand;
-  stock?: number;
-  minStock?: number;
-  weight?: number;
-  width?: number;
-  height?: number;
-  length?: number;
-  meta?: ProductMeta[];
-  categories?: (number | string)[];
 };
 
 export type CartItem = {
