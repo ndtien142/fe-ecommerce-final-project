@@ -2,56 +2,65 @@ import sum from 'lodash/sum';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Grid, Card, Button, CardHeader, Typography } from '@mui/material';
-// redux
-import { useDispatch, useSelector } from '../../../common/redux/store';
-import {
-  deleteCart,
-  onNextStep,
-  applyDiscount,
-  increaseQuantity,
-  decreaseQuantity,
-} from '../../../common/redux/slices/product';
-// routes
-import { PATH_CUSTOMER } from '../../../common/routes/paths';
+// hooks
+import { useGetCart } from '../../hooks/useGetCart';
+import { useMinusItemQuantity } from '../../hooks/useMinusItemQuantity';
+import { usePlusItemQuantity } from '../../hooks/usePlusItemQuantity';
+import { useRemoveItemFromCart } from '../../hooks/useRemoveItemFromCart';
 // components
 import Iconify from '../../../common/components/Iconify';
 import Scrollbar from '../../../common/components/Scrollbar';
 import EmptyContent from '../../../common/components/EmptyContent';
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutProductList from './CheckoutProductList';
+// routes
+import { PATH_CUSTOMER } from '../../../common/routes/paths';
 
 // ----------------------------------------------------------------------
 
 const CheckoutCart = () => {
-  const dispatch = useDispatch();
+  // Get cart data from API
+  const { data: cartData, isLoading } = useGetCart();
+  const minusItem = useMinusItemQuantity();
+  const plusItem = usePlusItemQuantity();
+  const removeItem = useRemoveItemFromCart();
 
-  const { checkout } = useSelector((state) => state.product);
-
-  const { cart, total, discount, subtotal } = checkout;
+  const cart = cartData?.metadata?.lineItems || [];
+  const subtotal = cart.reduce((sum, item) => sum + Number(item.total), 0);
+  const total = subtotal; // Adjust if you have shipping/discount logic
+  const discount = 0; // Adjust if you have discount logic
 
   const totalItems = sum(cart.map((item) => item.quantity));
-
   const isEmptyCart = cart.length === 0;
 
-  const handleDeleteCart = (productId: string) => {
-    dispatch(deleteCart(productId));
+  const handleDeleteCart = (id: string) => {
+    removeItem.mutate({ productId: id });
   };
 
-  const handleNextStep = () => {
-    dispatch(onNextStep());
+  const handleIncreaseQuantity = (id: string) => {
+    plusItem.mutate({ productId: id });
   };
 
-  const handleIncreaseQuantity = (productId: string) => {
-    dispatch(increaseQuantity(productId));
-  };
-
-  const handleDecreaseQuantity = (productId: string) => {
-    dispatch(decreaseQuantity(productId));
+  const handleDecreaseQuantity = (id: string) => {
+    minusItem.mutate({ productId: id });
   };
 
   const handleApplyDiscount = (value: number) => {
-    dispatch(applyDiscount(value));
+    // Implement discount logic if needed
   };
+
+  // Map API cart line items to UI CartItem type if needed by CheckoutProductList
+  const uiCart = cart.map((item) => ({
+    id: String(item.productId),
+    name: item.product.name,
+    cover: item.product.thumbnail ?? '', // Ensure cover is always a string
+    available: item.product.stock,
+    price: Number(item.price),
+    color: '', // Not in API, fallback to empty
+    size: '', // Not in API, fallback to empty
+    quantity: item.quantity,
+    subtotal: Number(item.total),
+  }));
 
   return (
     <Grid container spacing={3}>
@@ -72,7 +81,7 @@ const CheckoutCart = () => {
           {!isEmptyCart ? (
             <Scrollbar>
               <CheckoutProductList
-                products={cart}
+                products={uiCart}
                 onDelete={handleDeleteCart}
                 onIncreaseQuantity={handleIncreaseQuantity}
                 onDecreaseQuantity={handleDecreaseQuantity}
@@ -90,7 +99,7 @@ const CheckoutCart = () => {
         <Button
           color="inherit"
           component={RouterLink}
-          to={PATH_CUSTOMER.home}
+          to={'/'}
           startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
         >
           Tiếp tục mua sắm
@@ -111,7 +120,6 @@ const CheckoutCart = () => {
           type="submit"
           variant="contained"
           disabled={cart.length === 0}
-          onClick={handleNextStep}
         >
           Thanh toán
         </Button>

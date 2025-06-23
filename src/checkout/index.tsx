@@ -1,14 +1,8 @@
-import { useEffect } from 'react';
-// @mui
 import { styled } from '@mui/material/styles';
 import { Box, Grid, Step, Stepper, Container, StepLabel, StepConnector } from '@mui/material';
-// redux
-import { useDispatch, useSelector } from '../common/redux/store';
-import { getCart, createBilling } from '../common/redux/slices/product';
 // routes
 import { PATH_CUSTOMER } from '../common/routes/paths';
 // hooks
-import useIsMountedRef from '../common/hooks/useIsMountedRef';
 import useSettings from '../common/hooks/useSettings';
 // components
 import Page from '../common/components/Page';
@@ -16,6 +10,7 @@ import Iconify from '../common/components/Iconify';
 import HeaderBreadcrumbs from '../common/components/HeaderBreadcrumbs';
 // sections
 import CheckoutCart from './components/cart/CheckoutCart';
+import { HEADER } from 'src/config';
 
 // ----------------------------------------------------------------------
 
@@ -71,77 +66,61 @@ function QontoStepIcon({ active, completed }: { active: boolean; completed: bool
 const CheckoutContainer = () => {
   const { themeStretch } = useSettings();
 
-  const dispatch = useDispatch();
-
-  const isMountedRef = useIsMountedRef();
-
-  const { checkout } = useSelector((state) => state.product);
-
-  const { cart, billing, activeStep } = checkout;
-
-  const isComplete = activeStep === STEPS.length;
-
-  useEffect(() => {
-    if (isMountedRef.current) {
-      dispatch(getCart(cart));
-    }
-  }, [dispatch, isMountedRef, cart]);
-
-  useEffect(() => {
-    if (activeStep === 1) {
-      dispatch(createBilling(null));
-    }
-  }, [dispatch, activeStep]);
-
   return (
-    <Page title="Thanh toán">
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <HeaderBreadcrumbs
-          heading="Thanh toán"
-          links={[
-            { name: 'Trang chủ', href: PATH_CUSTOMER.home },
-            {
-              name: 'Mua sắm',
-              href: PATH_CUSTOMER.eCommerce.root,
-            },
-            { name: 'Thanh toán' },
-          ]}
-        />
+    <Box
+      component="main"
+      sx={{
+        px: { lg: 2 },
+        pt: {
+          xs: `${HEADER.MOBILE_HEIGHT + 20}px`,
+          lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 40}px`,
+        },
+        pb: {
+          xs: `${HEADER.MOBILE_HEIGHT + 24}px`,
+          lg: `${HEADER.DASHBOARD_DESKTOP_HEIGHT + 24}px`,
+        },
+      }}
+    >
+      <Page title="Thanh toán">
+        <Container maxWidth={themeStretch ? false : 'lg'}>
+          <HeaderBreadcrumbs
+            heading="Thanh toán"
+            links={[
+              { name: 'Trang chủ', href: PATH_CUSTOMER.home },
+              {
+                name: 'Mua sắm',
+                href: PATH_CUSTOMER.root,
+              },
+              { name: 'Thanh toán' },
+            ]}
+          />
 
-        <Grid container justifyContent={isComplete ? 'center' : 'flex-start'}>
-          <Grid item xs={12} md={8} sx={{ mb: 5 }}>
-            <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
-              {STEPS.map((label) => (
-                <Step key={label}>
-                  <StepLabel
-                    StepIconComponent={QontoStepIcon}
-                    sx={{
-                      '& .MuiStepLabel-label': {
-                        typography: 'subtitle2',
-                        color: 'text.disabled',
-                      },
-                    }}
-                  >
-                    {label}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+          <Grid container justifyContent={false ? 'center' : 'flex-start'}>
+            <Grid item xs={12} md={8} sx={{ mb: 5 }}>
+              <Stepper alternativeLabel activeStep={0} connector={<QontoConnector />}>
+                {STEPS.map((label) => (
+                  <Step key={label}>
+                    <StepLabel
+                      StepIconComponent={QontoStepIcon}
+                      sx={{
+                        '& .MuiStepLabel-label': {
+                          typography: 'subtitle2',
+                          color: 'text.disabled',
+                        },
+                      }}
+                    >
+                      {label}
+                    </StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </Grid>
           </Grid>
-        </Grid>
 
-        {!isComplete ? (
-          <>
-            {activeStep === 0 && <CheckoutCart />}
-            {/* {activeStep === 1 && <CheckoutBillingAddress />} */}
-            {/* {activeStep === 2 && billing && <CheckoutPayment />} */}
-          </>
-        ) : (
-          //   <CheckoutOrderComplete open={isComplete} />
-          <></>
-        )}
-      </Container>
-    </Page>
+          <CheckoutCart />
+        </Container>
+      </Page>
+    </Box>
   );
 };
 

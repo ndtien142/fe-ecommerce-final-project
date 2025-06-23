@@ -13,4 +13,8 @@ export const QUERY_KEYS = Object.freeze({
   // CATEGORY
   LIST_CATEGORY: 'LIST_CATEGORY',
   CATEGORY_TREE: 'CATEGORY_TREE',
+  // CART
+  CART: 'CART',
+  // ORDER
+  ORDER: 'ORDER',
 });

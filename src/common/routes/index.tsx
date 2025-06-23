@@ -229,6 +229,7 @@ export default function Router() {
         { element: <HomePage />, index: true },
         { path: 'shop', element: <Shop /> },
         { path: 'product/:slug', element: <ProductDetails /> },
+        { path: 'checkout', element: <EcommerceCheckout /> },
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
@@ -274,7 +275,7 @@ const ReorderCategories = Loadable(lazy(() => import('../../management-categorie
 const CategoryNew = Loadable(lazy(() => import('../../management-categories/create')));
 
 // BILLING AND CHECKOUT
-const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
+const EcommerceCheckout = Loadable(lazy(() => import('../../checkout')));
 
 // INVOICE
 const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));

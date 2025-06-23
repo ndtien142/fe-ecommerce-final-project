@@ -28,3 +28,6 @@ export const API_BRAND = '/brand';
 
 // CATEGORY API CONSTANTS
 export const API_CATEGORY = '/categories';
+
+// CART API CONSTANTS
+export const API_CART = '/cart';
