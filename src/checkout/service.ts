@@ -1,10 +1,11 @@
+import { IAddressForm, IAddressResponse } from 'src/common/@types/address/address.interface';
 import {
   ICartResponse,
   IParamsAddToCart,
   IParamsChangeItemQuantity,
   IParamsRemoveItemFromCart,
 } from 'src/common/@types/cart/cart.interface';
-import { API_CART } from 'src/common/constant/api.constant';
+import { API_ADDRESS, API_CART } from 'src/common/constant/api.constant';
 import axiosInstance from 'src/common/utils/axios';
 
 export const getCart = () => axiosInstance.get<unknown, ICartResponse>(`${API_CART}/user`);
@@ -19,3 +20,8 @@ export const plusItemQuantity = (data: IParamsChangeItemQuantity) =>
 
 export const removeItemFromCart = (data: IParamsRemoveItemFromCart) =>
   axiosInstance.patch(`${API_CART}/remove`, data);
+
+// ADDRESS
+export const getAddress = () => axiosInstance.get<unknown, IAddressResponse>(`${API_ADDRESS}/user`);
+
+export const addAddress = (data: IAddressForm) => axiosInstance.post(`${API_ADDRESS}`, data);

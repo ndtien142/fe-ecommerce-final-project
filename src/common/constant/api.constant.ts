@@ -31,3 +31,6 @@ export const API_CATEGORY = '/categories';
 
 // CART API CONSTANTS
 export const API_CART = '/cart';
+
+// ADDRESS API CONSTANTS
+export const API_ADDRESS = '/address';

@@ -15,15 +15,25 @@ import CheckoutSummary from './CheckoutSummary';
 import CheckoutProductList from './CheckoutProductList';
 // routes
 import { PATH_CUSTOMER } from '../../../common/routes/paths';
+import { useDispatch } from 'src/common/redux/store';
+import { onNextStep, setCart } from 'src/checkout/checkout.slice';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
 const CheckoutCart = () => {
+  const dispatch = useDispatch();
   // Get cart data from API
   const { data: cartData, isLoading } = useGetCart();
   const minusItem = useMinusItemQuantity();
   const plusItem = usePlusItemQuantity();
   const removeItem = useRemoveItemFromCart();
+
+  useEffect(() => {
+    if (cartData?.metadata) {
+      dispatch(setCart(cartData.metadata));
+    }
+  }, [cartData, dispatch]);
 
   const cart = cartData?.metadata?.lineItems || [];
   const subtotal = cart.reduce((sum, item) => sum + Number(item.total), 0);
@@ -47,6 +57,10 @@ const CheckoutCart = () => {
 
   const handleApplyDiscount = (value: number) => {
     // Implement discount logic if needed
+  };
+
+  const handleNextStep = () => {
+    dispatch(onNextStep());
   };
 
   // Map API cart line items to UI CartItem type if needed by CheckoutProductList
@@ -120,6 +134,7 @@ const CheckoutCart = () => {
           type="submit"
           variant="contained"
           disabled={cart.length === 0}
+          onClick={handleNextStep}
         >
           Thanh toán
         </Button>

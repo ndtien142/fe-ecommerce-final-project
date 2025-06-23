@@ -17,4 +17,6 @@ export const QUERY_KEYS = Object.freeze({
   CART: 'CART',
   // ORDER
   ORDER: 'ORDER',
+  // ADDRESS
+  ADDRESS_LIST: 'ADDRESS_LIST',
 });

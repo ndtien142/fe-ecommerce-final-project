@@ -11,6 +11,9 @@ import HeaderBreadcrumbs from '../common/components/HeaderBreadcrumbs';
 // sections
 import CheckoutCart from './components/cart/CheckoutCart';
 import { HEADER } from 'src/config';
+import { useDispatch, useSelector } from '../common/redux/store';
+import CheckoutAndBillingAddress from './components/billing-address/CheckoutAndBillingAddress';
+import { CheckoutOrderComplete } from 'src/common/sections/@dashboard/e-commerce/checkout';
 
 // ----------------------------------------------------------------------
 
@@ -66,6 +69,12 @@ function QontoStepIcon({ active, completed }: { active: boolean; completed: bool
 const CheckoutContainer = () => {
   const { themeStretch } = useSettings();
 
+  // Use checkout slice for activeStep
+  const dispatch = useDispatch();
+  const activeStep = useSelector((state) => state.checkout.activeStep);
+
+  const isComplete = activeStep === STEPS.length;
+
   return (
     <Box
       component="main"
@@ -97,7 +106,7 @@ const CheckoutContainer = () => {
 
           <Grid container justifyContent={false ? 'center' : 'flex-start'}>
             <Grid item xs={12} md={8} sx={{ mb: 5 }}>
-              <Stepper alternativeLabel activeStep={0} connector={<QontoConnector />}>
+              <Stepper alternativeLabel activeStep={activeStep} connector={<QontoConnector />}>
                 {STEPS.map((label) => (
                   <Step key={label}>
                     <StepLabel
@@ -116,8 +125,16 @@ const CheckoutContainer = () => {
               </Stepper>
             </Grid>
           </Grid>
-
-          <CheckoutCart />
+          {!isComplete ? (
+            <>
+              {activeStep === 0 && <CheckoutCart />}
+              {activeStep === 1 && <CheckoutAndBillingAddress />}
+              {/* {activeStep === 2 && billing && <CheckoutPayment />} */}
+              {activeStep === 2 && <div>hehe</div>}
+            </>
+          ) : (
+            <CheckoutOrderComplete open={isComplete} />
+          )}
         </Container>
       </Page>
     </Box>
