@@ -16,6 +16,21 @@ import LoadingScreen from '../components/LoadingScreen';
 import { useSelector } from '../redux/store';
 import { selectIsAuthenticated } from 'src/auth/login/auth.slice';
 
+function RoleGuard({
+  allowedRoles,
+  children,
+}: {
+  allowedRoles: string[];
+  children: React.ReactNode;
+}) {
+  const { user, isAuthenticated } = useSelector((state: any) => state.auth);
+  const userRole = user?.role?.name;
+  if (!isAuthenticated || !userRole || !allowedRoles.includes(userRole)) {
+    return <Navigate to="/permission-denied" replace />;
+  }
+  return <>{children}</>;
+}
+
 // ----------------------------------------------------------------------
 
 const Loadable = (Component: ElementType) => (props: any) => {
@@ -76,18 +91,30 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
-        { path: 'ecommerce', element: <GeneralEcommerce /> },
-        { path: 'analytics', element: <GeneralAnalytics /> },
-        { path: 'banking', element: <GeneralBanking /> },
-        { path: 'booking', element: <GeneralBooking /> },
+        { path: 'cart', element: <EcommerceCheckout /> },
+        { path: 'account', element: <UserAccount /> },
 
         {
           path: 'product',
           children: [
             { element: <Navigate to="/dashboard/product/list" replace />, index: true },
-            // { path: 'list', element: <EcommerceProductList /> },
-            { path: 'new', element: <ProductCreate /> },
-            { path: 'list', element: <ProductList /> },
+            // Only admin can create or edit products
+            {
+              path: 'new',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <ProductCreate />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <ProductList />
+                </RoleGuard>
+              ),
+            },
             // { path: ':name', element: <EcommerceProductDetails /> },
           ],
         },
@@ -96,8 +123,22 @@ export default function Router() {
           path: 'brand',
           children: [
             { element: <Navigate to="/dashboard/brand/list" replace />, index: true },
-            { path: 'new', element: <BrandCreate /> },
-            { path: 'list', element: <BrandList /> },
+            {
+              path: 'new',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <BrandCreate />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <BrandList />
+                </RoleGuard>
+              ),
+            },
             // { path: ':name', element: <BrandDetails /> },
           ],
         },
@@ -106,10 +147,31 @@ export default function Router() {
           path: 'categories',
           children: [
             { element: <Navigate to="/dashboard/categories/list" replace />, index: true },
-            // { path: 'new', element: <CategoryCreate /> },
-            { path: 'list', element: <CategoryList /> },
-            { path: 'reorder', element: <ReorderCategories /> },
-            { path: 'new', element: <CategoryNew /> },
+            // Only admin can create/reorder categories
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CategoryList />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: 'reorder',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <ReorderCategories />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: 'new',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CategoryNew />
+                </RoleGuard>
+              ),
+            },
             // { path: ':name', element: <CategoryDetails /> },
           ],
         },
@@ -118,12 +180,6 @@ export default function Router() {
           path: 'e-commerce',
           children: [
             { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
-            { path: 'shop', element: <EcommerceShop /> },
-            { path: 'product/:name', element: <EcommerceProductDetails /> },
-            { path: 'list', element: <EcommerceProductList /> },
-            { path: 'product/new', element: <EcommerceProductCreate /> },
-            { path: 'product/:name/edit', element: <EcommerceProductEdit /> },
-            { path: 'checkout', element: <EcommerceCheckout /> },
           ],
         },
         {
@@ -148,36 +204,6 @@ export default function Router() {
             { path: 'new', element: <InvoiceCreate /> },
           ],
         },
-        {
-          path: 'blog',
-          children: [
-            { element: <Navigate to="/dashboard/blog/posts" replace />, index: true },
-            { path: 'posts', element: <BlogPosts /> },
-            { path: 'post/:title', element: <BlogPost /> },
-            { path: 'new', element: <BlogNewPost /> },
-          ],
-        },
-        {
-          path: 'mail',
-          children: [
-            { element: <Navigate to="/dashboard/mail/all" replace />, index: true },
-            { path: 'label/:customLabel', element: <Mail /> },
-            { path: 'label/:customLabel/:mailId', element: <Mail /> },
-            { path: ':systemLabel', element: <Mail /> },
-            { path: ':systemLabel/:mailId', element: <Mail /> },
-          ],
-        },
-        {
-          path: 'chat',
-          children: [
-            { element: <Chat />, index: true },
-            { path: 'new', element: <Chat /> },
-            { path: ':conversationKey', element: <Chat /> },
-          ],
-        },
-        { path: 'calendar', element: <Calendar /> },
-        { path: 'kanban', element: <Kanban /> },
-        { path: 'permission-denied', element: <PermissionDenied /> },
       ],
     },
 
@@ -205,6 +231,7 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
+        { path: 'permission-denied', element: <PermissionDenied /> },
       ],
     },
     { path: '*', element: <Navigate to="/404" replace /> },
@@ -228,10 +255,6 @@ const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
 
 // GENERAL
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
-const GeneralEcommerce = Loadable(lazy(() => import('../pages/dashboard/GeneralEcommerce')));
-const GeneralAnalytics = Loadable(lazy(() => import('../pages/dashboard/GeneralAnalytics')));
-const GeneralBanking = Loadable(lazy(() => import('../pages/dashboard/GeneralBanking')));
-const GeneralBooking = Loadable(lazy(() => import('../pages/dashboard/GeneralBooking')));
 
 // PRODUCT
 const ProductCreate = Loadable(lazy(() => import('../../management-product/create')));
@@ -246,20 +269,7 @@ const CategoryList = Loadable(lazy(() => import('../../management-categories/lis
 const ReorderCategories = Loadable(lazy(() => import('../../management-categories/reorder')));
 const CategoryNew = Loadable(lazy(() => import('../../management-categories/create')));
 
-// ECOMMERCE
-const EcommerceShop = Loadable(lazy(() => import('../pages/dashboard/EcommerceShop')));
-const EcommerceProductDetails = Loadable(
-  lazy(() => import('../pages/dashboard/EcommerceProductDetails'))
-);
-const EcommerceProductList = Loadable(
-  lazy(() => import('../pages/dashboard/EcommerceProductList'))
-);
-const EcommerceProductCreate = Loadable(
-  lazy(() => import('../pages/dashboard/EcommerceProductCreate'))
-);
-const EcommerceProductEdit = Loadable(
-  lazy(() => import('../pages/dashboard/EcommerceProductEdit'))
-);
+// BILLING AND CHECKOUT
 const EcommerceCheckout = Loadable(lazy(() => import('../pages/dashboard/EcommerceCheckout')));
 
 // INVOICE
@@ -268,26 +278,12 @@ const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDet
 const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
 const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
 
-// BLOG
-const BlogPosts = Loadable(lazy(() => import('../pages/dashboard/BlogPosts')));
-const BlogPost = Loadable(lazy(() => import('../pages/dashboard/BlogPost')));
-const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')));
-
 // USER
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
-
-// APP
-const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
-const Mail = Loadable(lazy(() => import('../pages/dashboard/Mail')));
-const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
-const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
-
-// TEST RENDER PAGE BY ROLE
-const PermissionDenied = Loadable(lazy(() => import('../pages/dashboard/PermissionDenied')));
 
 // MAIN
 const About = Loadable(lazy(() => import('../pages/About')));
@@ -300,3 +296,4 @@ const Payment = Loadable(lazy(() => import('../pages/Payment')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const Page403 = Loadable(lazy(() => import('../pages/Page403')));
 const Page404 = Loadable(lazy(() => import('../pages/Page404')));
+const PermissionDenied = Loadable(lazy(() => import('../pages/dashboard/PermissionDenied')));

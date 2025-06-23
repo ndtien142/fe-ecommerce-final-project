@@ -99,6 +99,10 @@ export const PATH_DASHBOARD = {
   },
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
+    account: path(ROOTS_DASHBOARD, '/account'),
+    settings: path(ROOTS_DASHBOARD, '/settings'),
+    mailSettings: path(ROOTS_DASHBOARD, '/settings/mail'),
+    cart: path(ROOTS_DASHBOARD, '/cart'),
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     banking: path(ROOTS_DASHBOARD, '/banking'),

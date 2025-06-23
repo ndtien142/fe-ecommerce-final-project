@@ -27,8 +27,11 @@ export const authLoginSlice = createSlice({
     setRefreshToken: (state, action: PayloadAction<string>) => {
       state.refreshToken = action.payload;
     },
-    setLogout: (state, action: PayloadAction<boolean>) => {
-      state.isAuthenticated = action.payload;
+    setLogout: (state) => {
+      state.isAuthenticated = false;
+      state.accessToken = '';
+      state.refreshToken = '';
+      state.user = null;
     },
     setUser: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;

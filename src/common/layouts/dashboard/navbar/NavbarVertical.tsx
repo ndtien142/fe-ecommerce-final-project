@@ -16,9 +16,9 @@ import Scrollbar from '../../../components/Scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
 //
 import navConfig from './NavConfig';
-import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
+import { useSelector } from 'src/common/redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +47,22 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
 
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
+
+  const { user } = useSelector((state) => state.auth);
+  const userRole = user?.role?.name;
+
+  // Filter navConfig by role
+  const filteredNavConfig = navConfig.filter((section) => {
+    // Example: Only show "Quản lý sản phẩm" and "management" for admin
+    if (
+      (section.subheader === 'Quản lý sản phẩm' || section.subheader === 'management') &&
+      userRole !== 'admin'
+    ) {
+      return false;
+    }
+    // Add more logic here for other roles if needed
+    return true;
+  });
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -83,11 +99,9 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
         <NavbarAccount isCollapse={isCollapse} />
       </Stack>
 
-      <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+      <NavSectionVertical navConfig={filteredNavConfig} isCollapse={isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
-
-      {!isCollapse && <NavbarDocs />}
     </Scrollbar>
   );
 

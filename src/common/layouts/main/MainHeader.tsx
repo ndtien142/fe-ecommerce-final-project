@@ -19,6 +19,9 @@ import { useEffect, useState } from 'react';
 import { useGetCategoriesTree } from 'src/management-categories/common/hooks/useGetCategoriesTree';
 import Iconify from 'src/common/components/Iconify';
 import { ICategory } from 'src/common/@types/product/category.interface';
+import { PATH_AUTH } from 'src/common/routes/paths';
+import { useSelector } from 'src/common/redux/store';
+import AccountPopover from '../dashboard/header/AccountPopover';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +58,12 @@ export default function MainHeader() {
 
   const { pathname } = useLocation();
 
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  // Helper to check role
+  const isAdmin = user?.role?.name === 'admin';
+  const isCustomer = user?.role?.name === 'customer';
+
   const isDesktop = useResponsive('up', 'md');
 
   const isHome = pathname === '/';
@@ -84,8 +93,6 @@ export default function MainHeader() {
       ]);
     }
   }, [data]);
-
-  console.log('Menu Data:', menuData);
 
   // Helper to transform API response to menu format
   function mapCategoriesToMenu(metadata: ICategory[]): any[] {
@@ -137,14 +144,24 @@ export default function MainHeader() {
 
           {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={menuData} />}
 
-          {/* <Button
-            variant="contained"
-            target="_blank"
-            rel="noopener"
-            href="https://material-ui.com/store/items/minimal-dashboard/"
-          >
-            Purchase Now
-          </Button> */}
+          {/* Show user info and popover only if authenticated */}
+          {isAuthenticated && user ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {/* Show username */}
+              <span style={{ marginLeft: 8, color: 'black' }}>{user.username}</span>
+              {/* Show admin badge if admin */}
+              {isAdmin && (
+                <Label color="primary" sx={{ ml: 1 }}>
+                  Admin
+                </Label>
+              )}
+              <AccountPopover />
+            </Box>
+          ) : (
+            <Button variant="contained" target="_blank" rel="noopener" href={PATH_AUTH.login}>
+              Đăng nhập / Đăng ký ngay
+            </Button>
+          )}
 
           {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={menuData} />}
         </Container>

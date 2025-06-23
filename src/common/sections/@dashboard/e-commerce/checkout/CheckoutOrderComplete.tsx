@@ -6,7 +6,7 @@ import { Box, Link, Button, Divider, Typography, Stack, DialogProps } from '@mui
 import { useDispatch } from '../../../../redux/store';
 import { resetCart } from '../../../../redux/slices/product';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_CUSTOMER } from '../../../../routes/paths';
 // components
 import Iconify from '../../../../components/Iconify';
 import { DialogAnimate } from '../../../../components/animate';
@@ -34,7 +34,7 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
 
   const handleResetStep = () => {
     dispatch(resetCart());
-    navigate(PATH_DASHBOARD.eCommerce.shop);
+    navigate(PATH_CUSTOMER.root);
   };
 
   return (

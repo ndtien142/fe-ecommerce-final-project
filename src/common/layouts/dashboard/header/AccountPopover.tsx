@@ -13,6 +13,8 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+import { useDispatch } from 'src/common/redux/store';
+import { setLogout } from 'src/auth/login/auth.slice';
 
 // ----------------------------------------------------------------------
 
@@ -23,18 +25,20 @@ const MENU_OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.profile,
-  },
-  {
-    label: 'Settings',
     linkTo: PATH_DASHBOARD.user.account,
   },
+  // {
+  //   label: 'Settings',
+  //   linkTo: PATH_DASHBOARD.user.account,
+  // },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const { user, logout } = useAuth();
 
@@ -55,6 +59,7 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       await logout();
+      dispatch(setLogout());
       navigate(PATH_AUTH.login, { replace: true });
 
       if (isMountedRef.current) {

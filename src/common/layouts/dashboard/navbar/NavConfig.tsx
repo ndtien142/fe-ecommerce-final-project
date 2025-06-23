@@ -43,10 +43,8 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-      { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
-      { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
+      { title: 'tài khoản', path: PATH_DASHBOARD.general.account, icon: ICONS.user },
+      { title: 'giỏ hàng', path: PATH_DASHBOARD.general.cart, icon: ICONS.cart },
     ],
   },
 
@@ -102,25 +100,9 @@ const navConfig = [
           { title: 'account', path: PATH_DASHBOARD.user.account },
         ],
       },
-
-      // E-COMMERCE
-      {
-        title: 'ecommerce',
-        path: PATH_DASHBOARD.eCommerce.root,
-        icon: ICONS.cart,
-        children: [
-          { title: 'shop', path: PATH_DASHBOARD.eCommerce.shop },
-          { title: 'product', path: PATH_DASHBOARD.eCommerce.demoView },
-          { title: 'list', path: PATH_DASHBOARD.eCommerce.list },
-          { title: 'create', path: PATH_DASHBOARD.eCommerce.new },
-          { title: 'edit', path: PATH_DASHBOARD.eCommerce.demoEdit },
-          { title: 'checkout', path: PATH_DASHBOARD.eCommerce.checkout },
-        ],
-      },
-
       // INVOICE
       {
-        title: 'invoice',
+        title: 'Đơn đặt hàng',
         path: PATH_DASHBOARD.invoice.root,
         icon: ICONS.invoice,
         children: [
@@ -133,7 +115,7 @@ const navConfig = [
 
       // BLOG
       {
-        title: 'blog',
+        title: 'Đơn nhập hàng',
         path: PATH_DASHBOARD.blog.root,
         icon: ICONS.blog,
         children: [
@@ -142,93 +124,6 @@ const navConfig = [
           { title: 'create', path: PATH_DASHBOARD.blog.new },
         ],
       },
-    ],
-  },
-
-  // APP
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'app',
-    items: [
-      {
-        title: 'mail',
-        path: PATH_DASHBOARD.mail.root,
-        icon: ICONS.mail,
-        info: <Label color="error">+32</Label>,
-      },
-      { title: 'chat', path: PATH_DASHBOARD.chat.root, icon: ICONS.chat },
-      { title: 'calendar', path: PATH_DASHBOARD.calendar, icon: ICONS.calendar },
-      { title: 'kanban', path: PATH_DASHBOARD.kanban, icon: ICONS.kanban },
-    ],
-  },
-
-  // DEMO MENU STATES
-  {
-    subheader: 'Other cases',
-    items: [
-      {
-        // default roles : All roles can see this entry.
-        // roles: ['user'] Only users can see this item.
-        // roles: ['admin'] Only admin can see this item.
-        // roles: ['admin', 'manager'] Only admin/manager can see this item.
-        // Reference from 'src/guards/RoleBasedGuard'.
-        title: 'item_by_roles',
-        path: PATH_DASHBOARD.permissionDenied,
-        icon: ICONS.menuItem,
-        roles: ['admin'],
-        caption: 'only_admin_can_see_this_item',
-      },
-      {
-        title: 'menu_level_1',
-        path: '#/dashboard/menu_level_1',
-        icon: ICONS.menuItem,
-        children: [
-          { title: 'menu_level_2a', path: '#/dashboard/menu_level_1/menu_level_2a' },
-          {
-            title: 'menu_level_2b',
-            path: '#/dashboard/menu_level_1/menu_level_2b',
-            children: [
-              {
-                title: 'menu_level_3a',
-                path: '#/dashboard/menu_level_1/menu_level_2b/menu_level_3a',
-              },
-              {
-                title: 'menu_level_3b',
-                path: '#/dashboard/menu_level_1/menu_level_2b/menu_level_3b',
-                children: [
-                  {
-                    title: 'menu_level_4a',
-                    path: '#/dashboard/menu_level_1/menu_level_2b/menu_level_3b/menu_level_4a',
-                  },
-                  {
-                    title: 'menu_level_4b',
-                    path: '#/dashboard/menu_level_1/menu_level_2b/menu_level_3b/menu_level_4b',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      { title: 'item_disabled', path: '#disabled', icon: ICONS.menuItem, disabled: true },
-      {
-        title: 'item_label',
-        path: '#label',
-        icon: ICONS.menuItem,
-        info: (
-          <Label color="info" startIcon={<Iconify icon="eva:email-fill" />}>
-            NEW
-          </Label>
-        ),
-      },
-      {
-        title: 'item_caption',
-        path: '#caption',
-        icon: ICONS.menuItem,
-        caption:
-          'Quisque malesuada placerat nisl. In hac habitasse platea dictumst. Cras id dui. Pellentesque commodo eros a enim. Morbi mollis tellus ac sapien.',
-      },
-      { title: 'item_external_link', path: 'https://www.google.com/', icon: ICONS.menuItem },
     ],
   },
 ];
