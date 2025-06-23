@@ -134,7 +134,7 @@ export default function HomeContainer() {
   };
 
   return (
-    <Page title="Ecommerce: Shop" mt={15} mb={10}>
+    <Page title="Ecommerce: Shop">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <HeaderBreadcrumbs
           heading="Shop"

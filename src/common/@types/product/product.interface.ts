@@ -191,3 +191,9 @@ export interface IProductListResponse {
   status: string;
   message: string;
 }
+
+export interface IProductDetailResponse {
+  metadata: IProductApiResponse;
+  status: string;
+  message: string;
+}

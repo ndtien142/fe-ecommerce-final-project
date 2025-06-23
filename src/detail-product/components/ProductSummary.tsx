@@ -1,0 +1,186 @@
+import { sentenceCase } from 'change-case';
+import { useNavigate } from 'react-router-dom';
+// form
+import { Controller, useForm } from 'react-hook-form';
+// @mui
+import { useTheme, styled } from '@mui/material/styles';
+import { Box, Stack, Button, Typography, IconButton } from '@mui/material';
+// utils
+import { fCurrency } from '../../common/utils/formatNumber';
+// @types
+import { IProductApiResponse } from '../../common/@types/product/product.interface';
+// components
+import Label from '../../common/components/Label';
+import Iconify from '../../common/components/Iconify';
+
+// ----------------------------------------------------------------------
+
+const RootStyle = styled('div')(({ theme }) => ({
+  padding: theme.spacing(3),
+  [theme.breakpoints.up(1368)]: {
+    padding: theme.spacing(5, 8),
+  },
+}));
+
+// ----------------------------------------------------------------------
+
+type Props = {
+  product: IProductApiResponse;
+};
+
+export default function ProductSummary({ product }: Props) {
+  const theme = useTheme();
+  const navigate = useNavigate();
+
+  const { id, name, price, priceSale, flag, inventoryType, stock, description } = product;
+
+  const available = stock;
+  const defaultValues = {
+    id,
+    name,
+    price: Number(price),
+    quantity: available < 1 ? 0 : 1,
+  };
+
+  const methods = useForm({
+    defaultValues,
+  });
+
+  const { watch, setValue, handleSubmit } = methods;
+  const values = watch();
+
+  const handleAddCart = async () => {
+    // Implement add to cart logic here
+    // e.g., dispatch(addCart({ ...values, subtotal: values.price * values.quantity }))
+  };
+
+  return (
+    <RootStyle>
+      <Label
+        variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+        color={inventoryType === 'in_stock' ? 'success' : 'error'}
+        sx={{ textTransform: 'uppercase' }}
+      >
+        {sentenceCase(inventoryType || '')}
+      </Label>
+
+      <Typography
+        variant="overline"
+        sx={{
+          mt: 2,
+          mb: 1,
+          display: 'block',
+          color: flag === ('sale' as typeof flag) ? 'error.main' : 'info.main',
+        }}
+      >
+        {flag}
+      </Typography>
+
+      <Typography variant="h5" paragraph>
+        {name}
+      </Typography>
+
+      <Typography variant="body2" sx={{ mb: 2 }}>
+        {description}
+      </Typography>
+
+      <Typography variant="h4" sx={{ mb: 3 }}>
+        {priceSale && (
+          <Box
+            component="span"
+            sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 1 }}
+          >
+            {fCurrency(Number(priceSale))}
+          </Box>
+        )}
+        {fCurrency(Number(price))}
+      </Typography>
+
+      <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
+        <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+          Số lượng
+        </Typography>
+        <Incrementer
+          quantity={values.quantity}
+          available={available}
+          onIncrementQuantity={() => setValue('quantity', values.quantity + 1)}
+          onDecrementQuantity={() => setValue('quantity', values.quantity - 1)}
+        />
+        <Typography variant="caption" component="div" sx={{ ml: 2, color: 'text.secondary' }}>
+          Còn lại: {available}
+        </Typography>
+      </Stack>
+
+      <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+        <Button
+          fullWidth
+          size="large"
+          color="warning"
+          variant="contained"
+          startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
+          onClick={handleAddCart}
+          sx={{ whiteSpace: 'nowrap' }}
+          disabled={available < 1}
+        >
+          Thêm vào giỏ hàng
+        </Button>
+        <Button fullWidth size="large" type="submit" variant="contained" disabled={available < 1}>
+          Mua ngay
+        </Button>
+      </Stack>
+    </RootStyle>
+  );
+}
+
+// ----------------------------------------------------------------------
+
+type IncrementerProps = {
+  quantity: number;
+  available: number;
+  onIncrementQuantity: VoidFunction;
+  onDecrementQuantity: VoidFunction;
+};
+
+function Incrementer({
+  available,
+  quantity,
+  onIncrementQuantity,
+  onDecrementQuantity,
+}: IncrementerProps) {
+  return (
+    <Box
+      sx={{
+        py: 0.5,
+        px: 0.75,
+        border: 1,
+        lineHeight: 0,
+        borderRadius: 1,
+        display: 'flex',
+        alignItems: 'center',
+        borderColor: 'grey.50032',
+      }}
+    >
+      <IconButton
+        size="small"
+        color="inherit"
+        disabled={quantity <= 1}
+        onClick={onDecrementQuantity}
+      >
+        <Iconify icon={'eva:minus-fill'} width={14} height={14} />
+      </IconButton>
+
+      <Typography variant="body2" component="span" sx={{ width: 40, textAlign: 'center' }}>
+        {quantity}
+      </Typography>
+
+      <IconButton
+        size="small"
+        color="inherit"
+        disabled={quantity >= available}
+        onClick={onIncrementQuantity}
+      >
+        <Iconify icon={'eva:plus-fill'} width={14} height={14} />
+      </IconButton>
+    </Box>
+  );
+}

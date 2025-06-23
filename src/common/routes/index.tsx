@@ -228,6 +228,7 @@ export default function Router() {
       children: [
         { element: <HomePage />, index: true },
         { path: 'shop', element: <Shop /> },
+        { path: 'product/:slug', element: <ProductDetails /> },
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
@@ -259,6 +260,9 @@ const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')))
 // PRODUCT
 const ProductCreate = Loadable(lazy(() => import('../../management-product/create')));
 const ProductList = Loadable(lazy(() => import('../../management-product/list')));
+
+// PRODUCT USER
+const ProductDetails = Loadable(lazy(() => import('../../detail-product')));
 
 // BRAND
 const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));

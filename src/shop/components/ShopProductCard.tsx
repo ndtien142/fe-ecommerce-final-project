@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../common/routes/paths';
+import { PATH_CUSTOMER } from '../../common/routes/paths';
 // utils
 import { fCurrency } from '../../common/utils/formatNumber';
 // @types
@@ -26,8 +26,7 @@ export default function ShopProductCard({ product }: Props) {
   const priceSale = product.priceSale ? Number(product.priceSale) : undefined;
   const status = product.flag || '';
   const colors: string[] = []; // Not in API, fallback to empty
-
-  const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
+  const linkTo = PATH_CUSTOMER.eCommerce.view(paramCase(product.slug));
 
   return (
     <Card>
