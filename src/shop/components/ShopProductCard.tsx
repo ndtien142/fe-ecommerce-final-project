@@ -7,7 +7,7 @@ import { PATH_DASHBOARD } from '../../common/routes/paths';
 // utils
 import { fCurrency } from '../../common/utils/formatNumber';
 // @types
-import { Product } from '../../common/@types/product';
+import { IProductApiResponse } from 'src/common/@types/product/product.interface';
 // components
 import Label from '../../common/components/Label';
 import Image from '../../common/components/Image';
@@ -16,11 +16,16 @@ import { ColorPreview } from '../../common/components/color-utils';
 // ----------------------------------------------------------------------
 
 type Props = {
-  product: Product;
+  product: IProductApiResponse;
 };
 
 export default function ShopProductCard({ product }: Props) {
-  const { name, cover, price, colors, status, priceSale } = product;
+  const name = product.name;
+  const cover = product.thumbnail || (product.images?.find((img) => img.isPrimary)?.imageUrl ?? '');
+  const price = Number(product.price);
+  const priceSale = product.priceSale ? Number(product.priceSale) : undefined;
+  const status = product.flag || '';
+  const colors: string[] = []; // Not in API, fallback to empty
 
   const linkTo = PATH_DASHBOARD.eCommerce.view(paramCase(name));
 
@@ -30,7 +35,7 @@ export default function ShopProductCard({ product }: Props) {
         {status && (
           <Label
             variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
+            color={status?.toString() === 'sale' ? 'error' : 'info'}
             sx={{
               top: 16,
               right: 16,
@@ -57,16 +62,19 @@ export default function ShopProductCard({ product }: Props) {
           <ColorPreview colors={colors} />
 
           <Stack direction="row" spacing={0.5}>
-            {priceSale && (
-              <Typography
-                component="span"
-                sx={{ color: 'text.disabled', textDecoration: 'line-through' }}
-              >
-                {fCurrency(priceSale)}
-              </Typography>
+            {priceSale ? (
+              <>
+                <Typography
+                  component="span"
+                  sx={{ color: 'text.disabled', textDecoration: 'line-through' }}
+                >
+                  {fCurrency(price)}
+                </Typography>
+                <Typography variant="subtitle1">{fCurrency(priceSale)}</Typography>
+              </>
+            ) : (
+              <Typography variant="subtitle1">{fCurrency(price)}</Typography>
             )}
-
-            <Typography variant="subtitle1">{fCurrency(price)}</Typography>
           </Stack>
         </Stack>
       </Stack>

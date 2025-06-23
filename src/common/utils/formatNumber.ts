@@ -3,7 +3,9 @@ import numeral from 'numeral';
 // ----------------------------------------------------------------------
 
 export function fCurrency(number: string | number) {
-  return numeral(number).format(Number.isInteger(number) ? '$0,0' : '$0,0.00');
+  // Format as Vietnamese Dong (₫)
+  const value = typeof number === 'string' ? Number(number) : number;
+  return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 }
 
 export function fPercent(number: number) {

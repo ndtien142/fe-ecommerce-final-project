@@ -10,9 +10,14 @@ import { getProducts, filterProducts, setProducts } from '../common/redux/slices
 // routes
 import { PATH_CUSTOMER } from '../common/routes/paths';
 // @types
-import { Product, ProductFilter } from '../common/@types/product';
+import {
+  // Product, // remove this
+  ProductFilter,
+  IProductApiResponse,
+} from '../common/@types/product/product.interface';
 // hooks
 import useSettings from '../common/hooks/useSettings';
+
 // components
 import Page from '../common/components/Page';
 import HeaderBreadcrumbs from '../common/components/HeaderBreadcrumbs';
@@ -26,7 +31,7 @@ import {
   ShopProductSearch,
 } from './components';
 import CartWidget from '../common/sections/@dashboard/e-commerce/CartWidget';
-import { _products } from '../common/_mock/product/_product';
+import { useGetListProduct } from 'src/management-product/common/hooks/useGetListProduct';
 
 // ----------------------------------------------------------------------
 
@@ -37,8 +42,15 @@ export default function HomeContainer() {
 
   const [openFilter, setOpenFilter] = useState(false);
 
-  const { products, sortBy, filters } = useSelector((state) => state.product);
+  // Use the hook to get products
+  const { data, isLoading } = useGetListProduct({});
 
+  // Use API response directly for ShopProductList and filtering
+  const products: IProductApiResponse[] = data?.metadata?.items || [];
+
+  const { sortBy, filters } = useSelector((state) => state.product);
+
+  // Filter using IProductApiResponse[]
   const filteredProducts = applyFilter(products, sortBy, filters);
 
   const defaultValues = {
@@ -70,10 +82,9 @@ export default function HomeContainer() {
     values.category === 'All';
 
   useEffect(() => {
-    dispatch(setProducts(_products));
-    // Optionally, you can remove the line below if you don't want to call the API
-    // dispatch(getProducts());
-  }, [dispatch]);
+    dispatch(setProducts(products));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, data]);
 
   useEffect(() => {
     dispatch(filterProducts(values));
@@ -183,7 +194,7 @@ export default function HomeContainer() {
           )}
         </Stack>
 
-        <ShopProductList products={filteredProducts} loading={!products.length && isDefault} />
+        <ShopProductList products={filteredProducts} loading={isLoading} />
         <CartWidget />
       </Container>
     </Page>
@@ -192,50 +203,53 @@ export default function HomeContainer() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter(products: Product[], sortBy: string | null, filters: ProductFilter) {
+// Update filter to use IProductApiResponse
+function applyFilter(
+  products: IProductApiResponse[],
+  sortBy: string | null,
+  filters: ProductFilter
+) {
   // SORT BY
   if (sortBy === 'featured') {
     products = orderBy(products, ['sold'], ['desc']);
   }
   if (sortBy === 'newest') {
-    products = orderBy(products, ['createdAt'], ['desc']);
+    products = orderBy(products, ['createTime'], ['desc']);
   }
   if (sortBy === 'priceDesc') {
-    products = orderBy(products, ['price'], ['desc']);
+    products = orderBy(products, [(p) => Number(p.price)], ['desc']);
   }
   if (sortBy === 'priceAsc') {
-    products = orderBy(products, ['price'], ['asc']);
+    products = orderBy(products, [(p) => Number(p.price)], ['asc']);
   }
   // FILTER PRODUCTS
   if (filters.gender.length > 0) {
-    products = products.filter((product) => filters.gender.includes(product.gender));
+    products = products.filter((product) => {
+      // No gender in API, always false
+      return false;
+    });
   }
   if (filters.category !== 'All') {
-    products = products.filter((product) => product.category === filters.category);
+    products = products.filter(
+      (product) =>
+        product.categories && product.categories.some((cat) => cat.name === filters.category)
+    );
   }
   if (filters.colors.length > 0) {
-    products = products.filter((product) =>
-      product.colors.some((color) => filters.colors.includes(color))
-    );
+    products = products.filter(() => false); // No colors in API
   }
 
   const min = filters.priceRange[0];
   const max = filters.priceRange[1];
 
   if (min !== 0 || max !== 200) {
-    products = products.filter((product) => product.price >= min && product.price <= max);
+    products = products.filter(
+      (product) => Number(product.price) >= min && Number(product.price) <= max
+    );
   }
 
   if (filters.rating) {
-    products = products.filter((product) => {
-      const convertRating = (value: string) => {
-        if (value === 'up4Star') return 4;
-        if (value === 'up3Star') return 3;
-        if (value === 'up2Star') return 2;
-        return 1;
-      };
-      return product.totalRating > convertRating(filters.rating);
-    });
+    products = products.filter(() => false); // No rating in API
   }
   return products;
 }

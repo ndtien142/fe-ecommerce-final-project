@@ -1,7 +1,7 @@
 // @mui
 import { Box } from '@mui/material';
 // @type
-import { Product } from '../../common/@types/product';
+import { IProductApiResponse } from 'src/common/@types/product/product.interface';
 // components
 import { SkeletonProductItem } from '../../common/components/skeleton';
 //
@@ -10,7 +10,7 @@ import ShopProductCard from './ShopProductCard';
 // ----------------------------------------------------------------------
 
 type Props = {
-  products: Product[];
+  products: IProductApiResponse[];
   loading: boolean;
 };
 
