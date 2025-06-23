@@ -1,10 +1,10 @@
 // AUTH API CONSTANTS
-export const API_LOGIN = '/login';
-export const API_CUSTOMER_REGISTER = '/customer/signup';
-export const API_LOGOUT = '/logout';
-export const API_REFRESH_TOKEN = '/refresh-token';
-export const API_PROFILE = '/profile';
-export const API_POLICIES = '/policies';
+export const API_LOGIN = 'auth/login';
+export const API_CUSTOMER_REGISTER = 'auth/customer/signup';
+export const API_LOGOUT = 'auth/logout';
+export const API_REFRESH_TOKEN = 'auth/refresh-token';
+export const API_PROFILE = 'auth/profile';
+export const API_POLICIES = 'auth/policies';
 
 // ROLE API CONSTANTS
 export const API_ROLE = '/role';

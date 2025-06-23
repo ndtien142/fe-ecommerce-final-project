@@ -16,6 +16,22 @@ const axiosInstance = axios.create({
 export const axiosInstance2 = axios.create({
   baseURL: HOST_API,
 });
+const axiosInstance3 = axios.create({
+  baseURL: HOST_API,
+  paramsSerializer: (param) => toQueryString(param),
+});
+
+axiosInstance3.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    const { response } = error;
+    if (response?.status === 4001) {
+      store.dispatch(setIsExpired(true));
+      window.location.href = PATH_AUTH.login;
+    }
+    return Promise.reject(error);
+  }
+);
 
 axiosInstance.interceptors.response.use(
   (response) => response.data,
@@ -60,5 +76,7 @@ axiosInstance.interceptors.request.use(async (config) => {
     ...config,
   };
 });
+
+export { axiosInstance3 };
 
 export default axiosInstance;

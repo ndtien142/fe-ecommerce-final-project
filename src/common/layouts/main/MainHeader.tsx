@@ -74,7 +74,9 @@ export default function MainHeader() {
 
   // Update menuData when data changes
   useEffect(() => {
+    console.log('Fetched categories:', data);
     if (data && data.metadata) {
+      console.log('Mapping categories to menu data...');
       setMenuData([
         {
           title: 'Trang chủ',
@@ -108,6 +110,8 @@ export default function MainHeader() {
       };
     });
   }
+
+  console.log('Menu Data:', menuData);
 
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
