@@ -26,7 +26,7 @@ import {
   ProductDetailsReview,
   ProductDetailsCarousel,
 } from '../../sections/@dashboard/e-commerce/product-details';
-import CartWidget from '../../sections/@dashboard/e-commerce/CartWidget';
+import CartWidget from 'src/common/components/CartWidget';
 
 // ----------------------------------------------------------------------
 

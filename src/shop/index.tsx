@@ -30,8 +30,8 @@ import {
   ShopFilterSidebar,
   ShopProductSearch,
 } from './components';
-import CartWidget from '../common/sections/@dashboard/e-commerce/CartWidget';
 import { useGetListProduct } from 'src/management-product/common/hooks/useGetListProduct';
+import CartWidget from 'src/common/components/CartWidget';
 
 // ----------------------------------------------------------------------
 
