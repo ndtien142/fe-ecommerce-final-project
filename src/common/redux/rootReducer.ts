@@ -12,6 +12,7 @@ import authReducer from 'src/auth/login/auth.slice';
 import loginReducer from 'src/auth/login/login.slice';
 // Categories
 import categoryReducer from 'src/management-categories/common/category.slice';
+import checkoutReducer from 'src/checkout/checkout.slice';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   login: loginReducer,
   // Categories
   categories: categoryReducer,
+  checkout: checkoutReducer,
   // Other slices
   mail: mailReducer,
   chat: chatReducer,

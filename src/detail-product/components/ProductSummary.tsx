@@ -12,6 +12,9 @@ import { IProductApiResponse } from '../../common/@types/product/product.interfa
 // components
 import Label from '../../common/components/Label';
 import Iconify from '../../common/components/Iconify';
+import { useAddToCart } from '../hooks/useAddToCart';
+import { default as useMessage } from 'src/common/hooks/useMessage';
+import { PATH_CUSTOMER } from 'src/common/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -28,9 +31,20 @@ type Props = {
   product: IProductApiResponse;
 };
 
+type FormValues = {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
 export default function ProductSummary({ product }: Props) {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
+
+  const { mutate } = useAddToCart();
 
   const { id, name, price, priceSale, flag, inventoryType, stock, description } = product;
 
@@ -42,16 +56,50 @@ export default function ProductSummary({ product }: Props) {
     quantity: available < 1 ? 0 : 1,
   };
 
-  const methods = useForm({
+  const methods = useForm<FormValues>({
     defaultValues,
   });
 
   const { watch, setValue, handleSubmit } = methods;
   const values = watch();
 
-  const handleAddCart = async () => {
-    // Implement add to cart logic here
-    // e.g., dispatch(addCart({ ...values, subtotal: values.price * values.quantity }))
+  const handleAddCart = async (data: FormValues) => {
+    console.log('Adding to cart:', data);
+    mutate(
+      {
+        productId: String(data.id),
+        quantity: data.quantity,
+        price: data.price,
+      },
+      {
+        onError: (error: any) => {
+          showErrorSnackbar(error.message || 'Không thể thêm sản phẩm vào giỏ hàng');
+        },
+        onSuccess: () => {
+          showSuccessSnackbar('Sản phẩm đã được thêm vào giỏ hàng');
+        },
+      }
+    );
+  };
+
+  const handleBuyNow = async (data: FormValues) => {
+    console.log('Buy now:', data);
+    mutate(
+      {
+        productId: String(data.id),
+        quantity: data.quantity,
+        price: data.price,
+      },
+      {
+        onError: (error: any) => {
+          showErrorSnackbar(error.message || 'Không thể thêm sản phẩm vào giỏ hàng');
+        },
+        onSuccess: () => {
+          showSuccessSnackbar('Sản phẩm đã được thêm vào giỏ hàng');
+          navigate(PATH_CUSTOMER.eCommerce.checkout);
+        },
+      }
+    );
   };
 
   return (
@@ -111,20 +159,27 @@ export default function ProductSummary({ product }: Props) {
         </Typography>
       </Stack>
 
-      <Stack direction="row" spacing={2} sx={{ mt: 5 }}>
+      <Stack direction="column" spacing={2} sx={{ mt: 5 }}>
         <Button
           fullWidth
           size="large"
           color="warning"
           variant="contained"
           startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
-          onClick={handleAddCart}
+          onClick={handleSubmit(handleAddCart)}
           sx={{ whiteSpace: 'nowrap' }}
           disabled={available < 1}
         >
           Thêm vào giỏ hàng
         </Button>
-        <Button fullWidth size="large" type="submit" variant="contained" disabled={available < 1}>
+        <Button
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          disabled={available < 1}
+          onClick={handleSubmit(handleBuyNow)}
+        >
           Mua ngay
         </Button>
       </Stack>
