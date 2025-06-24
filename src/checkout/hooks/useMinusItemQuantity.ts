@@ -8,6 +8,7 @@ export function useMinusItemQuantity() {
   return useMutation(minusItemQuantity, {
     onSuccess: () => {
       queryClient.invalidateQueries(QUERY_KEYS.CART);
+      queryClient.invalidateQueries(QUERY_KEYS.CART_COUNT);
     },
   });
 }

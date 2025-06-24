@@ -8,6 +8,8 @@ interface CheckoutState {
   addressId: number | null;
   cart: ICart | null;
   address: IAddress | null;
+  paymentMethodId: number | null; // Optional field for payment method
+  shippingMethodId: number | null; // Optional field for shipping method
 }
 
 const initialState: CheckoutState = {
@@ -16,6 +18,8 @@ const initialState: CheckoutState = {
   addressId: null,
   cart: null,
   address: null,
+  paymentMethodId: null,
+  shippingMethodId: null,
 };
 
 const checkoutSlice = createSlice({
@@ -45,12 +49,21 @@ const checkoutSlice = createSlice({
       state.address = action.payload;
       state.addressId = action.payload ? action.payload.id : null;
     },
+    setPaymentMethodId(state, action: PayloadAction<number | null>) {
+      state.paymentMethodId = action.payload;
+    },
+    setShippingMethodId(state, action: PayloadAction<number | null>) {
+      state.shippingMethodId = action.payload;
+    },
+    // Reset checkout state to initial values
     resetCheckout(state) {
       state.activeStep = 0;
       state.cartId = null;
       state.addressId = null;
       state.cart = null;
       state.address = null;
+      state.paymentMethodId = null;
+      state.shippingMethodId = null;
     },
   },
 });
@@ -64,6 +77,8 @@ export const {
   setCart,
   setAddress,
   resetCheckout,
+  setPaymentMethodId,
+  setShippingMethodId,
 } = checkoutSlice.actions;
 
 export default checkoutSlice.reducer;

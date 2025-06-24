@@ -34,3 +34,12 @@ export const API_CART = '/cart';
 
 // ADDRESS API CONSTANTS
 export const API_ADDRESS = '/address';
+
+// SHIPPING API CONSTANTS
+export const API_SHIPPING_METHOD = '/shipping-method';
+
+// PAYMENT API CONSTANTS
+export const API_PAYMENT_METHOD = '/payment-method';
+
+// ORDER API CONSTANTS
+export const API_ORDER = '/order';

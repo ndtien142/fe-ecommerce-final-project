@@ -19,6 +19,7 @@ import ProductDetailsCarousel from './components/ProductDetailsCarousel';
 // types
 import { IProductApiResponse } from '../common/@types/product/product.interface';
 import { HEADER } from 'src/config';
+import CartWidget from 'src/common/components/CartWidget';
 
 const PRODUCT_DESCRIPTION = [
   {
@@ -86,6 +87,8 @@ const DetailProduct = () => {
               { name: sentenceCase(slug) },
             ]}
           />
+
+          <CartWidget />
 
           {isLoading && <SkeletonProductItem />}
           {isError && <Typography variant="h6">404 Product not found</Typography>}

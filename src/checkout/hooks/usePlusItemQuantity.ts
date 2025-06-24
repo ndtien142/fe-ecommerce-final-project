@@ -8,6 +8,7 @@ export function usePlusItemQuantity() {
   return useMutation(plusItemQuantity, {
     onSuccess: () => {
       queryClient.invalidateQueries(QUERY_KEYS.CART);
+      queryClient.invalidateQueries(QUERY_KEYS.CART_COUNT);
     },
   });
 }

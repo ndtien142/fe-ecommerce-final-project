@@ -11,9 +11,9 @@ import useIsMountedRef from '../../common/hooks/useIsMountedRef';
 // utils
 import axios from '../../common/utils/axios';
 // routes
-import { PATH_DASHBOARD } from '../../common/routes/paths';
+import { PATH_CUSTOMER } from '../../common/routes/paths';
 // @types
-import { Product } from '../../common/@types/product';
+import { IProductApiResponse } from '../../common/@types/product/product.interface';
 // components
 import Image from '../../common/components/Image';
 import Iconify from '../../common/components/Iconify';
@@ -35,7 +35,7 @@ export default function ShopProductSearch() {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<IProductApiResponse[]>([]);
 
   const handleChangeSearch = async (value: string) => {
     try {
@@ -54,13 +54,13 @@ export default function ShopProductSearch() {
     }
   };
 
-  const handleClick = (name: string) => {
-    navigate(PATH_DASHBOARD.eCommerce.view(paramCase(name)));
+  const handleClick = (slug: string) => {
+    navigate(PATH_CUSTOMER.eCommerce.view(paramCase(slug)));
   };
 
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleClick(searchQuery);
+    if (event.key === 'Enter' && searchResults.length > 0) {
+      handleClick(searchResults[0].slug);
     }
   };
 
@@ -72,14 +72,14 @@ export default function ShopProductSearch() {
       PopperComponent={PopperStyle}
       options={searchResults}
       onInputChange={(event, value) => handleChangeSearch(value)}
-      getOptionLabel={(product: Product) => product.name}
+      getOptionLabel={(product: IProductApiResponse) => product.name}
       noOptionsText={<SearchNotFound searchQuery={searchQuery} />}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <InputStyle
           {...params}
           stretchStart={200}
-          placeholder="Search product..."
+          placeholder="Tìm kiếm sản phẩm..."
           onKeyUp={handleKeyUp}
           InputProps={{
             ...params.InputProps,
@@ -95,18 +95,18 @@ export default function ShopProductSearch() {
         />
       )}
       renderOption={(props, product, { inputValue }) => {
-        const { name, cover } = product;
+        const { name, thumbnail } = product;
         const matches = match(name, inputValue);
         const parts = parse(name, matches);
 
         return (
           <li {...props}>
             <Image
-              alt={cover}
-              src={cover}
+              alt={name}
+              src={thumbnail ?? ''}
               sx={{ width: 48, height: 48, borderRadius: 1, flexShrink: 0, mr: 1.5 }}
             />
-            <Link underline="none" onClick={() => handleClick(name)}>
+            <Link underline="none" onClick={() => handleClick(product.slug)}>
               {parts.map((part, index) => (
                 <Typography
                   key={index}

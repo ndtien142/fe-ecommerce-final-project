@@ -5,9 +5,19 @@ import {
   IParamsChangeItemQuantity,
   IParamsRemoveItemFromCart,
 } from 'src/common/@types/cart/cart.interface';
-import { API_ADDRESS, API_CART } from 'src/common/constant/api.constant';
+import { IFormCreateNewOrder } from 'src/common/@types/order/order.interface';
+import { IPaymentMethodResponse } from 'src/common/@types/payment/payment.interface';
+import { IShippingMethodResponse } from 'src/common/@types/shipping/shipping.interface';
+import {
+  API_ADDRESS,
+  API_CART,
+  API_ORDER,
+  API_PAYMENT_METHOD,
+  API_SHIPPING_METHOD,
+} from 'src/common/constant/api.constant';
 import axiosInstance from 'src/common/utils/axios';
 
+// CART
 export const getCart = () => axiosInstance.get<unknown, ICartResponse>(`${API_CART}/user`);
 
 export const addToCart = (data: IParamsAddToCart) => axiosInstance.patch(`${API_CART}/add`, data);
@@ -25,3 +35,14 @@ export const removeItemFromCart = (data: IParamsRemoveItemFromCart) =>
 export const getAddress = () => axiosInstance.get<unknown, IAddressResponse>(`${API_ADDRESS}/user`);
 
 export const addAddress = (data: IAddressForm) => axiosInstance.post(`${API_ADDRESS}`, data);
+
+// SHIPPING
+export const getShippingMethod = () =>
+  axiosInstance.get<unknown, IShippingMethodResponse>(`${API_SHIPPING_METHOD}`);
+
+// PAYMENT
+export const getPaymentMethod = () =>
+  axiosInstance.get<unknown, IPaymentMethodResponse>(`${API_PAYMENT_METHOD}`);
+
+// ORDER
+export const createOrder = (data: IFormCreateNewOrder) => axiosInstance.post(`${API_ORDER}`, data);

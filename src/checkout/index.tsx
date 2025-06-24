@@ -13,7 +13,8 @@ import CheckoutCart from './components/cart/CheckoutCart';
 import { HEADER } from 'src/config';
 import { useDispatch, useSelector } from '../common/redux/store';
 import CheckoutAndBillingAddress from './components/billing-address/CheckoutAndBillingAddress';
-import { CheckoutOrderComplete } from 'src/common/sections/@dashboard/e-commerce/checkout';
+import CheckoutPayment from './components/payment/CheckoutPayment';
+import CheckoutOrderComplete from './components/CheckoutOrderComplete';
 
 // ----------------------------------------------------------------------
 
@@ -129,8 +130,7 @@ const CheckoutContainer = () => {
             <>
               {activeStep === 0 && <CheckoutCart />}
               {activeStep === 1 && <CheckoutAndBillingAddress />}
-              {/* {activeStep === 2 && billing && <CheckoutPayment />} */}
-              {activeStep === 2 && <div>hehe</div>}
+              {activeStep === 2 && <CheckoutPayment />}
             </>
           ) : (
             <CheckoutOrderComplete open={isComplete} />

@@ -10,6 +10,8 @@ import Iconify from 'src/common/components/Iconify';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axios';
 import { API_CART } from '../constant/api.constant';
+import { useQuery } from 'react-query';
+import { QUERY_KEYS } from '../constant/queryKeys.constant';
 
 // ----------------------------------------------------------------------
 
@@ -43,13 +45,14 @@ interface ICartItemCount {
 
 export default function CartWidget() {
   const [totalItems, setTotalItems] = useState<number>();
+  const { data } = useQuery([QUERY_KEYS.CART_COUNT], async () => {
+    const response = await axiosInstance.get<unknown, ICartItemCount>(`${API_CART}/count`);
+    return response.metadata ?? 0;
+  });
+
   useEffect(() => {
-    async function getItemCount() {
-      const response = await axiosInstance.get<unknown, ICartItemCount>(`${API_CART}/count`);
-      setTotalItems(response.metadata ?? 0);
-    }
-    getItemCount();
-  }, []);
+    setTotalItems(data);
+  }, [data]);
 
   return (
     <RootStyle to={PATH_CUSTOMER.eCommerce.checkout}>
