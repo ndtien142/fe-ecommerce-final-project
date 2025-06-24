@@ -91,11 +91,11 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep }: Pr
     formState: { isSubmitting },
   } = methods;
 
-  const addNewAddress = useAddNewAddress();
+  const { mutate, isLoading } = useAddNewAddress();
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await addNewAddress.mutateAsync(data);
+      await mutate(data);
       showSuccessSnackbar('Thêm địa chỉ mới thành công!');
       onNextStep();
     } catch (error) {
@@ -144,7 +144,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep }: Pr
           <LoadingButton
             type="submit"
             variant="contained"
-            loading={methods.formState.isSubmitting || addNewAddress.isLoading}
+            loading={methods.formState.isSubmitting || isLoading}
           >
             Giao đến địa chỉ này
           </LoadingButton>

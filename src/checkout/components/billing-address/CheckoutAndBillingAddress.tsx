@@ -54,7 +54,10 @@ export default function CheckoutAndBillingAddress() {
 
   // Fetch addresses from API
   const { data } = useGetListAddress();
-  const addressList = data?.metadata || [];
+  // Sort addressList: default addresses first
+  const addressList = (data?.metadata || [])
+    .slice()
+    .sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
 
   return (
     <>
