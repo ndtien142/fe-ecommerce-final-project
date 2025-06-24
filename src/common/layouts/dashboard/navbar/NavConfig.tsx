@@ -44,7 +44,8 @@ const navConfig = [
     items: [
       { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'tài khoản', path: PATH_DASHBOARD.general.account, icon: ICONS.user },
-      { title: 'giỏ hàng', path: PATH_DASHBOARD.general.cart, icon: ICONS.cart },
+      { title: 'đơn hàng của tôi', path: PATH_DASHBOARD.general.orders.root, icon: ICONS.cart },
+      // { title: 'giỏ hàng', path: PATH_DASHBOARD.general.cart, icon: ICONS.cart },
     ],
   },
 

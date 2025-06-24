@@ -95,6 +95,15 @@ export default function Router() {
         { path: 'account', element: <UserAccount /> },
 
         {
+          path: 'orders',
+          children: [
+            { element: <Navigate to="/dashboard/orders/list" replace />, index: true },
+            { path: 'list', element: <ListOrder /> },
+            // { path: ':id', element: <OrderDetails /> },
+          ],
+        },
+
+        {
           path: 'product',
           children: [
             { element: <Navigate to="/dashboard/product/list" replace />, index: true },
@@ -228,6 +237,7 @@ export default function Router() {
       children: [
         { element: <HomePage />, index: true },
         { path: 'shop', element: <Shop /> },
+
         { path: 'product/:slug', element: <ProductDetails /> },
         { path: 'checkout', element: <EcommerceCheckout /> },
         { path: 'about-us', element: <About /> },
@@ -264,6 +274,9 @@ const ProductList = Loadable(lazy(() => import('../../management-product/list'))
 
 // PRODUCT USER
 const ProductDetails = Loadable(lazy(() => import('../../detail-product')));
+
+// ORDER USER
+const ListOrder = Loadable(lazy(() => import('../../order/list')));
 
 // BRAND
 const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));
