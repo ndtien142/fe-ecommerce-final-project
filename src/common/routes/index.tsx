@@ -204,13 +204,13 @@ export default function Router() {
           ],
         },
         {
-          path: 'invoice',
+          path: 'management-order',
           children: [
-            { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
-            { path: 'list', element: <InvoiceList /> },
-            { path: ':id', element: <InvoiceDetails /> },
-            { path: ':id/edit', element: <InvoiceEdit /> },
-            { path: 'new', element: <InvoiceCreate /> },
+            { element: <Navigate to="/dashboard/management-order/list" replace />, index: true },
+            { path: 'list', element: <ManagementOrderList /> },
+            { path: ':id', element: <ManagementOrderDetails /> },
+            // { path: ':id/edit', element: <OrderEdit /> },
+            // { path: 'new', element: <OrderCreate /> },
           ],
         },
       ],
@@ -291,11 +291,12 @@ const CategoryNew = Loadable(lazy(() => import('../../management-categories/crea
 // BILLING AND CHECKOUT
 const EcommerceCheckout = Loadable(lazy(() => import('../../checkout')));
 
-// INVOICE
-const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));
-const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDetails')));
-const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
-const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
+// Management Order
+const ManagementOrderList = Loadable(lazy(() => import('../../management-order/list')));
+const ManagementOrderDetails = Loadable(lazy(() => import('../../management-order/detail')));
+// const OrderDetails = Loadable(lazy(() => import('../pages/dashboard/OrderDetails')));
+// const OrderCreate = Loadable(lazy(() => import('../pages/dashboard/OrderCreate')));
+// const OrderEdit = Loadable(lazy(() => import('../pages/dashboard/OrderEdit')));
 
 // USER
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));

@@ -104,14 +104,9 @@ const navConfig = [
       // INVOICE
       {
         title: 'Đơn đặt hàng',
-        path: PATH_DASHBOARD.invoice.root,
+        path: PATH_DASHBOARD.order.root,
         icon: ICONS.invoice,
-        children: [
-          { title: 'list', path: PATH_DASHBOARD.invoice.list },
-          { title: 'details', path: PATH_DASHBOARD.invoice.demoView },
-          { title: 'create', path: PATH_DASHBOARD.invoice.new },
-          { title: 'edit', path: PATH_DASHBOARD.invoice.demoEdit },
-        ],
+        children: [{ title: 'list', path: PATH_DASHBOARD.order.list }],
       },
 
       // BLOG
