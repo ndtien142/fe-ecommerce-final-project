@@ -79,6 +79,16 @@ export default function OrderTableRow({
     (status === 'cancelled' && 'error') ||
     'default';
 
+  // Status translation
+  const statusLabel: Record<string, string> = {
+    pending_confirmation: 'Chờ xác nhận',
+    pending_pickup: 'Chờ lấy hàng',
+    shipping: 'Đang giao',
+    delivered: 'Đã giao',
+    returned: 'Trả hàng',
+    cancelled: 'Đã hủy',
+  };
+
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -144,7 +154,7 @@ export default function OrderTableRow({
             color={statusColor}
             sx={{ textTransform: 'capitalize' }}
           >
-            {status}
+            {statusLabel[status] || status}
           </Label>
           {shippingMethodName && (
             <Typography variant="caption" color="text.secondary" noWrap>
