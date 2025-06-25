@@ -52,17 +52,26 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
   const userRole = user?.role?.name;
 
   // Filter navConfig by role
-  const filteredNavConfig = navConfig.filter((section) => {
-    // Example: Only show "Quản lý sản phẩm" and "management" for admin
-    if (
-      (section.subheader === 'Quản lý sản phẩm' || section.subheader === 'management') &&
-      userRole !== 'admin'
-    ) {
-      return false;
-    }
-    // Add more logic here for other roles if needed
-    return true;
-  });
+  const filteredNavConfig = navConfig
+    .map((section) => {
+      // Only show "Quản lý sản phẩm" and "management" for admin
+      if (
+        (section.subheader === 'Quản lý sản phẩm' || section.subheader === 'management') &&
+        userRole !== 'admin'
+      ) {
+        return undefined;
+      }
+      // For "general", remove "đơn hàng của tôi" for non-customer
+      if (section.subheader === 'general' && userRole !== 'customer') {
+        return {
+          ...section,
+          items: section.items.filter((item) => item.title !== 'đơn hàng của tôi'),
+        };
+      }
+      // Otherwise, keep section as is
+      return section;
+    })
+    .filter((section): section is { subheader: string; items: any[] } => !!section);
 
   useEffect(() => {
     if (isOpenSidebar) {

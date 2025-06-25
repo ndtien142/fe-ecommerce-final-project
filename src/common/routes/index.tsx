@@ -98,8 +98,22 @@ export default function Router() {
           path: 'orders',
           children: [
             { element: <Navigate to="/dashboard/orders/list" replace />, index: true },
-            { path: 'list', element: <ListOrder /> },
-            { path: ':id', element: <OrderDetails /> },
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['customer']}>
+                  <ListOrder />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: ':id',
+              element: (
+                <RoleGuard allowedRoles={['customer']}>
+                  <OrderDetails />
+                </RoleGuard>
+              ),
+            },
           ],
         },
 
@@ -181,34 +195,61 @@ export default function Router() {
                 </RoleGuard>
               ),
             },
-            // { path: ':name', element: <CategoryDetails /> },
           ],
         },
 
         {
-          path: 'e-commerce',
-          children: [
-            { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
-          ],
-        },
-        {
           path: 'user',
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'cards', element: <UserCards /> },
-            { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
-            { path: ':name/edit', element: <UserCreate /> },
             { path: 'account', element: <UserAccount /> },
+
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <UserList />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: 'new',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <UserCreate />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: ':name/edit',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <UserCreate />
+                </RoleGuard>
+              ),
+            },
           ],
         },
         {
           path: 'management-order',
           children: [
             { element: <Navigate to="/dashboard/management-order/list" replace />, index: true },
-            { path: 'list', element: <ManagementOrderList /> },
-            { path: ':id', element: <ManagementOrderDetails /> },
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <ManagementOrderList />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: ':id',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <ManagementOrderDetails />
+                </RoleGuard>
+              ),
+            },
             // { path: ':id/edit', element: <OrderEdit /> },
             // { path: 'new', element: <OrderCreate /> },
           ],
@@ -239,7 +280,14 @@ export default function Router() {
         { path: 'shop', element: <Shop /> },
 
         { path: 'product/:slug', element: <ProductDetails /> },
-        { path: 'checkout', element: <EcommerceCheckout /> },
+        {
+          path: 'checkout',
+          element: (
+            <RoleGuard allowedRoles={['customer']}>
+              <EcommerceCheckout />
+            </RoleGuard>
+          ),
+        },
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
