@@ -87,6 +87,12 @@ export interface IOrderListResponse {
   };
 }
 
+export interface IOrderResponse {
+  message: string;
+  status: string;
+  metadata: IOrder;
+}
+
 export interface IOrderParams {
   page?: number;
   limit?: number;

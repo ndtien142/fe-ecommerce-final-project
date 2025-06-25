@@ -101,7 +101,6 @@ export const PATH_DASHBOARD = {
       list: path(ROOTS_DASHBOARD, '/orders/list'),
       view: (id: string) => path(ROOTS_DASHBOARD, `/orders/${id}`),
       edit: (id: string) => path(ROOTS_DASHBOARD, `/orders/${id}/edit`),
-      demoView: path(ROOTS_DASHBOARD, '/orders/1'),
     },
     account: path(ROOTS_DASHBOARD, '/account'),
     settings: path(ROOTS_DASHBOARD, '/settings'),
