@@ -8,12 +8,10 @@ import { API_ORDER } from 'src/common/constant/api.constant';
 import axiosInstance from 'src/common/utils/axios';
 
 export const getListOrder = async (params: IOrderParams) =>
-  axiosInstance.get<unknown, IOrderListResponse>(`${API_ORDER}/user`, { params });
+  axiosInstance.get<unknown, IOrderListResponse>(`${API_ORDER}/admin`, { params });
 
 export const getOrderAnalytics = () =>
-  axiosInstance.get<unknown, IOrderAnalyticsResponse>(
-    `${API_ORDER}/user/analytics/count-by-status`
-  );
+  axiosInstance.get<unknown, IOrderAnalyticsResponse>(`${API_ORDER}/admin/count-by-status`);
 
 export const getOrderById = (id: number) =>
-  axiosInstance.get<unknown, IOrderResponse>(`${API_ORDER}/user/${id}`);
+  axiosInstance.get<unknown, IOrderResponse>(`${API_ORDER}/admin/${id}`);
