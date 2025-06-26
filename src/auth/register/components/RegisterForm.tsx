@@ -15,6 +15,8 @@ import Iconify from 'src/common/components/Iconify';
 import { FormProvider, RHFTextField } from 'src/common/components/hook-form';
 import { RegisterFormValues } from '../register.interface';
 import { useCreateNewAccount } from '../hooks/useCreateNewAccount';
+import { useNavigate } from 'react-router';
+import { PATH_AUTH } from 'src/common/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -23,10 +25,14 @@ export default function RegisterForm() {
 
   const isMountedRef = useIsMountedRef();
 
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
-    username: Yup.string().required('Tên đăng nhập là bắt buộc'),
+    username: Yup.string()
+      .required('Tên đăng nhập là bắt buộc')
+      .min(8, 'Tên đăng nhập phải có ít nhất 8 ký tự'),
     dateOfBirth: Yup.string().required('Ngày sinh là bắt buộc'),
     firstName: Yup.string().required('Họ là bắt buộc'),
     lastName: Yup.string().required('Tên là bắt buộc'),
@@ -63,6 +69,7 @@ export default function RegisterForm() {
     onSuccess: () => {
       showSuccessSnackbar('Tạo tài khoản thành công!');
       reset();
+      navigate(PATH_AUTH.login);
     },
     onError: (error: any) => {
       showErrorSnackbar(error?.message || 'Tạo tài khoản thất bại!');
