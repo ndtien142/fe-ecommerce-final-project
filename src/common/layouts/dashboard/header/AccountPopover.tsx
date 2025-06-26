@@ -20,12 +20,12 @@ import { setLogout } from 'src/auth/login/auth.slice';
 
 const MENU_OPTIONS = [
   {
-    label: 'Home',
+    label: 'Trang chủ',
     linkTo: '/',
   },
   {
-    label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.account,
+    label: 'Thông tin cá nhân',
+    linkTo: PATH_DASHBOARD.general.account,
   },
   // {
   //   label: 'Settings',
@@ -134,7 +134,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
+          Đăng xuất
         </MenuItem>
       </MenuPopover>
     </>

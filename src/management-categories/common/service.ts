@@ -1,5 +1,6 @@
 import { ISimpleParams } from 'src/common/@types/common.interface';
 import {
+  ICategoryDetailResponse,
   ICategoryTreeResponse,
   IFormCreateNewCategory,
   IListCategoriesResponse,
@@ -15,3 +16,6 @@ export const createNewCategory = async (data: IFormCreateNewCategory) =>
 
 export const getCategoriesTree = async () =>
   axiosInstance3.get<unknown, ICategoryTreeResponse>(`${API_CATEGORY}/tree`);
+
+export const getDetailCategory = async (categoryId: number) =>
+  axiosInstance.get<unknown, ICategoryDetailResponse>(`${API_CATEGORY}/${categoryId}`);

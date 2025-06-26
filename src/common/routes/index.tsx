@@ -188,6 +188,14 @@ export default function Router() {
               ),
             },
             {
+              path: ':id/edit',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CategoryEdit />
+                </RoleGuard>
+              ),
+            },
+            {
               path: 'new',
               element: (
                 <RoleGuard allowedRoles={['admin']}>
@@ -335,6 +343,7 @@ const BrandList = Loadable(lazy(() => import('../../management-brand/list')));
 const CategoryList = Loadable(lazy(() => import('../../management-categories/list')));
 const ReorderCategories = Loadable(lazy(() => import('../../management-categories/reorder')));
 const CategoryNew = Loadable(lazy(() => import('../../management-categories/create')));
+const CategoryEdit = Loadable(lazy(() => import('../../management-categories/edit')));
 
 // BILLING AND CHECKOUT
 const EcommerceCheckout = Loadable(lazy(() => import('../../checkout')));

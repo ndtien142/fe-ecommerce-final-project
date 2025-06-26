@@ -68,7 +68,7 @@ const ListCategoriesContainer = () => {
   };
 
   const handleEditRow = (id: string) => {
-    navigate(PATH_DASHBOARD.brand.edit(paramCase(id)));
+    navigate(PATH_DASHBOARD.categories.edit(Number(id)));
   };
 
   return (
@@ -139,7 +139,7 @@ const ListCategoriesContainer = () => {
                       selected={selected.includes(String(row.id))}
                       onSelectRow={() => onSelectRow(String(row.id))}
                       onDeleteRow={() => {}}
-                      onEditRow={() => handleEditRow(String(row.name))}
+                      onEditRow={() => handleEditRow(String(row.id))}
                     />
                   ))}
 

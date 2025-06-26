@@ -18,6 +18,10 @@ export interface IFormCreateNewCategory extends Omit<ICategory, 'id' | 'children
   imageUrl: CustomFile | string | null;
 }
 
+export interface IFormEditCategory extends Omit<ICategory, 'children' | 'imageUrl'> {
+  imageUrl: CustomFile | string | null;
+}
+
 export type IFlattenedCategory = ICategory & { ancestorIds: string[] };
 
 export interface IListCategoriesResponse {
@@ -33,4 +37,10 @@ export interface ICategoryTreeResponse {
   message: string;
   status: string;
   metadata: ICategory[];
+}
+
+export interface ICategoryDetailResponse {
+  message: string;
+  status: string;
+  metadata: ICategory;
 }

@@ -18,12 +18,12 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { ICategory } from 'src/common/@types/product/category.interface';
 import { CustomFile } from 'src/common/components/upload';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CreateNewCategorySchema } from '../schema';
-import { useGetCategoriesTree } from '../hooks/useGetCategoriesTree';
-import { flattenCategories } from '../utils';
+import { CreateNewCategorySchema } from '../common/schema';
+import { useGetCategoriesTree } from '../common/hooks/useGetCategoriesTree';
+import { flattenCategories } from '../common/utils';
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
-import { useCreateNewCategory } from '../hooks/useCreateNewCategory';
 import { slugify } from 'src/common/utils/common.util';
+import { useUpdateCategory } from '../common/hooks/useUpdateCategory';
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -56,7 +56,7 @@ const STATUS_OPTIONS = [
 
 // Add a simple slugify function
 
-const FormNewEditCategory = ({ isEdit, currentCategory }: Props) => {
+const FormEditCategory = ({ isEdit, currentCategory }: Props) => {
   const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
 
   const [categoryList, setCategoryList] = React.useState<IFlattenedCategoryV2[]>([]);
@@ -65,7 +65,7 @@ const FormNewEditCategory = ({ isEdit, currentCategory }: Props) => {
 
   const { uploadImage } = useUploadImage();
 
-  const { mutate } = useCreateNewCategory();
+  const { mutate } = useUpdateCategory();
 
   const { data } = useGetCategoriesTree();
 
@@ -146,7 +146,6 @@ const FormNewEditCategory = ({ isEdit, currentCategory }: Props) => {
   }, [isEdit, currentCategory]);
 
   const onSubmit = async (data: FormValuesProps) => {
-    console.log('Form data:', data);
     let updatedImageUrl = data.imageUrl;
     if (data.imageUrl instanceof File) {
       updatedImageUrl = await uploadImage(data.imageUrl);
@@ -158,11 +157,11 @@ const FormNewEditCategory = ({ isEdit, currentCategory }: Props) => {
       { ...data, imageUrl: updatedImageUrl, status: data.isActive ? 'active' : 'inactive' },
       {
         onSuccess: () => {
-          showSuccessSnackbar('Danh mục đã được tạo thành công');
+          showSuccessSnackbar('Danh mục đã được chỉnh sửa thành công');
           navigate(PATH_DASHBOARD.categories.root);
         },
         onError: (error: any) => {
-          showErrorSnackbar(error?.message || 'Đã xảy ra lỗi khi tạo danh mục');
+          showErrorSnackbar(error?.message || 'Đã xảy ra lỗi khi chỉnh sửa danh mục');
         },
       }
     );
@@ -253,4 +252,4 @@ const FormNewEditCategory = ({ isEdit, currentCategory }: Props) => {
   );
 };
 
-export default FormNewEditCategory;
+export default FormEditCategory;

@@ -17,7 +17,7 @@ type Props = {
 const CategoryTableRow = ({ row, selected, onEditRow, onSelectRow, onDeleteRow }: Props) => {
   const theme = useTheme();
 
-  const { id, name, slug, parentId, imageUrl, status } = row;
+  const { id, name, slug, parent, imageUrl, status } = row;
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -45,7 +45,7 @@ const CategoryTableRow = ({ row, selected, onEditRow, onSelectRow, onDeleteRow }
         {slug}
       </TableCell>
 
-      <TableCell align="left">{parentId}</TableCell>
+      <TableCell align="left">{parent?.name ?? ''}</TableCell>
 
       <TableCell align="left">
         <Label
@@ -64,7 +64,7 @@ const CategoryTableRow = ({ row, selected, onEditRow, onSelectRow, onDeleteRow }
           onClose={handleCloseMenu}
           actions={
             <>
-              <MenuItem
+              {/* <MenuItem
                 onClick={() => {
                   onDeleteRow();
                   handleCloseMenu();
@@ -73,7 +73,7 @@ const CategoryTableRow = ({ row, selected, onEditRow, onSelectRow, onDeleteRow }
               >
                 <Iconify icon={'eva:trash-2-outline'} />
                 Xoá
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem
                 onClick={() => {
                   onEditRow();
