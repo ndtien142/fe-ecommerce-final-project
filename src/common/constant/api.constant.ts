@@ -43,3 +43,6 @@ export const API_PAYMENT_METHOD = '/payment-method';
 
 // ORDER API CONSTANTS
 export const API_ORDER = '/order';
+
+// ACCOUNT API CONSTANTS
+export const API_ACCOUNT = '/account';
