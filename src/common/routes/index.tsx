@@ -342,15 +342,12 @@ const EcommerceCheckout = Loadable(lazy(() => import('../../checkout')));
 // Management Order
 const ManagementOrderList = Loadable(lazy(() => import('../../management-order/list')));
 const ManagementOrderDetails = Loadable(lazy(() => import('../../management-order/detail')));
-// const OrderDetails = Loadable(lazy(() => import('../pages/dashboard/OrderDetails')));
-// const OrderCreate = Loadable(lazy(() => import('../pages/dashboard/OrderCreate')));
-// const OrderEdit = Loadable(lazy(() => import('../pages/dashboard/OrderEdit')));
 
 // USER
-const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
-const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
+const UserAccount = Loadable(lazy(() => import('../../account')));
+
+// MANAGEMENT USER
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
-const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 
 // MAIN
