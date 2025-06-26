@@ -93,13 +93,13 @@ export default function RegisterForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="username" label="Username" />
+        <RHFTextField name="username" label="Tên đăng nhập" />
         <Controller
           name="dateOfBirth"
           control={methods.control}
           render={({ field, fieldState: { error } }) => (
             <DatePicker
-              label="Date of Birth"
+              label="Ngày sinh"
               value={field.value}
               onChange={(newValue) => field.onChange(newValue)}
               renderInput={(params) => (
@@ -110,15 +110,15 @@ export default function RegisterForm() {
         />
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <RHFTextField name="firstName" label="First name" />
-          <RHFTextField name="lastName" label="Last name" />
+          <RHFTextField name="firstName" label="Họ" />
+          <RHFTextField name="lastName" label="Tên" />
         </Stack>
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label="Địa chỉ email" />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Mật khẩu"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -143,7 +143,7 @@ export default function RegisterForm() {
           variant="contained"
           loading={isSubmitting}
         >
-          Register
+          Đăng ký
         </LoadingButton>
       </Stack>
     </FormProvider>
