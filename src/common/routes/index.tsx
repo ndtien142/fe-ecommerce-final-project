@@ -98,8 +98,22 @@ export default function Router() {
           path: 'orders',
           children: [
             { element: <Navigate to="/dashboard/orders/list" replace />, index: true },
-            { path: 'list', element: <ListOrder /> },
-            // { path: ':id', element: <OrderDetails /> },
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['customer']}>
+                  <ListOrder />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: ':id',
+              element: (
+                <RoleGuard allowedRoles={['customer']}>
+                  <OrderDetails />
+                </RoleGuard>
+              ),
+            },
           ],
         },
 
@@ -181,36 +195,63 @@ export default function Router() {
                 </RoleGuard>
               ),
             },
-            // { path: ':name', element: <CategoryDetails /> },
           ],
         },
 
         {
-          path: 'e-commerce',
-          children: [
-            { element: <Navigate to="/dashboard/e-commerce/shop" replace />, index: true },
-          ],
-        },
-        {
           path: 'user',
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
-            { path: 'profile', element: <UserProfile /> },
-            { path: 'cards', element: <UserCards /> },
-            { path: 'list', element: <UserList /> },
-            { path: 'new', element: <UserCreate /> },
-            { path: ':name/edit', element: <UserCreate /> },
             { path: 'account', element: <UserAccount /> },
+
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <UserList />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: 'new',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <UserCreate />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: ':name/edit',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <UserCreate />
+                </RoleGuard>
+              ),
+            },
           ],
         },
         {
-          path: 'invoice',
+          path: 'management-order',
           children: [
-            { element: <Navigate to="/dashboard/invoice/list" replace />, index: true },
-            { path: 'list', element: <InvoiceList /> },
-            { path: ':id', element: <InvoiceDetails /> },
-            { path: ':id/edit', element: <InvoiceEdit /> },
-            { path: 'new', element: <InvoiceCreate /> },
+            { element: <Navigate to="/dashboard/management-order/list" replace />, index: true },
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <ManagementOrderList />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: ':id',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <ManagementOrderDetails />
+                </RoleGuard>
+              ),
+            },
+            // { path: ':id/edit', element: <OrderEdit /> },
+            // { path: 'new', element: <OrderCreate /> },
           ],
         },
       ],
@@ -239,7 +280,14 @@ export default function Router() {
         { path: 'shop', element: <Shop /> },
 
         { path: 'product/:slug', element: <ProductDetails /> },
-        { path: 'checkout', element: <EcommerceCheckout /> },
+        {
+          path: 'checkout',
+          element: (
+            <RoleGuard allowedRoles={['customer']}>
+              <EcommerceCheckout />
+            </RoleGuard>
+          ),
+        },
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
@@ -277,6 +325,7 @@ const ProductDetails = Loadable(lazy(() => import('../../detail-product')));
 
 // ORDER USER
 const ListOrder = Loadable(lazy(() => import('../../order/list')));
+const OrderDetails = Loadable(lazy(() => import('../../order/detail')));
 
 // BRAND
 const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));
@@ -290,17 +339,15 @@ const CategoryNew = Loadable(lazy(() => import('../../management-categories/crea
 // BILLING AND CHECKOUT
 const EcommerceCheckout = Loadable(lazy(() => import('../../checkout')));
 
-// INVOICE
-const InvoiceList = Loadable(lazy(() => import('../pages/dashboard/InvoiceList')));
-const InvoiceDetails = Loadable(lazy(() => import('../pages/dashboard/InvoiceDetails')));
-const InvoiceCreate = Loadable(lazy(() => import('../pages/dashboard/InvoiceCreate')));
-const InvoiceEdit = Loadable(lazy(() => import('../pages/dashboard/InvoiceEdit')));
+// Management Order
+const ManagementOrderList = Loadable(lazy(() => import('../../management-order/list')));
+const ManagementOrderDetails = Loadable(lazy(() => import('../../management-order/detail')));
 
 // USER
-const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
-const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
+const UserAccount = Loadable(lazy(() => import('../../account')));
+
+// MANAGEMENT USER
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
-const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 
 // MAIN

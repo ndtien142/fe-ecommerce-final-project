@@ -101,7 +101,6 @@ export const PATH_DASHBOARD = {
       list: path(ROOTS_DASHBOARD, '/orders/list'),
       view: (id: string) => path(ROOTS_DASHBOARD, `/orders/${id}`),
       edit: (id: string) => path(ROOTS_DASHBOARD, `/orders/${id}/edit`),
-      demoView: path(ROOTS_DASHBOARD, '/orders/1'),
     },
     account: path(ROOTS_DASHBOARD, '/account'),
     settings: path(ROOTS_DASHBOARD, '/settings'),
@@ -144,6 +143,13 @@ export const PATH_DASHBOARD = {
     edit: (name: string) => path(ROOTS_DASHBOARD, `/e-commerce/product/${name}/edit`),
     demoEdit: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-blazer-low-77-vintage/edit'),
     demoView: path(ROOTS_DASHBOARD, '/e-commerce/product/nike-air-force-1-ndestrukt'),
+  },
+  order: {
+    root: path(ROOTS_DASHBOARD, '/management-order'),
+    list: path(ROOTS_DASHBOARD, '/management-order/list'),
+    new: path(ROOTS_DASHBOARD, '/management-order/new'),
+    view: (id: string) => path(ROOTS_DASHBOARD, `/management-order/${id}`),
+    edit: (id: string) => path(ROOTS_DASHBOARD, `/management-order/${id}/edit`),
   },
   invoice: {
     root: path(ROOTS_DASHBOARD, '/invoice'),

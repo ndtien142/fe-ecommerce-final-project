@@ -38,15 +38,12 @@ import { useGetListProduct } from '../common/hooks/useGetListProduct';
 // Table head config (match with ProductTableRow columns)
 const TABLE_PRODUCT_HEAD = [
   { id: 'name', label: 'Tên sản phẩm' },
-  { id: 'slug', label: 'Slug' },
   { id: 'brand', label: 'Thương hiệu' },
   { id: 'categories', label: 'Danh mục' },
   { id: 'createTime', label: 'Ngày tạo' },
   { id: 'inventoryType', label: 'Tồn kho', align: 'center' },
   { id: 'price', label: 'Giá', align: 'right' },
-  { id: 'priceSale', label: 'Giá KM', align: 'right' },
   { id: 'stock', label: 'SL', align: 'right' },
-  { id: 'minStock', label: 'Tối thiểu', align: 'right' },
   { id: 'sold', label: 'Đã bán', align: 'right' },
   { id: 'status', label: 'Trạng thái', align: 'right' },
   { id: '' },

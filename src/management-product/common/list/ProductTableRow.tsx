@@ -53,7 +53,6 @@ const ProductTableRow = ({ row, selected, onSelectRow, onDeleteRow, onEditRow }:
         </Typography>
       </TableCell>
 
-      <TableCell>{row.slug}</TableCell>
       <TableCell>{row.brand?.name}</TableCell>
       <TableCell>
         <Stack direction="row" spacing={1}>
@@ -77,9 +76,7 @@ const ProductTableRow = ({ row, selected, onSelectRow, onDeleteRow, onEditRow }:
         </Label>
       </TableCell>
       <TableCell align="right">{fCurrency(row.price)}</TableCell>
-      <TableCell align="right">{fCurrency(row.priceSale)}</TableCell>
       <TableCell align="right">{row.stock}</TableCell>
-      <TableCell align="right">{row.minStock}</TableCell>
       <TableCell align="right">{row.sold}</TableCell>
       <TableCell align="right">
         <Label

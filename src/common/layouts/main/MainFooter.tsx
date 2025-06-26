@@ -12,25 +12,36 @@ import SocialsButton from '../../components/SocialsButton';
 
 const LINKS = [
   {
-    headline: 'Minimal',
+    headline: 'FPT Furniture',
     children: [
-      { name: 'About us', href: PATH_PAGE.about },
-      { name: 'Contact us', href: PATH_PAGE.contact },
-      { name: 'FAQs', href: PATH_PAGE.faqs },
+      { name: 'Về chúng tôi', href: PATH_PAGE.about },
+      { name: 'Liên hệ', href: PATH_PAGE.contact },
+      { name: 'Câu hỏi thường gặp', href: PATH_PAGE.faqs },
     ],
   },
   {
-    headline: 'Legal',
+    headline: 'Dịch vụ',
     children: [
-      { name: 'Terms and Condition', href: '#' },
-      { name: 'Privacy Policy', href: '#' },
+      { name: 'Nội thất phòng khách', href: '#' },
+      { name: 'Nội thất phòng ngủ', href: '#' },
+      { name: 'Nội thất văn phòng', href: '#' },
+      { name: 'Thi công nội thất', href: '#' },
     ],
   },
   {
-    headline: 'Contact',
+    headline: 'Hỗ trợ',
     children: [
-      { name: 'support@minimals.cc', href: '#' },
-      { name: 'Los Angeles, 359  Hidden Valley Road', href: '#' },
+      { name: 'Chính sách đổi trả', href: '#' },
+      { name: 'Bảo hành sản phẩm', href: '#' },
+      { name: 'Giao hàng & Lắp đặt', href: '#' },
+    ],
+  },
+  {
+    headline: 'Liên hệ',
+    children: [
+      { name: 'hotline@fptfurniture.vn', href: '#' },
+      { name: '1900 1234 - Hotline 24/7', href: '#' },
+      { name: 'Hà Nội, Số 8 Tôn Thất Thuyết', href: '#' },
     ],
   },
 ];
@@ -59,8 +70,9 @@ export default function MainFooter() {
 
           <Grid item xs={8} md={3}>
             <Typography variant="body2" sx={{ pr: { md: 5 } }}>
-              The starting point for your next project with Minimal UI Kit, built on the newest
-              version of Material-UI ©, ready to be customized to your style.
+              FPT Furniture - Điểm đến tin cậy cho mọi nhu cầu nội thất của bạn. Chúng tôi cung cấp
+              các sản phẩm nội thất chất lượng cao với thiết kế hiện đại, phù hợp với mọi không gian
+              sống và làm việc.
             </Typography>
 
             <Stack
@@ -112,7 +124,7 @@ export default function MainFooter() {
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          © 2021. All rights reserved
+          © 2024 FPT Furniture. Tất cả quyền được bảo lưu
         </Typography>
       </Container>
     </RootStyle>
