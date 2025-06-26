@@ -31,3 +31,9 @@ export interface IAddressResponse {
   status: string;
   metadata: IAddress[];
 }
+
+export interface IDetailAddressResponse {
+  message: string;
+  status: string;
+  metadata: IAddress;
+}

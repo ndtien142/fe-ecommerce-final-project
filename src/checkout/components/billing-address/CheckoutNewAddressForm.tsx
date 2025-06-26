@@ -23,6 +23,8 @@ import {
 } from '../../../common/components/hook-form';
 import { useAddNewAddress } from '../../hooks/useAddNewAddress';
 import { default as useMessage } from 'src/common/hooks/useMessage';
+import { useDispatch } from 'src/common/redux/store';
+import { setAddress } from 'src/checkout/checkout.slice';
 
 // _mock
 // You may want to replace this with your own country list or API
@@ -53,6 +55,8 @@ type Props = {
 };
 
 export default function CheckoutNewAddressForm({ open, onClose, onNextStep }: Props) {
+  const dispatch = useDispatch();
+
   const NewAddressSchema = Yup.object().shape({
     title: Yup.string().required('Tiêu đề là bắt buộc'),
     country: Yup.string().required('Quốc gia là bắt buộc'),
@@ -95,9 +99,17 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep }: Pr
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await mutate(data);
-      showSuccessSnackbar('Thêm địa chỉ mới thành công!');
-      onNextStep();
+      await mutate(data, {
+        onSuccess: (res: any) => {
+          showSuccessSnackbar('Thêm địa chỉ mới thành công!');
+          dispatch(setAddress(res?.metadata));
+          onNextStep();
+        },
+        onError: (error: any) => {
+          showErrorSnackbar('Thêm địa chỉ mới thất bại!');
+          console.error(error);
+        },
+      });
     } catch (error) {
       showErrorSnackbar('Thêm địa chỉ mới thất bại!');
       console.error(error);
@@ -111,7 +123,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep }: Pr
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Stack spacing={3}>
-            <RHFTextField name="title" label="Tiêu đề" />
+            <RHFTextField name="title" label="Tên địa chỉ" />
 
             <RHFTextField name="receiverName" label="Tên người nhận" />
             <RHFTextField name="phoneNumber" label="Số điện thoại" />

@@ -1,4 +1,8 @@
-import { IAddressForm, IAddressResponse } from 'src/common/@types/address/address.interface';
+import {
+  IAddressForm,
+  IAddressResponse,
+  IDetailAddressResponse,
+} from 'src/common/@types/address/address.interface';
 import {
   ICartResponse,
   IParamsAddToCart,
@@ -34,7 +38,8 @@ export const removeItemFromCart = (data: IParamsRemoveItemFromCart) =>
 // ADDRESS
 export const getAddress = () => axiosInstance.get<unknown, IAddressResponse>(`${API_ADDRESS}/user`);
 
-export const addAddress = (data: IAddressForm) => axiosInstance.post(`${API_ADDRESS}`, data);
+export const addAddress = (data: IAddressForm) =>
+  axiosInstance.post<unknown, IDetailAddressResponse>(`${API_ADDRESS}`, data);
 
 // SHIPPING
 export const getShippingMethod = () =>
