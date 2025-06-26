@@ -1,6 +1,6 @@
 import { IParamsProduct, IProductListResponse } from 'src/common/@types/product/product.interface';
 import { API_PRODUCT } from 'src/common/constant/api.constant';
-import axiosInstance from 'src/common/utils/axios';
+import axiosInstance, { axiosInstance3 } from 'src/common/utils/axios';
 
 export const createNewProduct = async (productData: any) =>
   axiosInstance.post(API_PRODUCT, productData);
@@ -35,7 +35,7 @@ export const getListProduct = (params: {
   if (params.sortBy) searchParams.append('sortBy', params.sortBy);
   if (params.search) searchParams.append('search', params.search);
 
-  return axiosInstance.get<unknown, IProductListResponse>(
+  return axiosInstance3.get<unknown, IProductListResponse>(
     `${API_PRODUCT}?${searchParams.toString()}`
   );
 };
