@@ -23,7 +23,7 @@ import Scrollbar from 'src/common/components/Scrollbar';
 import useSettings from 'src/common/hooks/useSettings';
 import useTable, { emptyRows } from 'src/common/hooks/useTable';
 // Router
-import { PATH_DASHBOARD } from 'src/common/routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from 'src/common/routes/paths';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // API hook for products
 import {
@@ -87,8 +87,12 @@ const ListProductContainer = () => {
     setSelected([]);
   };
 
-  const handleEditRow = (id: string) => {
-    navigate(PATH_DASHBOARD.product.edit(id));
+  const handleViewRow = (slug: string) => {
+    window.open(PATH_CUSTOMER.eCommerce.view(slug), '_blank');
+  };
+
+  const handleEditRow = (slug: string) => {
+    navigate(PATH_DASHBOARD.product.edit(slug));
   };
 
   return (
@@ -158,8 +162,8 @@ const ListProductContainer = () => {
                       row={row}
                       selected={selected.includes(String(row.id))}
                       onSelectRow={() => onSelectRow(String(row.id))}
-                      onDeleteRow={() => {}}
-                      onEditRow={() => handleEditRow(String(row.id))}
+                      onViewRow={() => handleViewRow(String(row.slug))}
+                      onEditRow={() => handleEditRow(String(row.slug))}
                     />
                   ))}
 

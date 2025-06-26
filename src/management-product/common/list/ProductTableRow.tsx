@@ -14,10 +14,11 @@ type Props = {
   selected: boolean;
   onEditRow: VoidFunction;
   onSelectRow: VoidFunction;
-  onDeleteRow: VoidFunction;
+  onDeleteRow?: VoidFunction;
+  onViewRow: VoidFunction;
 };
 
-const ProductTableRow = ({ row, selected, onSelectRow, onDeleteRow, onEditRow }: Props) => {
+const ProductTableRow = ({ row, selected, onSelectRow, onEditRow, onViewRow }: Props) => {
   const theme = useTheme();
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
@@ -103,13 +104,12 @@ const ProductTableRow = ({ row, selected, onSelectRow, onDeleteRow, onEditRow }:
             <>
               <MenuItem
                 onClick={() => {
-                  onDeleteRow();
+                  onViewRow();
                   handleCloseMenu();
                 }}
-                sx={{ color: 'error.main' }}
               >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Xóa
+                <Iconify icon={'eva:eye-fill'} />
+                Xem
               </MenuItem>
               <MenuItem
                 onClick={() => {

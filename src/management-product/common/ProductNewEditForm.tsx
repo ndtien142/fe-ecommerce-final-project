@@ -1,9 +1,9 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -12,9 +12,12 @@ import { Card, Grid, Stack, Typography, InputAdornment, MenuItem } from '@mui/ma
 // routes
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
 // @types
-import { Product } from 'src/common/@types/product/product.interface';
+import {
+  FormValuesProps,
+  ICategoryForm,
+  Product,
+} from 'src/common/@types/product/product.interface';
 // components
-import { CustomFile } from 'src/common/components/upload';
 import {
   FormProvider,
   RHFSwitch,
@@ -26,13 +29,13 @@ import {
 import { slugify } from 'src/common/utils/common.util';
 import { useGetListBrand } from 'src/management-brand/common/hooks/useGetListBrand';
 import { useGetCategoriesTree } from 'src/management-categories/common/hooks/useGetCategoriesTree';
-import { ICategory } from 'src/common/@types/product/category.interface';
 import { flattenCategories } from 'src/management-categories/common/utils';
 import { useCreateNewProduct } from './hooks/useCreateNewProduct';
 import useUploadMultiImage from 'src/common/hooks/useUploadMultiImage';
+import { useUpdateProduct } from './hooks/useUpdateProduct';
 
 // Utility type to omit recursive properties from ICategory
-type ICategoryForm = Omit<ICategory, 'children' | 'parent'>;
+
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
@@ -55,16 +58,10 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   marginBottom: theme.spacing(1),
 }));
-interface FormValuesProps extends Omit<Product, 'images' | 'brand' | 'categories'> {
-  taxes: boolean;
-  inStock: boolean;
-  images: (CustomFile | string)[];
-  categories: ICategoryForm['id'][];
-}
 
 type Props = {
   isEdit?: boolean;
-  currentProduct?: Product;
+  currentProduct?: FormValuesProps;
 };
 
 export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
@@ -76,6 +73,8 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
   const { data: categoriesTree } = useGetCategoriesTree();
 
   const { mutate } = useCreateNewProduct();
+
+  const { mutate: updateProduct } = useUpdateProduct();
 
   const { uploadImages } = useUploadMultiImage();
 
@@ -126,6 +125,12 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
   const defaultValues = useMemo(
     () => ({
+      id:
+        typeof currentProduct?.id === 'number'
+          ? currentProduct.id
+          : currentProduct?.id
+          ? Number(currentProduct.id)
+          : undefined,
       name: currentProduct?.name || '',
       description: currentProduct?.description || '',
       images: (currentProduct as any)?.images || [],
@@ -142,7 +147,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
       height: currentProduct?.height || 0,
       length: currentProduct?.length || 0,
       inventoryType: (currentProduct?.inventoryType as Product['inventoryType']) ?? '',
-      categories: (currentProduct as any)?.categories?.map((cat: any) => cat.id) || [],
+      categories: currentProduct?.categories || [],
       brandId:
         typeof currentProduct?.brandId === 'number'
           ? currentProduct.brandId
@@ -167,10 +172,12 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
     setValue,
     getValues,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = methods;
 
+  console.log('Form errors:', errors);
   const values = watch();
+  console.log('form values:', values);
 
   // Watch name and update slug
   const nameValue = watch('name');
@@ -189,34 +196,73 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
   }, [isEdit, currentProduct]);
 
   const onSubmit = async (data: FormValuesProps) => {
-    let urls: string[] = [];
-    if (data?.images && data.images.length > 0) {
-      const filesToUpload = data.images.filter((img: any) => !img.url);
-      // Upload images if they are new files
-      urls = await uploadImages(filesToUpload as File[]);
-      data.images = [...data.images.filter((img) => typeof img === 'string')];
+    if (!isEdit && !data.id) {
+      let urls: string[] = [];
+      if (data?.images && data.images.length > 0) {
+        const filesToUpload = data.images.filter((img: any) => typeof img !== 'string');
+        const existingUrls = data.images.filter((img): img is string => typeof img === 'string');
+
+        // Upload images if they are new files
+        if (filesToUpload.length > 0) {
+          urls = await uploadImages(filesToUpload as File[]);
+        }
+
+        // Combine uploaded URLs with existing URLs
+        urls = [...urls, ...existingUrls];
+      }
+
+      const payload = {
+        ...data,
+        inventoryType: data.inStock ? 'in_stock' : 'out_of_stock',
+        brandId: data.brandId ? Number(data.brandId) : null,
+        images: urls,
+      };
+
+      mutate(payload, {
+        onSuccess: () => {
+          enqueueSnackbar(!isEdit ? 'Tạo sản phẩm thành công!' : 'Cập nhật sản phẩm thành công!', {
+            variant: 'success',
+          });
+          navigate(PATH_DASHBOARD.product.list);
+        },
+        onError: (error: any) => {
+          enqueueSnackbar(error?.message || 'Đã có lỗi xảy ra!', { variant: 'error' });
+        },
+      });
+    } else {
+      let urls: string[] = [];
+      if (data?.images && data.images.length > 0) {
+        const filesToUpload = data.images.filter((img: any) => typeof img !== 'string');
+        const existingUrls = data.images.filter((img): img is string => typeof img === 'string');
+
+        // Upload images if they are new files
+        if (filesToUpload.length > 0) {
+          urls = await uploadImages(filesToUpload as File[]);
+        }
+
+        // Combine uploaded URLs with existing URLs
+        urls = [...urls, ...existingUrls];
+      }
+
+      const payload = {
+        ...data,
+        inventoryType: data.inStock ? 'in_stock' : 'out_of_stock',
+        brandId: data.brandId ? Number(data.brandId) : null,
+        images: urls,
+      };
+
+      updateProduct(payload, {
+        onSuccess: () => {
+          enqueueSnackbar('Cập nhật sản phẩm thành công!', {
+            variant: 'success',
+          });
+          navigate(PATH_DASHBOARD.product.list);
+        },
+        onError: (error: any) => {
+          enqueueSnackbar(error?.message || 'Đã có lỗi xảy ra!', { variant: 'error' });
+        },
+      });
     }
-
-    const payload = {
-      ...data,
-      inventoryType: data.inStock ? 'in_stock' : 'out_of_stock',
-      brandId: data.brandId ? Number(data.brandId) : null,
-      images: urls,
-    };
-
-    mutate(payload, {
-      onSuccess: () => {
-        enqueueSnackbar(!isEdit ? 'Tạo sản phẩm thành công!' : 'Cập nhật sản phẩm thành công!', {
-          variant: 'success',
-        });
-        navigate(PATH_DASHBOARD.product.list);
-      },
-      onError: (error: any) => {
-        enqueueSnackbar(error?.message || 'Đã có lỗi xảy ra!', { variant: 'error' });
-      },
-    });
-    console.log('Submitted Data:', data);
-    console.log('images:', data.images);
   };
 
   const handleDrop = useCallback(

@@ -1,5 +1,6 @@
 // ----------------------------------------------------------------------
 
+import { CustomFile } from 'src/common/components/upload';
 import { PaginationMeta } from '../common.interface';
 import { ICategory } from './category.interface';
 
@@ -178,8 +179,6 @@ export interface IProductApiResponse {
   brand: ProductBrand;
   images: ProductImage[];
   categories: ICategory[];
-  meta: ProductMeta[];
-  tags: ProductTag[];
 }
 
 export interface IProductListResponse {
@@ -209,3 +208,12 @@ export interface IParamsProduct {
   flag?: ProductFlag;
   status?: ProductStatus;
 }
+
+export interface FormValuesProps extends Omit<Product, 'images' | 'brand' | 'categories'> {
+  taxes: boolean;
+  inStock: boolean;
+  images: (CustomFile | string)[];
+  categories: ICategoryForm['id'][];
+}
+
+export type ICategoryForm = Omit<ICategory, 'children' | 'parent'>;

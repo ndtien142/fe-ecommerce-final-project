@@ -24,17 +24,17 @@ import CartWidget from 'src/common/components/CartWidget';
 const PRODUCT_DESCRIPTION = [
   {
     title: '100% Chính hãng',
-    description: 'Thanh sô cô la, kẹo que, kem, kẹo bơ cứng, bánh quy, kẹo dẻo.',
+    description: 'Sản phẩm chính hãng, đảm bảo chất lượng tốt nhất cho khách hàng.',
     icon: 'ic:round-verified',
   },
   {
     title: 'Đổi trả trong 10 ngày',
-    description: 'Bánh quy marshmallow, bánh donut, bánh dragée, bánh trái cây, bánh wafer.',
+    description: 'Hỗ trợ đổi trả sản phẩm trong vòng 10 ngày nếu không hài lòng.',
     icon: 'eva:clock-fill',
   },
   {
     title: 'Bảo hành 1 năm',
-    description: 'Kẹo bông, bánh gừng, bánh kem, tôi yêu đồ ngọt.',
+    description: 'Cam kết bảo hành sản phẩm trong thời gian 1 năm.',
     icon: 'ic:round-verified-user',
   },
 ];
@@ -77,13 +77,13 @@ const DetailProduct = () => {
         },
       }}
     >
-      <Page title="Product Details">
+      <Page title="Chi tiết sản phẩm">
         <Container maxWidth={themeStretch ? false : 'lg'}>
           <HeaderBreadcrumbs
-            heading="Product Details"
+            heading="Chi tiết sản phẩm"
             links={[
-              { name: 'Home', href: '/' },
-              { name: 'Shop', href: '/shop' },
+              { name: 'Trang chủ', href: '/' },
+              { name: 'Cửa hàng', href: '/shop' },
               { name: sentenceCase(slug) },
             ]}
           />
@@ -91,7 +91,7 @@ const DetailProduct = () => {
           <CartWidget />
 
           {isLoading && <SkeletonProductItem />}
-          {isError && <Typography variant="h6">404 Product not found</Typography>}
+          {isError && <Typography variant="h6">404 Không tìm thấy sản phẩm</Typography>}
 
           {product && (
             <>
@@ -128,7 +128,7 @@ const DetailProduct = () => {
                 <TabContext value={tab}>
                   <Box sx={{ px: 3, bgcolor: 'background.neutral' }}>
                     <TabList onChange={(e, value) => setTab(value)}>
-                      <Tab disableRipple value="1" label="Description" />
+                      <Tab disableRipple value="1" label="Mô tả sản phẩm" />
                     </TabList>
                   </Box>
                   <Divider />

@@ -138,6 +138,14 @@ export default function Router() {
                 </RoleGuard>
               ),
             },
+            {
+              path: ':slug/edit',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <ProductEdit />
+                </RoleGuard>
+              ),
+            },
             // { path: ':name', element: <EcommerceProductDetails /> },
           ],
         },
@@ -327,6 +335,7 @@ const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')))
 // PRODUCT
 const ProductCreate = Loadable(lazy(() => import('../../management-product/create')));
 const ProductList = Loadable(lazy(() => import('../../management-product/list')));
+const ProductEdit = Loadable(lazy(() => import('../../management-product/edit')));
 
 // PRODUCT USER
 const ProductDetails = Loadable(lazy(() => import('../../detail-product')));

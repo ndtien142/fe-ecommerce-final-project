@@ -1,9 +1,15 @@
+import { FormValuesProps } from 'src/auth/login/interface';
 import { IParamsProduct, IProductListResponse } from 'src/common/@types/product/product.interface';
 import { API_PRODUCT } from 'src/common/constant/api.constant';
 import axiosInstance, { axiosInstance3 } from 'src/common/utils/axios';
 
 export const createNewProduct = async (productData: any) =>
   axiosInstance.post(API_PRODUCT, productData);
+
+export const updateProduct = async (data: any) => {
+  const { id, ...rest } = data;
+  return axiosInstance.put(`${API_PRODUCT}/${id}`, data);
+};
 
 export const getListProduct = (params: {
   page?: number;
