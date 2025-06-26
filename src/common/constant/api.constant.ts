@@ -5,6 +5,7 @@ export const API_LOGOUT = 'auth/logout';
 export const API_REFRESH_TOKEN = 'auth/refresh-token';
 export const API_PROFILE = 'auth/profile';
 export const API_POLICIES = 'auth/policies';
+export const API_CHANGE_PASSWORD = 'auth/change-password';
 
 // ROLE API CONSTANTS
 export const API_ROLE = '/role';

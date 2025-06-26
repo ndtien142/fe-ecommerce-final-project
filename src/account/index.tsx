@@ -26,35 +26,38 @@ export default function UserAccount() {
   const ACCOUNT_TABS = [
     {
       value: 'general',
+      label: 'Thông tin chung',
       icon: <Iconify icon={'ic:round-account-box'} width={20} height={20} />,
       component: <AccountGeneral />,
     },
     {
       value: 'billing',
+      label: 'Thông tin thanh toán',
       icon: <Iconify icon={'ic:round-receipt'} width={20} height={20} />,
       component: <AccountBilling />,
     },
     {
       value: 'notifications',
+      label: 'Thông báo',
       icon: <Iconify icon={'eva:bell-fill'} width={20} height={20} />,
       component: <AccountNotifications />,
     },
     {
       value: 'change_password',
+      label: 'Đổi mật khẩu',
       icon: <Iconify icon={'ic:round-vpn-key'} width={20} height={20} />,
       component: <AccountChangePassword />,
     },
   ];
 
   return (
-    <Page title="User: Account Settings">
+    <Page title="Người dùng: Cài đặt tài khoản">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Account"
+          heading="Tài khoản"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'Account Settings' },
+            { name: 'Bảng điều khiển', href: PATH_DASHBOARD.root },
+            { name: 'Cài đặt tài khoản' },
           ]}
         />
 
@@ -69,7 +72,7 @@ export default function UserAccount() {
             <Tab
               disableRipple
               key={tab.value}
-              label={capitalCase(tab.value)}
+              label={tab.label}
               icon={tab.icon}
               value={tab.value}
             />

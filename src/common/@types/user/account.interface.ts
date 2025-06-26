@@ -22,3 +22,9 @@ export interface IProfileUpdateForm {
   nickname: string | null;
   dateOfBirth: string | null;
 }
+
+export interface IChangePasswordForm {
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
