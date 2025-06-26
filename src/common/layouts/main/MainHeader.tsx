@@ -101,9 +101,8 @@ export default function MainHeader() {
     return metadata.map((category) => {
       const items = (category.children || []).map((child: ICategory) => ({
         title: child.name,
-        path: `/category/${child.slug}`,
+        path: `shop?category=${child.slug}`,
       }));
-      console.log('Category:', category.name, 'Items:', items);
       return {
         subheader: category.name,
         items,

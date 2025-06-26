@@ -129,7 +129,6 @@ export type ProductState = {
 };
 
 export type ProductFilter = {
-  gender: string[];
   category: string;
   colors: string[];
   priceRange: [number, number];
@@ -196,4 +195,17 @@ export interface IProductDetailResponse {
   metadata: IProductApiResponse;
   status: string;
   message: string;
+}
+
+export interface IParamsProduct {
+  page?: number;
+  limit?: number;
+  categorySlug?: string;
+  sortBy?: string;
+  search?: string;
+  brandId?: number;
+  priceRange?: [number, number];
+  inventoryType?: ProductInventoryType;
+  flag?: ProductFlag;
+  status?: ProductStatus;
 }

@@ -15,7 +15,6 @@ export default function HomePage() {
     <Page title="Điểm bắt đầu không gian của bạn" mt={15} mb={10}>
       <HeroSection />
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <HeaderHome />
         <EcommerceShopContainer />
       </Container>
     </Page>
