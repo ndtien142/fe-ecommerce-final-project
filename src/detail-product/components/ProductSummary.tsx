@@ -128,9 +128,11 @@ export default function ProductSummary({ product }: Props) {
         {name}
       </Typography>
 
-      <Typography variant="body2" sx={{ mb: 2 }}>
-        {description}
-      </Typography>
+      {/* <Typography
+        variant="body2"
+        sx={{ mb: 2 }}
+        dangerouslySetInnerHTML={{ __html: description || '' }}
+      /> */}
 
       <Typography variant="h4" sx={{ mb: 3 }}>
         {priceSale && (
