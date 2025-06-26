@@ -4,14 +4,13 @@ import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Divider, Typography, Stack, DialogProps } from '@mui/material';
 // redux
 import { useDispatch } from 'src/common/redux/store';
-import { resetCart } from 'src/common/redux/slices/product';
 // routes
-import { PATH_CUSTOMER } from 'src/common/routes/paths';
 // components
 import Iconify from 'src/common/components/Iconify';
 import { DialogAnimate } from 'src/common/components/animate';
 // assets
 import { OrderCompleteIllustration } from '../../assets';
+import { resetCheckout } from '../checkout.slice';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +32,7 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
   const dispatch = useDispatch();
 
   const handleResetStep = () => {
-    dispatch(resetCart());
+    dispatch(resetCheckout());
     navigate('/');
   };
 
@@ -42,20 +41,20 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
       <Box sx={{ p: 4, maxWidth: 480, margin: 'auto' }}>
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="h4" paragraph>
-            Thank you for your purchase!
+            Cảm ơn bạn đã mua hàng!
           </Typography>
 
           <OrderCompleteIllustration sx={{ height: 260, my: 10 }} />
 
           <Typography align="left" paragraph>
-            Thanks for placing order &nbsp;
+            Cảm ơn bạn đã đặt hàng &nbsp;
             <Link href="#">01dc1370-3df6-11eb-b378-0242ac130002</Link>
           </Typography>
 
           <Typography align="left" sx={{ color: 'text.secondary' }}>
-            We will send you a notification within 5 days when it ships.
-            <br /> <br /> If you have any question or queries then fell to get in contact us. <br />{' '}
-            <br /> All the best,
+            Chúng tôi sẽ gửi thông báo cho bạn trong vòng 5 ngày khi đơn hàng được giao.
+            <br /> <br /> Nếu bạn có bất kỳ câu hỏi hay thắc mắc nào, hãy liên hệ với chúng tôi.{' '}
+            <br /> <br /> Chúc bạn mọi điều tốt đẹp,
           </Typography>
         </Box>
 
@@ -71,14 +70,14 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
             onClick={handleResetStep}
             startIcon={<Iconify icon={'eva:arrow-ios-back-fill'} />}
           >
-            Continue Shopping
+            Tiếp tục mua sắm
           </Button>
           <Button
             variant="contained"
             startIcon={<Iconify icon={'ant-design:file-pdf-filled'} />}
             onClick={handleResetStep}
           >
-            Download as PDF
+            Tải xuống PDF
           </Button>
         </Stack>
       </Box>
