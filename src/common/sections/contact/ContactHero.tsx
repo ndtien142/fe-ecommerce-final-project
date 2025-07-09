@@ -9,24 +9,24 @@ import { TextAnimate, MotionContainer, varFade } from '../../components/animate'
 
 const CONTACTS = [
   {
-    country: 'Bali',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(239) 555-0108',
+    country: 'Main Store',
+    address: '123 Furniture Boulevard, Design District, NY 10001',
+    phoneNumber: '(555) 123-4567',
   },
   {
-    country: 'London',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(319) 555-0115',
+    country: 'Showroom 2',
+    address: '456 Home Avenue, Comfort City, CA 90210',
+    phoneNumber: '(555) 987-6543',
   },
   {
-    country: 'Prague',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(252) 555-0126',
+    country: 'Warehouse',
+    address: '789 Storage Street, Industrial Park, TX 75001',
+    phoneNumber: '(555) 456-7890',
   },
   {
-    country: 'Moscow',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(307) 555-0133',
+    country: 'Customer Service',
+    address: '321 Support Lane, Service Center, FL 33101',
+    phoneNumber: '(555) 111-2222',
   },
 ];
 
@@ -58,12 +58,12 @@ export default function ContactHero() {
     <RootStyle>
       <Container component={MotionContainer} sx={{ position: 'relative', height: '100%' }}>
         <ContentStyle>
-          <TextAnimate text="Where" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
+          <TextAnimate text="Find" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
           <br />
           <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
-            <TextAnimate text="to" sx={{ mr: 2 }} />
-            <TextAnimate text="find" sx={{ mr: 2 }} />
-            <TextAnimate text="us?" />
+            <TextAnimate text="our" sx={{ mr: 2 }} />
+            <TextAnimate text="furniture" sx={{ mr: 2 }} />
+            <TextAnimate text="stores" />
           </Box>
 
           <Grid container spacing={5} sx={{ mt: 5, color: 'common.white' }}>

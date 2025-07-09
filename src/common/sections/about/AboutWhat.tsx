@@ -75,7 +75,7 @@ export default function AboutWhat() {
           <Grid item xs={12} md={6} lg={5}>
             <m.div variants={varFade().inRight}>
               <Typography variant="h2" sx={{ mb: 3 }}>
-                What is minimal?
+                Quality furniture for every home
               </Typography>
             </m.div>
 
@@ -86,10 +86,11 @@ export default function AboutWhat() {
                     theme.palette.mode === 'light' ? 'text.secondary' : 'common.white',
                 }}
               >
-                Our theme is the most advanced and user-friendly theme you will find on the market,
-                we have documentation and video to help set your site really easily, pre-installed
-                demos you can import in one click and everything from the theme options to page
-                content can be edited from the front-end. This is the theme you are looking for.
+                We specialize in creating beautiful, functional furniture that transforms houses
+                into homes. With over 25 years of experience, we've helped thousands of customers
+                find the perfect pieces for their living spaces. From modern minimalist designs to
+                classic traditional styles, our curated collection offers something for every taste
+                and budget.
               </Typography>
             </m.div>
 

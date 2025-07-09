@@ -35,11 +35,15 @@ export default function AboutHero() {
     <RootStyle>
       <Container component={MotionContainer} sx={{ position: 'relative', height: '100%' }}>
         <ContentStyle>
-          <TextAnimate text="Who" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
+          <TextAnimate
+            text="Crafting"
+            sx={{ color: 'primary.main' }}
+            variants={varFade().inRight}
+          />
           <br />
           <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
-            <TextAnimate text="we" sx={{ mr: 2 }} />
-            <TextAnimate text="are?" />
+            <TextAnimate text="beautiful" sx={{ mr: 2 }} />
+            <TextAnimate text="homes" />
           </Box>
 
           <m.div variants={varFade().inRight}>
@@ -51,8 +55,8 @@ export default function AboutHero() {
                 fontWeight: 'fontWeightMedium',
               }}
             >
-              Let's work together and
-              <br /> make awesome site easily
+              Your trusted furniture partner
+              <br /> for over 25 years
             </Typography>
           </m.div>
         </ContentStyle>

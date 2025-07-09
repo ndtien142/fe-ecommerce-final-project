@@ -10,7 +10,7 @@ export default function FaqsForm() {
   return (
     <Stack component={MotionViewport} spacing={3}>
       <m.div variants={varFade().inUp}>
-        <Typography variant="h4">Haven't found the right help?</Typography>
+        <Typography variant="h4">Still have questions about our furniture?</Typography>
       </m.div>
 
       <m.div variants={varFade().inUp}>
@@ -26,7 +26,12 @@ export default function FaqsForm() {
       </m.div>
 
       <m.div variants={varFade().inUp}>
-        <TextField fullWidth label="Enter your message here." multiline rows={4} />
+        <TextField
+          fullWidth
+          label="Ask us about furniture, delivery, or customization..."
+          multiline
+          rows={4}
+        />
       </m.div>
 
       <m.div variants={varFade().inUp}>

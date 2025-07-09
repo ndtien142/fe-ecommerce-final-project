@@ -37,20 +37,23 @@ export default function FaqsHero() {
       <Container component={MotionContainer} sx={{ position: 'relative', height: '100%' }}>
         <ContentStyle spacing={5}>
           <div>
-            <TextAnimate text="How" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
+            <TextAnimate
+              text="Furniture"
+              sx={{ color: 'primary.main' }}
+              variants={varFade().inRight}
+            />
             <br />
             <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
-              <TextAnimate text="can" sx={{ mr: 2 }} />
-              <TextAnimate text="we" sx={{ mr: 2 }} />
-              <TextAnimate text="help" sx={{ mr: 2 }} />
-              <TextAnimate text="you?" />
+              <TextAnimate text="questions" sx={{ mr: 2 }} />
+              <TextAnimate text="&" sx={{ mr: 2 }} />
+              <TextAnimate text="answers" />
             </Box>
           </div>
 
           <m.div variants={varFade().inUp}>
             <InputStyle
               stretchStart={280}
-              placeholder="Search support"
+              placeholder="Search furniture FAQs..."
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

@@ -307,6 +307,7 @@ export default function Router() {
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
         { path: 'faqs', element: <Faqs /> },
+        { path: 'policy', element: <Policy /> },
         { path: 'permission-denied', element: <PermissionDenied /> },
       ],
     },
@@ -369,9 +370,10 @@ const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 
 // MAIN
-const About = Loadable(lazy(() => import('../pages/About')));
-const Contact = Loadable(lazy(() => import('../pages/Contact')));
-const Faqs = Loadable(lazy(() => import('../pages/Faqs')));
+const About = Loadable(lazy(() => import('../../marketing/pages/About')));
+const Contact = Loadable(lazy(() => import('../../marketing/pages/Contact')));
+const Faqs = Loadable(lazy(() => import('../../marketing/pages/Faqs')));
+const Policy = Loadable(lazy(() => import('../../marketing/pages/Policy')));
 const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
 const Pricing = Loadable(lazy(() => import('../pages/Pricing')));

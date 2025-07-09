@@ -11,8 +11,8 @@ export default function ContactForm() {
     <Stack component={MotionViewport} spacing={5}>
       <m.div variants={varFade().inUp}>
         <Typography variant="h3">
-          Feel free to contact us. <br />
-          We'll be glad to hear from you, buddy.
+          Have questions about our furniture? <br />
+          We'd love to help you find the perfect pieces for your home.
         </Typography>
       </m.div>
 
@@ -30,7 +30,12 @@ export default function ContactForm() {
         </m.div>
 
         <m.div variants={varFade().inUp}>
-          <TextField fullWidth label="Enter your message here." multiline rows={4} />
+          <TextField
+            fullWidth
+            label="Enter your message about furniture needs..."
+            multiline
+            rows={4}
+          />
         </m.div>
       </Stack>
 
