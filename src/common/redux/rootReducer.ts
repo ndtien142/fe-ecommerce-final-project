@@ -10,6 +10,7 @@ import kanbanReducer from './slices/kanban';
 // auth
 import authReducer from 'src/auth/login/auth.slice';
 import loginReducer from 'src/auth/login/login.slice';
+import registerReducer from 'src/auth/register/register.slice';
 // Categories
 import categoryReducer from 'src/management-categories/common/category.slice';
 import checkoutReducer from 'src/checkout/checkout.slice';
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   // Auth
   auth: authReducer,
   login: loginReducer,
+  register: registerReducer,
   // Categories
   categories: categoryReducer,
   checkout: checkoutReducer,

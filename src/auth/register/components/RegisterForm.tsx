@@ -17,11 +17,15 @@ import { RegisterFormValues } from '../register.interface';
 import { useCreateNewAccount } from '../hooks/useCreateNewAccount';
 import { useNavigate } from 'react-router';
 import { PATH_AUTH } from 'src/common/routes/paths';
+import { useDispatch } from 'src/common/redux/store';
+import { setEmail, setUsernameRegister } from '../register.slice';
 
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
   const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
+
+  const dispatch = useDispatch();
 
   const isMountedRef = useIsMountedRef();
 
@@ -72,20 +76,25 @@ export default function RegisterForm() {
       navigate(PATH_AUTH.login);
     },
     onError: (error: any) => {
-      showErrorSnackbar(error?.message || 'Tạo tài khoản thất bại!');
+      showErrorSnackbar(error?.response?.data?.message || 'Tạo tài khoản thất bại!');
     },
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    try {
-      mutate(data);
-    } catch (error) {
-      console.error(error);
-      reset();
-      if (isMountedRef.current) {
-        setError('afterSubmit', { ...error, message: error.message });
-      }
-    }
+    mutate(data, {
+      onSuccess: () => {
+        dispatch(setEmail(data.email));
+        dispatch(setUsernameRegister(data.username));
+        navigate(PATH_AUTH.verify);
+      },
+      onError: (error: any) => {
+        console.error(error);
+        if (isMountedRef.current) {
+          setError('afterSubmit', { ...error, message: error.message });
+        }
+        showErrorSnackbar(error?.response?.data?.message || 'Đăng ký thất bại!');
+      },
+    });
   };
 
   return (

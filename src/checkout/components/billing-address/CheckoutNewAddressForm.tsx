@@ -98,22 +98,17 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep }: Pr
   const { mutate, isLoading } = useAddNewAddress();
 
   const onSubmit = async (data: FormValuesProps) => {
-    try {
-      await mutate(data, {
-        onSuccess: (res: any) => {
-          showSuccessSnackbar('Thêm địa chỉ mới thành công!');
-          dispatch(setAddress(res?.metadata));
-          onNextStep();
-        },
-        onError: (error: any) => {
-          showErrorSnackbar('Thêm địa chỉ mới thất bại!');
-          console.error(error);
-        },
-      });
-    } catch (error) {
-      showErrorSnackbar('Thêm địa chỉ mới thất bại!');
-      console.error(error);
-    }
+    mutate(data, {
+      onSuccess: (res: any) => {
+        showSuccessSnackbar('Thêm địa chỉ mới thành công!');
+        dispatch(setAddress(res?.metadata));
+        onNextStep();
+      },
+      onError: (error: any) => {
+        showErrorSnackbar(error?.response?.data?.message || 'Thêm địa chỉ mới thất bại!');
+        console.error(error);
+      },
+    });
   };
 
   return (

@@ -94,7 +94,7 @@ export default function FormNewEditBrand({
           navigate(PATH_DASHBOARD.brand.root);
         },
         onError: (error: any) => {
-          showErrorSnackbar(error?.message || 'Đã xảy ra lỗi khi tạo thương hiệu');
+          showErrorSnackbar(error?.response?.data?.message || 'Đã xảy ra lỗi khi tạo thương hiệu');
         },
       }
     );

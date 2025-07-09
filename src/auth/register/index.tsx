@@ -61,8 +61,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 const Register = () => {
-  const { method } = useAuth();
-
   const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');

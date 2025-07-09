@@ -7,6 +7,11 @@ export const API_PROFILE = 'auth/profile';
 export const API_POLICIES = 'auth/policies';
 export const API_CHANGE_PASSWORD = 'auth/change-password';
 
+// AUTH VERIFICATION API CONSTANTS
+export const API_RESEND_VERIFY_CODE = 'auth/resend-verification-code';
+export const API_CHECK_VERIFICATION_STATUS = 'auth/check-verification-status';
+export const API_VERIFY_EMAIL_CODE = 'auth/verify-email-code';
+
 // ROLE API CONSTANTS
 export const API_ROLE = '/role';
 export const API_ROLE_PERMISSION = '/role-permission';
