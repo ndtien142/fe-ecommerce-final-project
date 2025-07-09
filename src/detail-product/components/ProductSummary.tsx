@@ -64,7 +64,6 @@ export default function ProductSummary({ product }: Props) {
   const values = watch();
 
   const handleAddCart = async (data: FormValues) => {
-    console.log('Adding to cart:', data);
     mutate(
       {
         productId: String(data.id),
@@ -73,7 +72,9 @@ export default function ProductSummary({ product }: Props) {
       },
       {
         onError: (error: any) => {
-          showErrorSnackbar(error.message || 'Không thể thêm sản phẩm vào giỏ hàng');
+          showErrorSnackbar(
+            error?.response?.data?.message || 'Không thể thêm sản phẩm vào giỏ hàng'
+          );
         },
         onSuccess: () => {
           showSuccessSnackbar('Sản phẩm đã được thêm vào giỏ hàng');
@@ -92,7 +93,9 @@ export default function ProductSummary({ product }: Props) {
       },
       {
         onError: (error: any) => {
-          showErrorSnackbar(error.message || 'Không thể thêm sản phẩm vào giỏ hàng');
+          showErrorSnackbar(
+            error?.response?.data?.message || 'Không thể thêm sản phẩm vào giỏ hàng'
+          );
         },
         onSuccess: () => {
           showSuccessSnackbar('Sản phẩm đã được thêm vào giỏ hàng');

@@ -162,7 +162,7 @@ const FormNewEditCategory = ({ isEdit, currentCategory }: Props) => {
           navigate(PATH_DASHBOARD.categories.root);
         },
         onError: (error: any) => {
-          showErrorSnackbar(error?.message || 'Đã xảy ra lỗi khi tạo danh mục');
+          showErrorSnackbar(error?.response?.data?.message || 'Đã xảy ra lỗi khi tạo danh mục');
         },
       }
     );

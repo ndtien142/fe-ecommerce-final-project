@@ -33,8 +33,10 @@ export default function VerifyCode() {
 
   const handleResendCode = () => {
     resendVerifyCode(email, {
-      onError: () => {
-        showErrorSnackbar('Gửi lại mã xác minh thất bại, vui lòng thử lại sau.');
+      onError: (error: any) => {
+        showErrorSnackbar(
+          error?.response?.data?.message || 'Gửi lại mã xác minh thất bại, vui lòng thử lại sau.'
+        );
       },
       onSuccess: () => {
         showSuccessSnackbar('Mã xác minh đã được gửi lại thành công.');

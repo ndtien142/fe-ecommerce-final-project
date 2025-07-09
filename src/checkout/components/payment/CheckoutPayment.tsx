@@ -88,7 +88,6 @@ export default function CheckoutPayment() {
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
-    console.log('Form submitted with data:', data);
     if (!cart) {
       // Handle error or show a message to the user
       console.error('Cart is null');
@@ -108,9 +107,10 @@ export default function CheckoutPayment() {
         showSuccessSnackbar('Đặt hàng thành công!');
         handleNextStep();
       },
-      onError: (error) => {
-        console.error('Error creating order:', error);
-        showErrorSnackbar('Đặt hàng thất bại! Vui lòng thử lại sau.');
+      onError: (error: any) => {
+        showErrorSnackbar(
+          error?.response?.data?.message || 'Đặt hàng thất bại! Vui lòng thử lại sau.'
+        );
       },
     });
     // Continue with your submit logic here

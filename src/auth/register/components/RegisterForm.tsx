@@ -76,7 +76,7 @@ export default function RegisterForm() {
       navigate(PATH_AUTH.login);
     },
     onError: (error: any) => {
-      showErrorSnackbar(error?.message || 'Tạo tài khoản thất bại!');
+      showErrorSnackbar(error?.response?.data?.message || 'Tạo tài khoản thất bại!');
     },
   });
 
@@ -92,7 +92,7 @@ export default function RegisterForm() {
         if (isMountedRef.current) {
           setError('afterSubmit', { ...error, message: error.message });
         }
-        showErrorSnackbar(error?.message || 'Đăng ký thất bại!');
+        showErrorSnackbar(error?.response?.data?.message || 'Đăng ký thất bại!');
       },
     });
   };
