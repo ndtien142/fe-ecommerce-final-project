@@ -9,9 +9,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Stack, OutlinedInput, FormHelperText } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
-import { PATH_DASHBOARD } from 'src/common/routes/paths';
+import { PATH_AUTH } from 'src/common/routes/paths';
 // components
 import { FormProvider } from 'src/common/components/hook-form';
+import { useVerifyEmailCode } from '../hooks/useVerifyEmailCode';
+import { useDispatch, useSelector } from 'src/common/redux/store';
+import { resetRegisterState } from 'src/auth/register/register.slice';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +33,12 @@ export default function VerifyCodeForm() {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const dispatch = useDispatch();
+
+  const email = useSelector((state) => state.register.email);
+
+  const { mutate: verifyEmail } = useVerifyEmailCode();
 
   const VerifyCodeSchema = Yup.object().shape({
     code1: Yup.string().required('Code is required'),
@@ -66,31 +75,56 @@ export default function VerifyCodeForm() {
   const values = watch();
 
   useEffect(() => {
-    const target = document.querySelector('input.field-code');
+    const handlePasteEvent = (event: ClipboardEvent) => {
+      // Check if the target is one of our code input fields
+      const target = event.target as HTMLElement;
+      if (target && target.classList.contains('field-code')) {
+        handlePaste(event);
+      }
+    };
 
-    target?.addEventListener('paste', handlePaste);
+    // Add paste event listener to document
+    document.addEventListener('paste', handlePasteEvent);
 
     return () => {
-      target?.removeEventListener('paste', handlePaste);
+      document.removeEventListener('paste', handlePasteEvent);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handlePaste = (event: any) => {
-    let data = event.clipboardData.getData('text');
+  const handlePaste = (event: ClipboardEvent) => {
+    event.preventDefault();
 
-    data = data.split('');
+    let data = event.clipboardData?.getData('text') || '';
 
-    [].forEach.call(document.querySelectorAll('.field-code'), (node: any, index) => {
-      node.value = data[index];
+    // Remove any non-digit characters and limit to 6 characters
+    data = data.replace(/\D/g, '').slice(0, 6);
 
-      const fieldIndex = `code${index + 1}`;
+    if (data.length === 0) return;
 
-      setValue(fieldIndex as ValueNames, data[index]);
+    const dataArray = data.split('');
+
+    // Clear all fields first
+    Object.keys(values).forEach((_, index) => {
+      const fieldIndex = `code${index + 1}` as ValueNames;
+      setValue(fieldIndex, '');
     });
 
-    event.preventDefault();
+    // Fill fields with pasted data
+    dataArray.forEach((char, index) => {
+      if (index < 6) {
+        const fieldIndex = `code${index + 1}` as ValueNames;
+        setValue(fieldIndex, char);
+      }
+    });
+
+    // Focus on the next empty field or the last field
+    const nextEmptyIndex = Math.min(dataArray.length, 5);
+    const nextField = document.querySelector(`input[name=code${nextEmptyIndex + 1}]`);
+    if (nextField) {
+      (nextField as HTMLElement).focus();
+    }
   };
 
   const handleChangeWithNextField = (
@@ -100,33 +134,57 @@ export default function VerifyCodeForm() {
     const { maxLength, value, name } = event.target;
 
     const fieldIndex = name.replace('code', '');
-
     const fieldIntIndex = Number(fieldIndex);
 
-    if (value.length >= maxLength) {
-      if (fieldIntIndex < 6) {
-        const nextfield = document.querySelector(`input[name=code${fieldIntIndex + 1}]`);
+    // Only allow single digit
+    const numericValue = value.replace(/\D/g, '').slice(0, 1);
 
-        if (nextfield !== null) {
-          (nextfield as HTMLElement).focus();
-        }
-      }
+    // Update the field with only numeric value
+    if (value !== numericValue) {
+      event.target.value = numericValue;
     }
 
-    handleChange(event);
+    handleChange({ ...event, target: { ...event.target, value: numericValue } });
+
+    // Move to next field if current field has value and not the last field
+    if (numericValue.length === maxLength && fieldIntIndex < 6) {
+      const nextfield = document.querySelector(`input[name=code${fieldIntIndex + 1}]`);
+      if (nextfield !== null) {
+        (nextfield as HTMLElement).focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const { name, value } = event.currentTarget;
+    const fieldIndex = name.replace('code', '');
+    const fieldIntIndex = Number(fieldIndex);
+
+    if (event.key === 'Backspace' && value === '' && fieldIntIndex > 1) {
+      const prevField = document.querySelector(`input[name=code${fieldIntIndex - 1}]`);
+      if (prevField !== null) {
+        (prevField as HTMLElement).focus();
+      }
+    }
   };
 
   const onSubmit = async (data: FormValuesProps) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log('data', Object.values(data).join(''));
-
-      enqueueSnackbar('Verify success!');
-
-      navigate(PATH_DASHBOARD.root, { replace: true });
-    } catch (error) {
-      console.error(error);
-    }
+    verifyEmail(
+      {
+        email,
+        code: Object.values(values).join(''),
+      },
+      {
+        onSuccess: (response) => {
+          enqueueSnackbar(response.message, { variant: 'success' });
+          dispatch(resetRegisterState());
+          navigate(PATH_AUTH.login, { replace: true });
+        },
+        onError: (error: any) => {
+          enqueueSnackbar(error?.response?.data?.message || 'Đã xảy ra lỗi', { variant: 'error' });
+        },
+      }
+    );
   };
 
   return (
@@ -147,6 +205,7 @@ export default function VerifyCodeForm() {
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     handleChangeWithNextField(event, field.onChange)
                   }
+                  onKeyDown={handleKeyDown}
                   inputProps={{
                     className: 'field-code',
                     maxLength: 1,
@@ -170,7 +229,7 @@ export default function VerifyCodeForm() {
           !!errors.code5 ||
           !!errors.code6) && (
           <FormHelperText error sx={{ px: 2 }}>
-            Mã là bắt buộc
+            Vui lòng nhập mã xác minh
           </FormHelperText>
         )}
 

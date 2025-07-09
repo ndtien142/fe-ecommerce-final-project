@@ -7,6 +7,9 @@ import LogoOnlyLayout from 'src/common/layouts/LogoOnlyLayout';
 import Page from 'src/common/components/Page';
 // sections
 import VerifyCodeForm from './components/VerifyCodeForm';
+import { useSelector } from 'src/common/redux/store';
+import { useResendVerifyCode } from './hooks/useResendVerifyCode';
+import { default as useMessage } from 'src/common/hooks/useMessage';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +26,22 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function VerifyCode() {
+  const { email, username } = useSelector((state) => state.register);
+  const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
+
+  const { mutate: resendVerifyCode } = useResendVerifyCode();
+
+  const handleResendCode = () => {
+    resendVerifyCode(email, {
+      onError: () => {
+        showErrorSnackbar('Gửi lại mã xác minh thất bại, vui lòng thử lại sau.');
+      },
+      onSuccess: () => {
+        showSuccessSnackbar('Mã xác minh đã được gửi lại thành công.');
+      },
+    });
+  };
+
   return (
     <Page title="Verify Code">
       <LogoOnlyLayout />
@@ -34,8 +53,8 @@ export default function VerifyCode() {
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
-            Chúng tôi đã gửi mã xác nhận gồm 6 chữ số qua email đến acb@domain, vui lòng nhập mã vào
-            ô bên dưới để xác minh email của bạn.
+            Chúng tôi đã gửi mã xác nhận gồm 6 chữ số qua email đến {email}, vui lòng nhập mã vào ô
+            bên dưới để xác minh email của bạn cho tài khoản {username}.
           </Typography>
 
           <Box sx={{ mt: 5, mb: 3 }}>
@@ -43,8 +62,8 @@ export default function VerifyCode() {
           </Box>
 
           <Typography variant="body2">
-            Không có mã? &nbsp;
-            <Link variant="subtitle2" onClick={() => {}}>
+            Không nhận được mã? &nbsp;
+            <Link variant="subtitle2" onClick={handleResendCode}>
               Gửi lại mã
             </Link>
           </Typography>
