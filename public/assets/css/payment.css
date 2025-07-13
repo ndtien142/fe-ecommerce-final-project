@@ -1,0 +1,70 @@
+/* MoMo Payment Styles */
+.payment-method-momo {
+  border: 2px solid #d63384;
+  background: linear-gradient(135deg, #d63384 0%, #e83e8c 100%);
+  color: white;
+}
+
+.payment-method-momo:hover {
+  background: linear-gradient(135deg, #b02a5b 0%, #d63384 100%);
+}
+
+.payment-method-vnpay {
+  border: 2px solid #0052cc;
+  background: linear-gradient(135deg, #0052cc 0%, #2684ff 100%);
+  color: white;
+}
+
+.payment-method-cash {
+  border: 2px solid #28a745;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+/* Payment Return Page Styles */
+.payment-return-checking {
+  text-align: center;
+  padding: 40px;
+}
+
+.payment-return-success {
+  text-align: center;
+  padding: 40px;
+  color: #28a745;
+}
+
+.payment-return-failed {
+  text-align: center;
+  padding: 40px;
+  color: #dc3545;
+}
+
+.payment-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .payment-method {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .payment-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .payment-actions button {
+    width: 100%;
+  }
+}

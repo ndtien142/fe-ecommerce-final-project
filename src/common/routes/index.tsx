@@ -282,6 +282,9 @@ export default function Router() {
         { path: 'maintenance', element: <Maintenance /> },
         { path: 'pricing', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },
+        { path: 'payment/return', element: <PaymentReturn /> },
+        { path: 'payment/success', element: <PaymentReturn /> },
+        { path: 'payment/failed', element: <PaymentReturn /> },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <Page404 /> },
         { path: '403', element: <Page403 /> },
@@ -378,6 +381,7 @@ const ComingSoon = Loadable(lazy(() => import('../pages/ComingSoon')));
 const Maintenance = Loadable(lazy(() => import('../pages/Maintenance')));
 const Pricing = Loadable(lazy(() => import('../pages/Pricing')));
 const Payment = Loadable(lazy(() => import('../pages/Payment')));
+const PaymentReturn = Loadable(lazy(() => import('../pages/PaymentReturn')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
 const Page403 = Loadable(lazy(() => import('../pages/Page403')));
 const Page404 = Loadable(lazy(() => import('../pages/Page404')));

@@ -43,8 +43,6 @@ type Props = {
 export default function CheckoutPaymentMethods({ paymentOptions, cardOptions }: Props) {
   const { control } = useFormContext();
 
-  const isDesktop = true;
-
   return (
     <Card sx={{ my: 3 }}>
       <CardHeader title="Phương thức thanh toán" />
@@ -77,12 +75,32 @@ export default function CheckoutPaymentMethods({ paymentOptions, cardOptions }: 
                             <Radio checkedIcon={<Iconify icon={'eva:checkmark-circle-2-fill'} />} />
                           }
                           label={
-                            <Box sx={{ ml: 1 }}>
-                              <Typography variant="subtitle2">{name}</Typography>
-                              <Typography>Nhà cung cấp: {provider}</Typography>
-                              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                {description}
-                              </Typography>
+                            <Box sx={{ ml: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+                              <Box>
+                                <Typography variant="subtitle2">{name}</Typography>
+                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                  {description}
+                                </Typography>
+                              </Box>
+                              {provider === 'momo' && (
+                                <Box
+                                  component="img"
+                                  src="/assets/icons/momo-icon.png"
+                                  alt="MoMo"
+                                  sx={{ width: 40, height: 40 }}
+                                  onError={(e: any) => {
+                                    // Fallback if image doesn't exist
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                  }}
+                                />
+                              )}
+
+                              {provider === 'cash' && (
+                                <Iconify
+                                  icon="eva:credit-card-outline"
+                                  sx={{ width: 40, height: 40, color: 'text.secondary' }}
+                                />
+                              )}
                             </Box>
                           }
                           sx={{ flexGrow: 1, py: 3 }}

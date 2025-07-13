@@ -24,8 +24,12 @@ import CheckoutSummary from '../cart/CheckoutSummary';
 import { useGetListShippingMethod } from '../../hooks/useGetListShippingMethod';
 import { useGetListPaymentMethod } from '../../hooks/useGetListPaymentMethod';
 import { IFormCreateNewOrder } from 'src/common/@types/order/order.interface';
+import { IFormCreateMoMoOrder } from 'src/common/@types/payment/momo.interface';
 import { useCreateOrder } from 'src/checkout/hooks/useCreateOrder';
+import { useCreateMoMoOrder } from 'src/checkout/hooks/useCreateMoMoOrder';
 import { default as useMessage } from 'src/common/hooks/useMessage';
+import { OrderUtils } from 'src/common/utils/orderUtils';
+import EnhancedPaymentButton from 'src/common/components/EnhancedPaymentButton';
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +68,7 @@ export default function CheckoutPayment() {
   };
 
   const { mutate } = useCreateOrder();
+  const { mutate: createMoMoOrder } = useCreateMoMoOrder();
 
   const PaymentSchema = Yup.object().shape({
     payment: Yup.string().required('Vui lòng chọn phương thức thanh toán!'),
@@ -93,27 +98,66 @@ export default function CheckoutPayment() {
       console.error('Cart is null');
       return;
     }
-    const payload: IFormCreateNewOrder = {
-      cart: cart,
-      addressId: address?.id || 0,
-      paymentMethodId: Number(data.payment),
-      shippingMethodId: Number(data.delivery),
-      note: '', // You can add a note field if needed
-      shippingFee: 0,
-    };
 
-    mutate(payload, {
-      onSuccess: () => {
-        showSuccessSnackbar('Đặt hàng thành công!');
-        handleNextStep();
-      },
-      onError: (error: any) => {
-        showErrorSnackbar(
-          error?.response?.data?.message || 'Đặt hàng thất bại! Vui lòng thử lại sau.'
-        );
-      },
-    });
-    // Continue with your submit logic here
+    // Find the selected payment method to check if it's MoMo
+    const selectedPaymentMethod = paymentMethods?.find(
+      (method) => method.id === Number(data.payment)
+    );
+    const isMoMoPayment = selectedPaymentMethod?.provider === 'momo';
+
+    if (isMoMoPayment) {
+      // Handle MoMo payment
+      const momoPayload: IFormCreateMoMoOrder = {
+        cart: cart,
+        addressId: address?.id || 0,
+        paymentMethodId: Number(data.payment),
+        shippingMethodId: Number(data.delivery),
+        note: '', // You can add a note field if needed
+        shippingFee: 0,
+        orderInfo: OrderUtils.generateOrderInfo(cart.id?.toString() || 'unknown'),
+      };
+
+      createMoMoOrder(momoPayload, {
+        onSuccess: (response) => {
+          // Store order info for later reference
+          OrderUtils.storePendingOrder({
+            orderId: response.metadata.order.id,
+            amount: response.metadata.order.totalAmount,
+            paymentMethod: 'momo',
+          });
+
+          // Redirect to MoMo payment
+          window.location.href = response.metadata.momoPayment.payUrl;
+        },
+        onError: (error: any) => {
+          showErrorSnackbar(
+            error?.response?.data?.message || 'Tạo đơn hàng MoMo thất bại! Vui lòng thử lại sau.'
+          );
+        },
+      });
+    } else {
+      // Handle regular payment (cash, etc.)
+      const payload: IFormCreateNewOrder = {
+        cart: cart,
+        addressId: address?.id || 0,
+        paymentMethodId: Number(data.payment),
+        shippingMethodId: Number(data.delivery),
+        note: '', // You can add a note field if needed
+        shippingFee: 0,
+      };
+
+      mutate(payload, {
+        onSuccess: () => {
+          showSuccessSnackbar('Đặt hàng thành công!');
+          handleNextStep();
+        },
+        onError: (error: any) => {
+          showErrorSnackbar(
+            error?.response?.data?.message || 'Đặt hàng thất bại! Vui lòng thử lại sau.'
+          );
+        },
+      });
+    }
   };
 
   // Fetch shipping and payment methods from API
@@ -121,7 +165,6 @@ export default function CheckoutPayment() {
   const { data: paymentMethods } = useGetListPaymentMethod();
 
   const DELIVERY_OPTIONS = shippingMethods || [];
-
   const PAYMENT_OPTIONS = paymentMethods || [];
 
   return (
@@ -154,15 +197,53 @@ export default function CheckoutPayment() {
             shipping={shipping}
             onEdit={() => handleGotoStep(0)}
           />
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            Hoàn tất đơn hàng
-          </LoadingButton>
+
+          {/* Enhanced MoMo Payment Button */}
+          {paymentMethods?.find((method) => method.id === Number(methods.watch('payment')))
+            ?.provider === 'momo' ? (
+            <EnhancedPaymentButton
+              order={{
+                id: cart?.id?.toString() || 'unknown',
+                total: total,
+                items: cart?.lineItems || [],
+                deliveryInfo: {
+                  address: address
+                    ? `${address.streetNumber} ${address.street}, ${address.ward}, ${address.district}, ${address.city}, ${address.country}`
+                    : '',
+                  fee: shipping,
+                },
+                referenceId: `REF_${cart?.id || Date.now()}`,
+              }}
+              customer={{
+                name: address?.receiverName || '',
+                phone: address?.phoneNumber || '',
+                email: '', // IAddress doesn't have email field
+              }}
+              cart={cart}
+              addressId={address?.id || 0}
+              paymentMethodId={Number(methods.watch('payment'))}
+              shippingMethodId={Number(methods.watch('delivery'))}
+              note=""
+              shippingFee={shipping}
+              onSuccess={() => {
+                showSuccessSnackbar('Thanh toán MoMo thành công!');
+                handleNextStep();
+              }}
+              onError={(error: any) => {
+                showErrorSnackbar(`Lỗi thanh toán MoMo: ${error.message}`);
+              }}
+            />
+          ) : (
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+            >
+              Hoàn tất đơn hàng
+            </LoadingButton>
+          )}
         </Grid>
       </Grid>
     </FormProvider>
