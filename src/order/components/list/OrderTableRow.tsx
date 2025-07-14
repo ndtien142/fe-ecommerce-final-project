@@ -66,7 +66,7 @@ export default function OrderTableRow({
   const customerName = address?.receiverName || 'Khách hàng';
   const customerPhone = address?.phoneNumber || '';
   const shippingMethodName = shippingMethod?.name || '';
-  const paymentMethodName = payment?.paymentMethod?.name || '';
+  const paymentMethodName = payment?.paymentMethod || '';
   const productNames = lineItems?.map((item) => item.product?.name).join(', ');
 
   // Status color mapping

@@ -139,8 +139,8 @@ export default function OrderDetailSection({ order }: Props) {
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
               Phương thức thanh toán
             </Typography>
-            <Typography variant="body2">{payment?.paymentMethod?.name || '-'}</Typography>
-            <Typography variant="body2">{payment?.paymentMethod?.description || ''}</Typography>
+            <Typography variant="body2">{payment?.paymentMethod || '-'}</Typography>
+            <Typography variant="body2">{payment?.paymentMethod || ''}</Typography>
             <Typography variant="body2">
               Số tiền: {payment?.amount ? fCurrency(payment.amount) : '-'}
             </Typography>
