@@ -1,10 +1,15 @@
+import { IOrderTimelineResponse } from 'src/common/@types/order/logs.interface';
 import {
   IOrderAnalyticsResponse,
   IOrderListResponse,
   IOrderParams,
   IOrderResponse,
 } from 'src/common/@types/order/order.interface';
-import { API_ORDER } from 'src/common/constant/api.constant';
+import {
+  IWorkflowActionRequest,
+  IWorkflowActionResponse,
+} from 'src/common/@types/order/workflow.interface';
+import { API_LOGS, API_ORDER, API_ORDER_WORKFLOW } from 'src/common/constant/api.constant';
 import axiosInstance from 'src/common/utils/axios';
 
 export const getListOrder = async (params: IOrderParams) =>
@@ -34,3 +39,53 @@ export const processOrderRefund = async (orderId: number, amount?: number) =>
 
 export const getOrderStatusHistory = async (orderId: number) =>
   axiosInstance.get<unknown, any>(`${API_ORDER}/admin/${orderId}/history`);
+
+// Workflow update functions
+/**
+ * Confirm order (Admin action)
+ */
+export const confirmOrder = (orderId: number, data: IWorkflowActionRequest) =>
+  axiosInstance.post<unknown, IWorkflowActionResponse>(
+    `${API_ORDER_WORKFLOW}/${orderId}/confirm`,
+    data
+  );
+
+export const pickupOrder = (orderId: number, data: IWorkflowActionRequest) =>
+  axiosInstance.post<unknown, IWorkflowActionResponse>(
+    `${API_ORDER_WORKFLOW}/${orderId}/pickup`,
+    data
+  );
+
+export const deliverOrder = (orderId: number, data: IWorkflowActionRequest) =>
+  axiosInstance.post<unknown, IWorkflowActionResponse>(
+    `${API_ORDER_WORKFLOW}/${orderId}/deliver`,
+    data
+  );
+
+export const customerConfirmOrder = (orderId: number, data: IWorkflowActionRequest) =>
+  axiosInstance.post<unknown, IWorkflowActionResponse>(
+    `${API_ORDER_WORKFLOW}/${orderId}/customer-confirm`,
+    data
+  );
+
+export const completeCOD = (orderId: number, data: IWorkflowActionRequest) =>
+  axiosInstance.post<unknown, IWorkflowActionResponse>(
+    `${API_ORDER_WORKFLOW}/${orderId}/complete-cod`,
+    data
+  );
+
+export const returnOrder = (orderId: number, data: IWorkflowActionRequest) =>
+  axiosInstance.post<unknown, IWorkflowActionResponse>(
+    `${API_ORDER_WORKFLOW}/${orderId}/return`,
+    data
+  );
+
+export const cancelOrder = (orderId: number, data: IWorkflowActionRequest) =>
+  axiosInstance.post<unknown, IWorkflowActionResponse>(
+    `${API_ORDER_WORKFLOW}/${orderId}/cancel`,
+    data
+  );
+
+// Get logs for order timeline
+export const getOrderTimeline = (orderId: number) =>
+  axiosInstance.get<unknown, IOrderTimelineResponse>(`${API_LOGS}/${orderId}/timeline`);

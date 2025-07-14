@@ -59,5 +59,9 @@ export const API_ORDER_STATUS = '/order/status';
 export const API_ORDER_HISTORY = '/order/history';
 export const API_ORDER_STATISTICS = '/order/statistics';
 
+// ORDER WORKFLOW API CONSTANTS
+export const API_ORDER_WORKFLOW = '/order/workflow';
+export const API_LOGS = '/order/logs';
+
 // ACCOUNT API CONSTANTS
 export const API_ACCOUNT = '/account';

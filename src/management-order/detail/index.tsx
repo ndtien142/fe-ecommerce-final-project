@@ -8,8 +8,9 @@ import Page from '../../common/components/Page';
 import HeaderBreadcrumbs from '../../common/components/HeaderBreadcrumbs';
 // sections
 import { useGetOrderById } from '../hooks/useGetOrderById';
-import OrderDetailSection from '../components/detail/OrderDetailSection';
+// import OrderDetailSection from '../components/detail/OrderDetailSection';
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
+import NewOrderDetailSection from '../components/new-detail/NewOrderDetailSection';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +33,7 @@ export default function OrderDetail() {
           ]}
         />
 
-        <OrderDetailSection order={order} />
+        <NewOrderDetailSection order={order} />
       </Container>
     </Page>
   );
