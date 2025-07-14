@@ -16,7 +16,7 @@ const CATEGORIES = [
     icon: 'eva:home-outline',
     image:
       'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-    link: '/shop?category=living-room',
+    link: '/shop?category=phong-khach',
   },
   {
     name: 'Phòng ngủ',
@@ -24,7 +24,7 @@ const CATEGORIES = [
     icon: 'eva:bed-outline',
     image:
       'https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-    link: '/shop?category=bedroom',
+    link: '/shop?category=phong-ngu',
   },
   {
     name: 'Phòng bếp',
@@ -40,7 +40,7 @@ const CATEGORIES = [
     icon: 'eva:book-outline',
     image:
       'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-    link: '/shop?category=office',
+    link: '/shop?category=phong-lam-viec',
   },
 ];
 

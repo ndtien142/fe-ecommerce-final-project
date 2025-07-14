@@ -211,7 +211,20 @@ const FormEditCategory = ({ isEdit, currentCategory }: Props) => {
                   label="Danh mục cha"
                   placeholder="Danh mục cha"
                   InputLabelProps={{ shrink: true }}
-                  SelectProps={{ native: false, sx: { textTransform: 'capitalize' } }}
+                  SelectProps={{
+                    native: false,
+                    sx: { textTransform: 'capitalize' },
+                    MenuProps: {
+                      PaperProps: {
+                        sx: {
+                          maxHeight: 300,
+                          '& .MuiMenuItem-root': {
+                            fontSize: 14,
+                          },
+                        },
+                      },
+                    },
+                  }}
                 >
                   <MenuItem key={0} value={0}>
                     {'Không có danh mục cha'}
@@ -221,12 +234,16 @@ const FormEditCategory = ({ isEdit, currentCategory }: Props) => {
                       key={cat.id}
                       value={cat.id}
                       sx={{
-                        // pl: `${cat.depth * 2 + 2}px`,
+                        pl: `${cat.depth * 2 + 2}px`,
                         fontWeight: cat.depth === 0 ? 'bold' : 'normal',
                         fontSize: 14,
+                        minHeight: 40,
+                        '&:hover': {
+                          backgroundColor: 'action.hover',
+                        },
                       }}
                     >
-                      {cat.name}
+                      {'—'.repeat(cat.depth)} {cat.name}
                     </MenuItem>
                   ))}
                 </RHFSelect>

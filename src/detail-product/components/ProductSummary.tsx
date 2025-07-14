@@ -46,7 +46,7 @@ export default function ProductSummary({ product }: Props) {
 
   const { mutate } = useAddToCart();
 
-  const { id, name, price, priceSale, flag, inventoryType, stock, description } = product;
+  const { id, name, price, priceSale, flag, inventoryType, stock } = product;
 
   const available = stock;
   const defaultValues = {
@@ -68,7 +68,7 @@ export default function ProductSummary({ product }: Props) {
       {
         productId: String(data.id),
         quantity: data.quantity,
-        price: data.price,
+        price: priceSale ? Number(priceSale) : data.price,
       },
       {
         onError: (error: any) => {
@@ -138,15 +138,19 @@ export default function ProductSummary({ product }: Props) {
       /> */}
 
       <Typography variant="h4" sx={{ mb: 3 }}>
-        {priceSale && (
-          <Box
-            component="span"
-            sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 1 }}
-          >
-            {fCurrency(Number(priceSale))}
-          </Box>
+        {priceSale ? (
+          <>
+            <Box
+              component="span"
+              sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 1 }}
+            >
+              {fCurrency(Number(price))}
+            </Box>
+            <>{fCurrency(Number(priceSale))}</>
+          </>
+        ) : (
+          <>{fCurrency(Number(price))}</>
         )}
-        {fCurrency(Number(price))}
       </Typography>
 
       <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 3 }}>
