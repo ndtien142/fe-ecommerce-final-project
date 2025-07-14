@@ -17,3 +17,16 @@ export const getOrderAnalytics = () =>
 
 export const getOrderById = (id: number) =>
   axiosInstance.get<unknown, IOrderResponse>(`${API_ORDER}/user/${id}`);
+
+// User-specific order management endpoints based on router
+export const createOrderWithMoMo = async (orderData: any) =>
+  axiosInstance.post<unknown, any>(`${API_ORDER}/momo`, orderData);
+
+export const updateOrderAddress = async (orderId: number, addressId: number) =>
+  axiosInstance.patch<unknown, any>(`${API_ORDER}/user/${orderId}/address`, { addressId });
+
+export const checkMoMoPaymentStatus = async (orderId: number) =>
+  axiosInstance.get<unknown, any>(`/v1/api/momo/status/${orderId}`);
+
+export const cancelOrder = async (orderId: number) =>
+  axiosInstance.patch<unknown, any>(`${API_ORDER}/user/${orderId}/cancel`);

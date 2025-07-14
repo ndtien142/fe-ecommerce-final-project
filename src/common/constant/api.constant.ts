@@ -46,9 +46,18 @@ export const API_SHIPPING_METHOD = '/shipping-method';
 
 // PAYMENT API CONSTANTS
 export const API_PAYMENT_METHOD = '/payment-method';
+export const API_MOMO_STATUS = '/momo/status';
+export const API_MOMO_IPN = '/momo/ipn';
+export const API_PAYMENT_STATUS = '/payment/status';
 
 // ORDER API CONSTANTS
 export const API_ORDER = '/order';
+export const API_ORDER_MOMO = '/order/create-with-momo';
+export const API_ORDER_CANCEL = '/order/cancel';
+export const API_ORDER_REFUND = '/order/refund';
+export const API_ORDER_STATUS = '/order/status';
+export const API_ORDER_HISTORY = '/order/history';
+export const API_ORDER_STATISTICS = '/order/statistics';
 
 // ACCOUNT API CONSTANTS
 export const API_ACCOUNT = '/account';
