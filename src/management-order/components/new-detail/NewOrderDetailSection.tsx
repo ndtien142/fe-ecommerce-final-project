@@ -101,6 +101,7 @@ export default function NewOrderDetailSection({ order }: Props) {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
   };
+  console.log('payment', payment);
 
   return (
     <>
@@ -207,7 +208,16 @@ export default function NewOrderDetailSection({ order }: Props) {
               <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
                 Phương thức thanh toán
               </Typography>
-              <Typography variant="body2">{payment?.paymentMethod?.name || '-'}</Typography>
+              <Typography variant="body2">{payment?.paymentMethod || '-'}</Typography>
+              <Typography variant="body2">
+                Số tiền: {payment?.amount ? fCurrency(payment.amount) : '-'}
+              </Typography>
+              {payment?.paidAt && (
+                <Typography variant="body2">Ngày thanh toán: {fDate(payment.paidAt)}</Typography>
+              )}
+              {payment?.transactionCode && (
+                <Typography variant="body2">Mã giao dịch: {payment.transactionCode}</Typography>
+              )}
               <Label
                 color={
                   payment?.status === 'completed'
@@ -245,18 +255,22 @@ export default function NewOrderDetailSection({ order }: Props) {
                 <TableBody>
                   {lineItems.map((row, index) => (
                     <TableRow
-                      key={index}
+                      key={row.id}
                       sx={{
                         borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
                       }}
                     >
                       <TableCell>{index + 1}</TableCell>
                       <TableCell align="left">
-                        <Box sx={{ maxWidth: 560 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', maxWidth: 560 }}>
+                          {row.product?.thumbnail && (
+                            <Image
+                              src={row.product.thumbnail ?? ''}
+                              alt={row.product?.name}
+                              sx={{ width: 48, height: 48, mr: 2, borderRadius: 1 }}
+                            />
+                          )}
                           <Typography variant="subtitle2">{row.product?.name}</Typography>
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                            {row.product?.description}
-                          </Typography>
                         </Box>
                       </TableCell>
                       <TableCell align="left">{row.quantity}</TableCell>

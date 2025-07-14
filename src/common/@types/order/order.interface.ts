@@ -35,15 +35,17 @@ export interface IOrderUser {
 export interface IOrderPayment {
   id: number;
   orderId: number;
+  paymentMethod: string;
   paymentMethodId: number;
-  customerPaymentOptionId: number | null;
+  transactionId: string | null;
   transactionCode: string | null;
   status: string;
   amount: string;
+  gatewayResponse: string | null;
   paidAt: string | null;
+  customerPaymentOptionId: number | null;
   createTime: string;
   updateTime: string;
-  paymentMethod?: IPaymentMethod;
 }
 
 export type OrderStatus =

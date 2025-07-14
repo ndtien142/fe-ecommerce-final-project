@@ -445,7 +445,7 @@ export default function OrderToolbar({ order }: Props) {
               <strong>Số tiền hoàn:</strong> {OrderUtils.formatCurrency(Number(order.totalAmount))}
             </Typography>
             <Typography variant="body2" gutterBottom>
-              <strong>Phương thức thanh toán:</strong> {order.payment?.paymentMethod?.name || 'N/A'}
+              <strong>Phương thức thanh toán:</strong> {order.payment?.paymentMethod || 'N/A'}
             </Typography>
             <Typography variant="body2" gutterBottom>
               <strong>Thời gian xử lý:</strong> 3-5 ngày làm việc
