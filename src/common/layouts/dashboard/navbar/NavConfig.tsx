@@ -43,6 +43,11 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      {
+        title: 'workflow dashboard',
+        path: PATH_DASHBOARD.general.workflowDashboard,
+        icon: ICONS.analytics,
+      },
       { title: 'tài khoản', path: PATH_DASHBOARD.general.account, icon: ICONS.user },
       { title: 'đơn hàng của tôi', path: PATH_DASHBOARD.general.orders.root, icon: ICONS.cart },
       // { title: 'giỏ hàng', path: PATH_DASHBOARD.general.cart, icon: ICONS.cart },

@@ -96,6 +96,7 @@ export const PATH_DASHBOARD = {
   },
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
+    workflowDashboard: path(ROOTS_DASHBOARD, '/workflow-dashboard'),
     orders: {
       root: path(ROOTS_DASHBOARD, '/orders'),
       list: path(ROOTS_DASHBOARD, '/orders/list'),

@@ -91,6 +91,14 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralApp /> },
+        {
+          path: 'workflow-dashboard',
+          element: (
+            <RoleGuard allowedRoles={['admin']}>
+              <WorkflowDashboard />
+            </RoleGuard>
+          ),
+        },
         { path: 'cart', element: <EcommerceCheckout /> },
         { path: 'account', element: <UserAccount /> },
 
@@ -335,6 +343,9 @@ const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
 
 // GENERAL
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
+
+// WORKFLOW DASHBOARD
+const WorkflowDashboard = Loadable(lazy(() => import('../../management/workflow-dashboard')));
 
 // PRODUCT
 const ProductCreate = Loadable(lazy(() => import('../../management-product/create')));
