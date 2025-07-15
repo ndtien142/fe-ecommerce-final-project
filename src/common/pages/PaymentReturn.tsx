@@ -7,6 +7,7 @@ import Page from '../components/Page';
 import { checkMoMoPaymentStatus } from '../../checkout/service';
 import { PATH_CUSTOMER } from '../routes/paths';
 import { OrderUtils } from '../utils/orderUtils';
+import { replace } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -81,11 +82,11 @@ export default function PaymentReturn() {
   }, [orderId, resultCode]);
 
   const handleGoToOrders = () => {
-    navigate('/order');
+    navigate('/dashboard/orders', { replace: true });
   };
 
   const handleContinueShopping = () => {
-    navigate(PATH_CUSTOMER.home);
+    navigate('/', { replace: true });
   };
 
   const handleRetryPayment = () => {
