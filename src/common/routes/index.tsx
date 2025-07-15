@@ -90,15 +90,22 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <GeneralApp /> },
         {
-          path: 'workflow-dashboard',
+          path: 'app',
           element: (
             <RoleGuard allowedRoles={['admin']}>
               <WorkflowDashboard />
             </RoleGuard>
           ),
         },
+        // {
+        //   path: 'workflow-dashboard',
+        //   element: (
+        //     <RoleGuard allowedRoles={['admin']}>
+        //       <WorkflowDashboard />
+        //     </RoleGuard>
+        //   ),
+        // },
         { path: 'cart', element: <EcommerceCheckout /> },
         { path: 'account', element: <UserAccount /> },
 

@@ -43,11 +43,11 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      {
-        title: 'workflow dashboard',
-        path: PATH_DASHBOARD.general.workflowDashboard,
-        icon: ICONS.analytics,
-      },
+      // {
+      //   title: 'workflow dashboard',
+      //   path: PATH_DASHBOARD.general.workflowDashboard,
+      //   icon: ICONS.analytics,
+      // },
       { title: 'tài khoản', path: PATH_DASHBOARD.general.account, icon: ICONS.user },
       { title: 'đơn hàng của tôi', path: PATH_DASHBOARD.general.orders.root, icon: ICONS.cart },
       // { title: 'giỏ hàng', path: PATH_DASHBOARD.general.cart, icon: ICONS.cart },
@@ -111,17 +111,16 @@ const navConfig = [
         children: [{ title: 'list', path: PATH_DASHBOARD.order.list }],
       },
 
-      // BLOG
-      {
-        title: 'Đơn nhập hàng',
-        path: PATH_DASHBOARD.blog.root,
-        icon: ICONS.blog,
-        children: [
-          { title: 'posts', path: PATH_DASHBOARD.blog.posts },
-          { title: 'post', path: PATH_DASHBOARD.blog.demoView },
-          { title: 'create', path: PATH_DASHBOARD.blog.new },
-        ],
-      },
+      // {
+      //   title: 'Đơn nhập hàng',
+      //   path: PATH_DASHBOARD.blog.root,
+      //   icon: ICONS.blog,
+      //   children: [
+      //     { title: 'posts', path: PATH_DASHBOARD.blog.posts },
+      //     { title: 'post', path: PATH_DASHBOARD.blog.demoView },
+      //     { title: 'create', path: PATH_DASHBOARD.blog.new },
+      //   ],
+      // },
     ],
   },
 ];
