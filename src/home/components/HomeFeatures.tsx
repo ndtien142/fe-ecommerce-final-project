@@ -67,7 +67,7 @@ export default function HomeFeatures() {
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <m.div variants={varFade().inUp}>
             <Typography variant="h2" sx={{ mb: 3 }}>
-              Tại sao chọn FPT Furniture?
+              Tại sao chọn Mini Furniture?
             </Typography>
             <Typography variant="h6" sx={{ color: 'text.secondary', maxWidth: 600, mx: 'auto' }}>
               Chúng tôi cam kết mang đến trải nghiệm mua sắm nội thất tuyệt vời nhất cho khách hàng

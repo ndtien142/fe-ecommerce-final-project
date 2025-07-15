@@ -43,7 +43,7 @@ export default function PolicyContent() {
                 Chính sách bảo mật
               </Typography>
               <Typography variant="body1" paragraph>
-                FPT Furniture tôn trọng quyền riêng tư và cam kết bảo vệ thông tin cá nhân của bạn.
+                Mini Furniture tôn trọng quyền riêng tư và cam kết bảo vệ thông tin cá nhân của bạn.
                 Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ dữ liệu
                 của bạn khi bạn truy cập cửa hàng nội thất hoặc mua hàng.
               </Typography>
@@ -83,7 +83,7 @@ export default function PolicyContent() {
                 Điều khoản dịch vụ
               </Typography>
               <Typography variant="body1" paragraph>
-                Bằng cách sử dụng website và dịch vụ của FPT Furniture, bạn đồng ý tuân thủ và bị
+                Bằng cách sử dụng website và dịch vụ của Mini Furniture, bạn đồng ý tuân thủ và bị
                 ràng buộc bởi các điều khoản và điều kiện sau.
               </Typography>
               <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
@@ -224,7 +224,7 @@ export default function PolicyContent() {
               Có thắc mắc về chính sách của chúng tôi?
             </Typography>
             <Typography variant="body1" sx={{ color: 'grey.500' }}>
-              Liên hệ đội ngũ chăm sóc khách hàng tại support@fptfurniture.com hoặc gọi 1800-1234
+              Liên hệ đội ngũ chăm sóc khách hàng tại support@Minifurniture.com hoặc gọi 1800-1234
             </Typography>
           </Box>
         </m.div>

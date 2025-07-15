@@ -43,7 +43,7 @@ export default function HomeHero() {
           <Stack spacing={5} sx={{ maxWidth: 600 }}>
             <div>
               <TextAnimate
-                text="FPT"
+                text="Mini"
                 sx={{ color: 'primary.light' }}
                 variants={varFade().inRight}
               />
@@ -60,7 +60,7 @@ export default function HomeHero() {
               </Typography>
               <Typography variant="h6" sx={{ opacity: 0.9, mb: 4 }}>
                 Mang đến sự tinh tế, tiện nghi và phong cách cho ngôi nhà của bạn với bộ sưu tập nội
-                thất cao cấp từ FPT Furniture.
+                thất cao cấp từ Mini Furniture.
               </Typography>
             </m.div>
 

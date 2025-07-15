@@ -83,7 +83,7 @@ const Register = () => {
         {mdUp && (
           <SectionStyle>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Mua sắm thả ga cùng nội thất FPT
+              Mua sắm thả ga cùng nội thất Mini
             </Typography>
             <Image
               visibleByDefault

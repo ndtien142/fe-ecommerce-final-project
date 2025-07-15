@@ -73,7 +73,7 @@ export default function AboutVision() {
           <Box sx={{ position: 'relative' }}>
             <Image
               src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
-              alt="FPT Furniture about"
+              alt="Mini Furniture about"
               sx={{
                 height: { xs: 280, xl: 320 },
                 boxShadow: shadow,

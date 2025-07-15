@@ -61,7 +61,7 @@ export default function ContactHero() {
           <TextAnimate text="Tìm" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
           <br />
           <Box sx={{ display: 'inline-flex', color: 'common.white' }}>
-            <TextAnimate text="FPT" sx={{ mr: 2 }} />
+            <TextAnimate text="Mini" sx={{ mr: 2 }} />
             <TextAnimate text="Furniture" sx={{ mr: 2 }} />
             <TextAnimate text="gần bạn" />
           </Box>

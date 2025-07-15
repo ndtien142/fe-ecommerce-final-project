@@ -10,7 +10,7 @@ const FAQS = [
     id: 'faq1',
     heading: 'Chính sách đổi trả sản phẩm như thế nào?',
     detail:
-      'FPT Furniture áp dụng chính sách đổi trả trong vòng 30 ngày cho hầu hết sản phẩm. Sản phẩm phải còn nguyên vẹn, chưa sử dụng và có đầy đủ bao bì. Sản phẩm theo yêu cầu riêng có thời gian đổi trả 14 ngày. Chi phí vận chuyển đổi trả do khách hàng chi trả, trừ trường hợp sản phẩm bị lỗi.',
+      'Mini Furniture áp dụng chính sách đổi trả trong vòng 30 ngày cho hầu hết sản phẩm. Sản phẩm phải còn nguyên vẹn, chưa sử dụng và có đầy đủ bao bì. Sản phẩm theo yêu cầu riêng có thời gian đổi trả 14 ngày. Chi phí vận chuyển đổi trả do khách hàng chi trả, trừ trường hợp sản phẩm bị lỗi.',
   },
   {
     id: 'faq2',

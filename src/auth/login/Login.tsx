@@ -102,7 +102,7 @@ export default function Login() {
                 sx={{ flexGrow: 1, justifyItems: 'space-between' }}
               >
                 <Typography color={'green'} variant="h4">
-                  Nội thất FPT
+                  Nội thất Mini
                 </Typography>
               </Stack>
             </Stack>
