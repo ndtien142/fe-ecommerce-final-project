@@ -8,10 +8,13 @@ interface UseGetListProductParams {
   categorySlug?: string;
   status?: 'active' | 'inactive' | 'archived' | 'draft';
   brandId?: number;
+  brandName?: string;
   minPrice?: number;
   maxPrice?: number;
   flag?: 'new' | 'popular' | 'featured' | 'on_sale' | 'none';
   search?: string;
+  startDate?: string;
+  endDate?: string;
   sortBy?:
     | 'id'
     | 'name'

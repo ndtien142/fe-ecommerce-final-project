@@ -33,10 +33,13 @@ export const getListProduct = (params: {
   categorySlug?: string;
   status?: 'active' | 'inactive' | 'archived' | 'draft';
   brandId?: number;
+  brandName?: string;
   minPrice?: number;
   maxPrice?: number;
   flag?: 'new' | 'popular' | 'featured' | 'on_sale' | 'none';
   search?: string;
+  startDate?: string;
+  endDate?: string;
   sortBy?:
     | 'id'
     | 'name'
@@ -62,10 +65,13 @@ export const getListProduct = (params: {
   if (params.categorySlug) searchParams.append('categorySlug', params.categorySlug);
   if (params.status) searchParams.append('status', params.status);
   if (params.brandId) searchParams.append('brandId', params.brandId.toString());
+  if (params.brandName) searchParams.append('brandName', params.brandName);
   if (params.minPrice) searchParams.append('minPrice', params.minPrice.toString());
   if (params.maxPrice) searchParams.append('maxPrice', params.maxPrice.toString());
   if (params.flag) searchParams.append('flag', params.flag);
   if (params.search) searchParams.append('search', params.search);
+  if (params.startDate) searchParams.append('startDate', params.startDate);
+  if (params.endDate) searchParams.append('endDate', params.endDate);
   if (params.sortBy) searchParams.append('sortBy', params.sortBy);
   if (params.sortOrder) searchParams.append('sortOrder', params.sortOrder);
 

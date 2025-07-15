@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // Mui
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   TablePagination,
   Switch,
   FormControlLabel,
+  Divider,
 } from '@mui/material';
 // Components
 import HeaderBreadcrumbs from 'src/common/components/HeaderBreadcrumbs';
@@ -33,6 +34,8 @@ import {
   TableSelectedActions,
 } from 'src/common/components/table';
 import ProductTableRow from '../common/list/ProductTableRow';
+import ProductTableToolbar from '../common/list/ProductTableToolbar';
+import ProductTagFiltered from '../common/list/ProductTagFiltered';
 import { useGetListProduct } from '../common/hooks/useGetListProduct';
 
 // Table head config (match with ProductTableRow columns)
@@ -73,14 +76,73 @@ const ListProductContainer = () => {
     onChangeRowsPerPage,
   } = useTable();
 
+  // Filter states
+  const [filterName, setFilterName] = useState('');
+  const [filterBrand, setFilterBrand] = useState('all');
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterFlag, setFilterFlag] = useState('all');
+  const [filterStartDate, setFilterStartDate] = useState<Date | null>(null);
+  const [filterEndDate, setFilterEndDate] = useState<Date | null>(null);
+
   const denseHeight = dense ? 52 : 72;
 
-  const { data, isLoading } = useGetListProduct({
+  // Build API filters
+  const apiFilters = {
     limit: rowsPerPage,
     page: page + 1,
-  });
+    search: filterName || undefined,
+    status:
+      filterStatus !== 'all' ? (filterStatus as 'active' | 'inactive' | 'archived') : undefined,
+    flag:
+      filterFlag !== 'all'
+        ? (filterFlag as 'none' | 'new' | 'popular' | 'featured' | 'on_sale')
+        : undefined,
+    brandName: filterBrand !== 'all' ? filterBrand : undefined,
+    categorySlug: filterCategory !== 'all' ? filterCategory : undefined,
+    startDate: filterStartDate ? filterStartDate.toISOString() : undefined,
+    endDate: filterEndDate ? filterEndDate.toISOString() : undefined,
+  };
+
+  const { data, isLoading } = useGetListProduct(apiFilters);
 
   const products = data?.metadata?.items || [];
+
+  // Filter handlers
+  const handleFilterName = (value: string) => {
+    setFilterName(value);
+    setPage(0);
+  };
+
+  const handleFilterBrand = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterBrand(event.target.value);
+    setPage(0);
+  };
+
+  const handleFilterCategory = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterCategory(event.target.value);
+    setPage(0);
+  };
+
+  const handleFilterStatus = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterStatus(event.target.value);
+    setPage(0);
+  };
+
+  const handleFilterFlag = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterFlag(event.target.value);
+    setPage(0);
+  };
+
+  const handleFilterStartDate = (date: Date | null) => {
+    setFilterStartDate(date);
+    setPage(0);
+  };
+
+  const handleFilterEndDate = (date: Date | null) => {
+    setFilterEndDate(date);
+    setPage(0);
+  };
 
   const handleDeleteRows = (selected: string[]) => {
     // Implement delete logic here
@@ -94,6 +156,65 @@ const ListProductContainer = () => {
   const handleEditRow = (slug: string) => {
     navigate(PATH_DASHBOARD.product.edit(slug));
   };
+
+  // Reset functions for filters
+  const handleResetFilter = () => {
+    setFilterName('');
+    setFilterBrand('all');
+    setFilterCategory('all');
+    setFilterStatus('all');
+    setFilterFlag('all');
+    setFilterStartDate(null);
+    setFilterEndDate(null);
+    setPage(0);
+  };
+
+  const handleRemoveName = () => {
+    setFilterName('');
+    setPage(0);
+  };
+
+  const handleRemoveBrand = () => {
+    setFilterBrand('all');
+    setPage(0);
+  };
+
+  const handleRemoveCategory = () => {
+    setFilterCategory('all');
+    setPage(0);
+  };
+
+  const handleRemoveStatus = () => {
+    setFilterStatus('all');
+    setPage(0);
+  };
+
+  const handleRemoveFlag = () => {
+    setFilterFlag('all');
+    setPage(0);
+  };
+
+  const handleRemoveStartDate = () => {
+    setFilterStartDate(null);
+    setPage(0);
+  };
+
+  const handleRemoveEndDate = () => {
+    setFilterEndDate(null);
+    setPage(0);
+  };
+
+  const isNotFound = !products.length && !!filterName;
+
+  // Check if any filter is applied
+  const isFiltered =
+    filterName !== '' ||
+    filterBrand !== 'all' ||
+    filterCategory !== 'all' ||
+    filterStatus !== 'all' ||
+    filterFlag !== 'all' ||
+    filterStartDate !== null ||
+    filterEndDate !== null;
 
   return (
     <Page title="Quản lý: Danh sách sản phẩm">
@@ -116,7 +237,26 @@ const ListProductContainer = () => {
             </Button>
           }
         />
-        <Card sx={{ p: 3 }}>
+        <Card>
+          <ProductTableToolbar
+            filterName={filterName}
+            filterBrand={filterBrand}
+            filterCategory={filterCategory}
+            filterStatus={filterStatus}
+            filterFlag={filterFlag}
+            filterStartDate={filterStartDate}
+            filterEndDate={filterEndDate}
+            onFilterName={handleFilterName}
+            onFilterBrand={handleFilterBrand}
+            onFilterCategory={handleFilterCategory}
+            onFilterStatus={handleFilterStatus}
+            onFilterFlag={handleFilterFlag}
+            onFilterStartDate={handleFilterStartDate}
+            onFilterEndDate={handleFilterEndDate}
+          />
+
+          <Divider />
+
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
               {selected.length > 0 && (
@@ -156,27 +296,29 @@ const ListProductContainer = () => {
                 />
 
                 <TableBody>
-                  {products.map((row) => (
-                    <ProductTableRow
-                      key={row.id}
-                      row={row}
-                      selected={selected.includes(String(row.id))}
-                      onSelectRow={() => onSelectRow(String(row.id))}
-                      onViewRow={() => handleViewRow(String(row.slug))}
-                      onEditRow={() => handleEditRow(String(row.slug))}
+                  {isLoading ? (
+                    <TableEmptyRows
+                      height={denseHeight}
+                      emptyRows={emptyRows(page, rowsPerPage, products.length)}
                     />
-                  ))}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, products.length)}
-                  />
-
-                  <TableNoData isNotFound={products.length === 0 || isLoading} />
+                  ) : (
+                    products.map((row) => (
+                      <ProductTableRow
+                        key={row.id}
+                        row={row}
+                        selected={selected.includes(String(row.id))}
+                        onSelectRow={() => onSelectRow(String(row.id))}
+                        onViewRow={() => handleViewRow(row.slug)}
+                        onEditRow={() => handleEditRow(row.slug)}
+                      />
+                    ))
+                  )}
+                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </TableContainer>
           </Scrollbar>
+
           <Box sx={{ position: 'relative' }}>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}

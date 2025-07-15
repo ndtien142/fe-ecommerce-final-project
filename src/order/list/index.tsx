@@ -298,11 +298,6 @@ export default function OrderList() {
                       />
                     ))}
 
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
