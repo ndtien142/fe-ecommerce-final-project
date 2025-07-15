@@ -19,7 +19,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function About() {
   return (
-    <Page title="Về chúng tôi - FPT Furniture">
+    <Page title="Về chúng tôi - Mini Furniture">
       <RootStyle>
         <AboutHero />
         <AboutWhat />

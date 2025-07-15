@@ -18,7 +18,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function Policy() {
   return (
-    <Page title="Chính sách & Điều khoản - FPT Furniture">
+    <Page title="Chính sách & Điều khoản - Mini Furniture">
       <RootStyle>
         <PolicyHero />
         <PolicyContent />

@@ -10,7 +10,7 @@ export default function FaqsForm() {
   return (
     <Stack component={MotionViewport} spacing={3}>
       <m.div variants={varFade().inUp}>
-        <Typography variant="h4">Vẫn còn thắc mắc về nội thất FPT?</Typography>
+        <Typography variant="h4">Vẫn còn thắc mắc về nội thất Mini?</Typography>
       </m.div>
 
       <m.div variants={varFade().inUp}>

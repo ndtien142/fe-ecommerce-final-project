@@ -11,23 +11,21 @@ import MenuPopover from '../../common/components/MenuPopover';
 // ----------------------------------------------------------------------
 
 const SORT_BY_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'priceDesc', label: 'Price: High-Low' },
-  { value: 'priceAsc', label: 'Price: Low-High' },
+  { value: 'create_time', label: 'Mới nhất' },
+  { value: 'name', label: 'Tên A-Z' },
+  { value: 'name_desc', label: 'Tên Z-A' },
+  { value: 'price', label: 'Giá: Thấp-Cao' },
+  { value: 'price_desc', label: 'Giá: Cao-Thấp' },
+  { value: 'price_sale', label: 'Giá sale: Thấp-Cao' },
+  { value: 'price_sale_desc', label: 'Giá sale: Cao-Thấp' },
+  { value: 'sold', label: 'Bán chạy nhất' },
+  { value: 'stock', label: 'Còn hàng nhiều' },
+  { value: 'stock_desc', label: 'Còn hàng ít' },
 ];
 
 function renderLabel(label: string | null) {
-  if (label === 'featured') {
-    return 'Featured';
-  }
-  if (label === 'newest') {
-    return 'Newest';
-  }
-  if (label === 'priceDesc') {
-    return 'Price: High-Low';
-  }
-  return 'Price: Low-High';
+  const option = SORT_BY_OPTIONS.find((opt) => opt.value === label);
+  return option ? option.label : 'Mới nhất';
 }
 
 // ----------------------------------------------------------------------
@@ -59,8 +57,15 @@ export default function ShopProductSort() {
         disableRipple
         onClick={(event) => handleOpen(event.currentTarget)}
         endIcon={<Iconify icon={open ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
+        sx={{
+          fontSize: '0.875rem',
+          fontWeight: 500,
+          '&:hover': {
+            bgcolor: 'action.hover',
+          },
+        }}
       >
-        Sort By:&nbsp;
+        Sắp xếp:&nbsp;
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
           {renderLabel(sortBy)}
         </Typography>

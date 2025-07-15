@@ -33,7 +33,7 @@ const TESTIMONIALS = [
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80',
     rating: 5,
     comment:
-      'FPT Furniture là lựa chọn hàng đầu của tôi khi tư vấn nội thất cho khách hàng. Thiết kế đẹp, chất lượng tuyệt vời!',
+      'Mini Furniture là lựa chọn hàng đầu của tôi khi tư vấn nội thất cho khách hàng. Thiết kế đẹp, chất lượng tuyệt vời!',
   },
   {
     name: 'Lê Thị Hương',
@@ -75,7 +75,7 @@ export default function HomeTestimonials() {
               Khách hàng nói gì về chúng tôi?
             </Typography>
             <Typography variant="h6" sx={{ color: 'text.secondary', maxWidth: 600, mx: 'auto' }}>
-              Hàng nghìn khách hàng đã tin tưởng và lựa chọn FPT Furniture cho không gian sống của
+              Hàng nghìn khách hàng đã tin tưởng và lựa chọn Mini Furniture cho không gian sống của
               họ
             </Typography>
           </m.div>

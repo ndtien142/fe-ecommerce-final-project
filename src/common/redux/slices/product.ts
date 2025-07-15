@@ -16,11 +16,12 @@ const initialState: ProductState = {
   product: null,
   sortBy: null,
   filters: {
-    gender: [],
     category: 'All',
     colors: [],
     priceRange: [0, 200],
     rating: '',
+    sizes: [],
+    brands: [],
   },
   checkout: {
     activeStep: 0,
@@ -66,11 +67,12 @@ const slice = createSlice({
     },
 
     filterProducts(state, action) {
-      state.filters.gender = action.payload.gender;
       state.filters.category = action.payload.category;
       state.filters.colors = action.payload.colors;
       state.filters.priceRange = action.payload.priceRange;
       state.filters.rating = action.payload.rating;
+      state.filters.sizes = action.payload.sizes;
+      state.filters.brands = action.payload.brands;
     },
 
     // CHECKOUT

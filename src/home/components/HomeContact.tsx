@@ -18,7 +18,7 @@ const CONTACT_INFO = [
   {
     icon: 'eva:email-outline',
     title: 'Email',
-    value: 'support@fptfurniture.com',
+    value: 'support@Minifurniture.com',
     description: 'Phản hồi trong 2 giờ',
   },
   {
@@ -57,7 +57,7 @@ export default function HomeContact() {
               Liên hệ với chúng tôi
             </Typography>
             <Typography variant="h6" sx={{ color: 'text.secondary', maxWidth: 600, mx: 'auto' }}>
-              Đội ngũ chuyên gia của FPT Furniture luôn sẵn sàng hỗ trợ bạn tìm kiếm giải pháp nội
+              Đội ngũ chuyên gia của Mini Furniture luôn sẵn sàng hỗ trợ bạn tìm kiếm giải pháp nội
               thất tối ưu
             </Typography>
           </m.div>

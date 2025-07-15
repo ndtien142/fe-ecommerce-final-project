@@ -23,7 +23,7 @@ export default function ContactMap({ contacts }: { contacts: any[] }) {
     <RootStyle>
       <m.div variants={varFade().inUp}>
         <Typography variant="h3" sx={{ mb: 3 }}>
-          Địa chỉ các showroom FPT Furniture
+          Địa chỉ các showroom Mini Furniture
         </Typography>
       </m.div>
 
@@ -44,7 +44,7 @@ export default function ContactMap({ contacts }: { contacts: any[] }) {
                 Bản đồ showroom
               </Typography>
               <Typography variant="body1">
-                Ghé thăm showroom FPT Furniture gần nhất để trải nghiệm trực tiếp
+                Ghé thăm showroom Mini Furniture gần nhất để trải nghiệm trực tiếp
                 <br />
                 các sản phẩm nội thất chất lượng cao
               </Typography>

@@ -56,7 +56,9 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
     .map((section) => {
       // Only show "Quản lý sản phẩm" and "management" for admin
       if (
-        (section.subheader === 'Quản lý sản phẩm' || section.subheader === 'management') &&
+        (section.subheader === 'Quản lý sản phẩm' ||
+          section.subheader === 'management' ||
+          section.subheader === 'workflow dashboard') &&
         userRole !== 'admin'
       ) {
         return undefined;
