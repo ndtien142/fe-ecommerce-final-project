@@ -10,14 +10,15 @@ export default function SearchNotFound({ searchQuery = '', ...other }: Props) {
   return searchQuery ? (
     <Paper {...other}>
       <Typography gutterBottom align="center" variant="subtitle1">
-        Not found
+        Không tìm thấy
       </Typography>
       <Typography variant="body2" align="center">
-        No results found for &nbsp;
-        <strong>&quot;{searchQuery}&quot;</strong>. Try checking for typos or using complete words.
+        Không tìm thấy kết quả cho &nbsp;
+        <strong>&quot;{searchQuery}&quot;</strong>. Hãy thử kiểm tra lỗi chính tả hoặc sử dụng từ
+        khóa khác.
       </Typography>
     </Paper>
   ) : (
-    <Typography variant="body2"> Please enter keywords</Typography>
+    <Typography variant="body2">Vui lòng nhập từ khóa tìm kiếm</Typography>
   );
 }

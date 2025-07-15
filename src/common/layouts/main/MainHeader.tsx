@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Button, AppBar, Toolbar, Container, Link } from '@mui/material';
+import { Box, Button, AppBar, Toolbar, Container } from '@mui/material';
 // hooks
 import useOffSetTop from '../../hooks/useOffSetTop';
 import useResponsive from '../../hooks/useResponsive';
@@ -15,6 +15,7 @@ import Label from '../../components/Label';
 //
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
+import SearchProduct from './SearchProduct';
 import { useEffect, useState } from 'react';
 import { useGetCategoriesTree } from 'src/management-categories/common/hooks/useGetCategoriesTree';
 import Iconify from 'src/common/components/Iconify';
@@ -62,7 +63,6 @@ export default function MainHeader() {
 
   // Helper to check role
   const isAdmin = user?.role?.name === 'admin';
-  const isCustomer = user?.role?.name === 'customer';
 
   const isDesktop = useResponsive('up', 'md');
 
@@ -112,6 +112,13 @@ export default function MainHeader() {
 
   console.log('Menu Data:', menuData);
 
+  // Handle add to cart from search
+  const handleAddToCart = (productId: number) => {
+    // TODO: Implement add to cart logic
+    console.log('Add to cart:', productId);
+    // You can dispatch to cart slice or call API here
+  };
+
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
       <ToolbarStyle
@@ -130,32 +137,49 @@ export default function MainHeader() {
             justifyContent: 'space-between',
           }}
         >
-          <Logo />
+          {/* Logo */}
+          <Box sx={{ minWidth: 'auto' }}>
+            <Logo />
+          </Box>
 
-          <Box sx={{ flexGrow: 1 }} />
-
-          {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={menuData} />}
-
-          {/* Show user info and popover only if authenticated */}
-          {isAuthenticated && user ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              {/* Show username */}
-              <span style={{ marginLeft: 8, color: 'black' }}>{user.username}</span>
-              {/* Show admin badge if admin */}
-              {isAdmin && (
-                <Label color="primary" sx={{ ml: 1 }}>
-                  Admin
-                </Label>
-              )}
-              <AccountPopover />
+          {/* Search - Always show on desktop */}
+          {isDesktop && (
+            <Box sx={{ flexGrow: 1, mx: 3, display: 'flex', justifyContent: 'center' }}>
+              <SearchProduct onAddToCart={handleAddToCart} />
             </Box>
-          ) : (
-            <Button variant="contained" target="_blank" rel="noopener" href={PATH_AUTH.login}>
-              Đăng nhập / Đăng ký ngay
-            </Button>
           )}
 
-          {!isDesktop && <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={menuData} />}
+          {/* Menu & User Section */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {isDesktop && <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={menuData} />}
+
+            {/* Show user info and popover only if authenticated */}
+            {isAuthenticated && user ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                {/* Show username */}
+                <span style={{ marginLeft: 8, color: 'black' }}>{user.username}</span>
+                {/* Show admin badge if admin */}
+                {isAdmin && (
+                  <Label color="primary" sx={{ ml: 1 }}>
+                    Admin
+                  </Label>
+                )}
+                <AccountPopover />
+              </Box>
+            ) : (
+              <Button variant="contained" target="_blank" rel="noopener" href={PATH_AUTH.login}>
+                Đăng nhập / Đăng ký ngay
+              </Button>
+            )}
+          </Box>
+
+          {/* Mobile Menu */}
+          {!isDesktop && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <SearchProduct onAddToCart={handleAddToCart} />
+              <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={menuData} />
+            </Box>
+          )}
         </Container>
       </ToolbarStyle>
 
