@@ -47,13 +47,11 @@ type Props = {
   onRemoveRating: VoidFunction;
   onRemoveCategory: VoidFunction;
   onRemoveColor: (value: string) => void;
-  onRemoveGender: (value: string) => void;
 };
 
 export default function ShopTagFiltered({
   filters,
   isShowReset,
-  onRemoveGender,
   onRemoveCategory,
   onRemoveColor,
   onRemovePrice,
@@ -62,7 +60,7 @@ export default function ShopTagFiltered({
 }: Props) {
   const theme = useTheme();
 
-  const { gender, category, colors, priceRange, rating } = filters;
+  const { category, colors, priceRange, rating } = filters;
 
   const min = priceRange[0];
 
@@ -70,23 +68,6 @@ export default function ShopTagFiltered({
 
   return (
     <RootStyle>
-      {gender.length > 0 && (
-        <WrapperStyle>
-          <LabelStyle>Gender:</LabelStyle>
-          <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {gender.map((_gender) => (
-              <Chip
-                key={_gender}
-                label={_gender}
-                size="small"
-                onDelete={() => onRemoveGender(_gender)}
-                sx={{ m: 0.5 }}
-              />
-            ))}
-          </Stack>
-        </WrapperStyle>
-      )}
-
       {category !== 'All' && (
         <WrapperStyle>
           <LabelStyle>Category:</LabelStyle>

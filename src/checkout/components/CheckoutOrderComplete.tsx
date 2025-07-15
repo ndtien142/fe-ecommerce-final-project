@@ -11,6 +11,7 @@ import { DialogAnimate } from 'src/common/components/animate';
 // assets
 import { OrderCompleteIllustration } from '../../assets';
 import { resetCheckout } from '../checkout.slice';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +36,12 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
     dispatch(resetCheckout());
     navigate('/');
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetCheckout());
+    };
+  }, []);
 
   return (
     <DialogStyle fullScreen open={open}>

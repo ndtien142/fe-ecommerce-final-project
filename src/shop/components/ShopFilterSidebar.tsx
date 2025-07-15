@@ -22,31 +22,48 @@ import { NAVBAR } from '../../config';
 import Iconify from '../../common/components/Iconify';
 import Scrollbar from '../../common/components/Scrollbar';
 import { ColorManyPicker } from '../../common/components/color-utils';
-import { RHFMultiCheckbox, RHFRadioGroup, RHFSlider } from '../../common/components/hook-form';
+import { RHFRadioGroup, RHFSlider } from '../../common/components/hook-form';
 
 // ----------------------------------------------------------------------
 
 export const SORT_BY_OPTIONS = [
-  { value: 'featured', label: 'Featured' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'priceDesc', label: 'Price: High-Low' },
-  { value: 'priceAsc', label: 'Price: Low-High' },
-];
-
-export const FILTER_GENDER_OPTIONS = [
-  { label: 'Men', value: 'Men' },
-  { label: 'Women', value: 'Women' },
-  { label: 'Kids', value: 'Kids' },
+  { value: 'create_time', label: 'Mới nhất' },
+  { value: 'name', label: 'Tên A-Z' },
+  { value: 'price', label: 'Giá: Thấp-Cao' },
+  { value: 'price_sale', label: 'Giá sale: Thấp-Cao' },
+  { value: 'sold', label: 'Bán chạy nhất' },
+  { value: 'stock', label: 'Còn hàng' },
 ];
 
 export const FILTER_CATEGORY_OPTIONS = [
-  { label: 'All', value: 'All' },
-  { label: 'Shose', value: 'Shose' },
-  { label: 'Apparel', value: 'Apparel' },
-  { label: 'Accessories', value: 'Accessories' },
+  { label: 'Tất cả', value: 'All' },
+  { label: 'Bàn ghế', value: 'furniture' },
+  { label: 'Giường tủ', value: 'bedroom' },
+  { label: 'Trang trí', value: 'decoration' },
+  { label: 'Đèn chiếu sáng', value: 'lighting' },
+  { label: 'Phụ kiện nhà bếp', value: 'kitchen' },
 ];
 
-export const FILTER_RATING_OPTIONS = ['up4Star', 'up3Star', 'up2Star', 'up1Star'];
+export const FILTER_STATUS_OPTIONS = [
+  { label: 'Đang bán', value: 'active' },
+  { label: 'Ngừng bán', value: 'inactive' },
+  { label: 'Lưu trữ', value: 'archived' },
+];
+
+export const FILTER_FLAG_OPTIONS = [
+  { label: 'Sản phẩm mới', value: 'new' },
+  { label: 'Phổ biến', value: 'popular' },
+  { label: 'Nổi bật', value: 'featured' },
+  { label: 'Đang sale', value: 'on_sale' },
+  { label: 'Không có', value: 'none' },
+];
+
+export const FILTER_RATING_OPTIONS = [
+  { value: 'up4Star', label: '4 sao trở lên' },
+  { value: 'up3Star', label: '3 sao trở lên' },
+  { value: 'up2Star', label: '2 sao trở lên' },
+  { value: 'up1Star', label: '1 sao trở lên' },
+];
 
 export const FILTER_COLOR_OPTIONS = [
   '#00AB55',
@@ -57,6 +74,8 @@ export const FILTER_COLOR_OPTIONS = [
   '#1890FF',
   '#94D82D',
   '#FFC107',
+  '#9C27B0',
+  '#FF9800',
 ];
 
 // ----------------------------------------------------------------------
@@ -99,8 +118,15 @@ export default function ShopFilterSidebar({
         color="inherit"
         endIcon={<Iconify icon={'ic:round-filter-list'} />}
         onClick={onOpen}
+        sx={{
+          fontSize: '0.875rem',
+          fontWeight: 500,
+          '&:hover': {
+            bgcolor: 'action.hover',
+          },
+        }}
       >
-        Filters
+        Bộ lọc
       </Button>
 
       <Drawer
@@ -118,7 +144,7 @@ export default function ShopFilterSidebar({
           sx={{ px: 1, py: 2 }}
         >
           <Typography variant="subtitle1" sx={{ ml: 1 }}>
-            Filters
+            Bộ lọc
           </Typography>
 
           <IconButton onClick={onClose}>
@@ -131,17 +157,22 @@ export default function ShopFilterSidebar({
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 2.5 }}>
             <Stack spacing={1}>
-              <Typography variant="subtitle1"> Gender </Typography>
-              <RHFMultiCheckbox name="gender" options={FILTER_GENDER_OPTIONS} sx={{ width: 1 }} />
-            </Stack>
-
-            <Stack spacing={1}>
-              <Typography variant="subtitle1"> Category </Typography>
+              <Typography variant="subtitle1">Danh mục</Typography>
               <RHFRadioGroup name="category" options={FILTER_CATEGORY_OPTIONS} row={false} />
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1"> Color </Typography>
+              <Typography variant="subtitle1">Trạng thái</Typography>
+              <RHFRadioGroup name="status" options={FILTER_STATUS_OPTIONS} row={false} />
+            </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Loại sản phẩm</Typography>
+              <RHFRadioGroup name="flag" options={FILTER_FLAG_OPTIONS} row={false} />
+            </Stack>
+
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Màu sắc</Typography>
 
               <Controller
                 name="colors"
@@ -149,8 +180,9 @@ export default function ShopFilterSidebar({
                 render={({ field }) => (
                   <ColorManyPicker
                     colors={FILTER_COLOR_OPTIONS}
+                    value={field.value}
                     onChangeColor={(color) => field.onChange(onSelected(field.value, color))}
-                    sx={{ maxWidth: 36 * 4 }}
+                    sx={{ maxWidth: 38 * 5 }}
                   />
                 )}
               />
@@ -158,7 +190,7 @@ export default function ShopFilterSidebar({
 
             <Stack spacing={1} sx={{ pb: 2 }}>
               <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
-                Price
+                Khoảng giá
               </Typography>
 
               <Stack direction="row" spacing={2}>
@@ -179,7 +211,7 @@ export default function ShopFilterSidebar({
             </Stack>
 
             <Stack spacing={1}>
-              <Typography variant="subtitle1">Rating</Typography>
+              <Typography variant="subtitle1">Đánh giá</Typography>
 
               <Controller
                 name="rating"
@@ -188,8 +220,8 @@ export default function ShopFilterSidebar({
                   <RadioGroup {...field}>
                     {FILTER_RATING_OPTIONS.map((item, index) => (
                       <FormControlLabel
-                        key={item}
-                        value={item}
+                        key={item.value}
+                        value={item.value}
                         control={
                           <Radio
                             disableRipple
@@ -201,12 +233,12 @@ export default function ShopFilterSidebar({
                             }}
                           />
                         }
-                        label="& Up"
+                        label={item.label}
                         sx={{
                           my: 0.5,
                           borderRadius: 1,
                           '&:hover': { opacity: 0.48 },
-                          ...(field.value.includes(item) && {
+                          ...(field.value === item.value && {
                             bgcolor: 'action.selected',
                           }),
                         }}
@@ -216,29 +248,100 @@ export default function ShopFilterSidebar({
                 )}
               />
             </Stack>
+
+            {/* Thêm bộ lọc theo kích thước */}
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Kích thước</Typography>
+              <Controller
+                name="sizes"
+                control={control}
+                render={({ field }) => (
+                  <Stack direction="row" spacing={1} flexWrap="wrap">
+                    {['Nhỏ', 'Vừa', 'Lớn', 'Đại'].map((size) => (
+                      <Button
+                        key={size}
+                        variant={field.value?.includes(size) ? 'contained' : 'outlined'}
+                        size="small"
+                        onClick={() => {
+                          const currentSizes = field.value || [];
+                          field.onChange(onSelected(currentSizes, size));
+                        }}
+                        sx={{ minWidth: 50, height: 40 }}
+                      >
+                        {size}
+                      </Button>
+                    ))}
+                  </Stack>
+                )}
+              />
+            </Stack>
+
+            {/* Thêm bộ lọc theo thương hiệu */}
+            <Stack spacing={1}>
+              <Typography variant="subtitle1">Thương hiệu</Typography>
+              <Controller
+                name="brands"
+                control={control}
+                render={({ field }) => (
+                  <Stack spacing={1}>
+                    {['IKEA', 'Jysk', 'Lotte', 'Duy Tân', 'Hòa Phát'].map((brand) => (
+                      <FormControlLabel
+                        key={brand}
+                        control={
+                          <Radio
+                            checked={field.value?.includes(brand)}
+                            onChange={(e) => {
+                              const currentBrands = field.value || [];
+                              field.onChange(
+                                e.target.checked
+                                  ? [...currentBrands, brand]
+                                  : currentBrands.filter((b: string) => b !== brand)
+                              );
+                            }}
+                          />
+                        }
+                        label={brand}
+                      />
+                    ))}
+                  </Stack>
+                )}
+              />
+            </Stack>
           </Stack>
         </Scrollbar>
 
         <Box sx={{ p: 2.5 }}>
-          <Badge
-            color="error"
-            variant="dot"
-            anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-            invisible={isDefault}
-            sx={{ width: 1 }}
-          >
+          <Stack spacing={2}>
+            <Badge
+              color="error"
+              variant="dot"
+              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+              invisible={isDefault}
+              sx={{ width: 1 }}
+            >
+              <Button
+                fullWidth
+                size="large"
+                type="submit"
+                color="inherit"
+                variant="outlined"
+                onClick={onResetAll}
+                startIcon={<Iconify icon="ic:round-clear-all" />}
+              >
+                Xóa tất cả
+              </Button>
+            </Badge>
+
             <Button
               fullWidth
               size="large"
-              type="submit"
-              color="inherit"
-              variant="outlined"
-              onClick={onResetAll}
-              startIcon={<Iconify icon="ic:round-clear-all" />}
+              variant="contained"
+              onClick={onClose}
+              startIcon={<Iconify icon="eva:checkmark-fill" />}
             >
-              Clear All
+              Áp dụng bộ lọc
             </Button>
-          </Badge>
+          </Stack>
         </Box>
       </Drawer>
     </>

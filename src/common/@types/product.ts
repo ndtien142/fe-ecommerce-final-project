@@ -82,11 +82,12 @@ export type ProductState = {
   product: Product | null;
   sortBy: string | null;
   filters: {
-    gender: string[];
     category: string;
     colors: string[];
     priceRange: [number, number];
     rating: string;
+    sizes: string[];
+    brands: string[];
   };
   checkout: {
     activeStep: number;
@@ -100,11 +101,12 @@ export type ProductState = {
 };
 
 export type ProductFilter = {
-  gender: string[];
   category: string;
   colors: string[];
   priceRange: [number, number];
   rating: string;
+  sizes: string[];
+  brands: string[];
 };
 
 export type DeliveryOption = {

@@ -27,20 +27,20 @@ const CATEGORIES = [
     link: '/shop?category=phong-ngu',
   },
   {
-    name: 'Phòng bếp',
-    description: 'Bàn ăn, ghế ăn, tủ bếp hiện đại',
+    name: 'Phòng làm việc',
+    description: 'Bàn làm việc, ghế ergonomic, tủ sách',
     icon: 'eva:grid-outline',
     image:
-      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-    link: '/shop?category=kitchen',
+      'https://images.unsplash.com/photo-1560264280-88b68371db39?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    link: '/shop?category=phong-lam-viec',
   },
   {
-    name: 'Văn phòng',
-    description: 'Bàn làm việc, ghế ergonomic, tủ sách',
+    name: 'Phụ kiện trang trí',
+    description: 'Đèn, tranh treo tường, thảm trải sàn',
     icon: 'eva:book-outline',
     image:
-      'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
-    link: '/shop?category=phong-lam-viec',
+      'https://plus.unsplash.com/premium_photo-1677534712600-798e360ce337?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fGRlY29yYXRpdmUlMjBhY2Nlc3Nvcmllc3xlbnwwfHwwfHx8MA%3D%3D',
+    link: '/shop?category=phu-kien-trang-tri',
   },
 ];
 
