@@ -65,3 +65,11 @@ export const API_LOGS = '/order/logs';
 
 // ACCOUNT API CONSTANTS
 export const API_ACCOUNT = '/account';
+
+// COUPON API CONSTANTS
+export const API_COUPON = '/coupons';
+export const API_COUPON_AVAILABLE = '/coupons/available';
+export const API_COUPON_VALIDATE = '/coupons/validate';
+export const API_COUPON_MY_AVAILABLE = '/coupons/my-available';
+export const API_COUPON_GRANT_USER = '/coupons/grant-user';
+export const API_COUPON_USER = '/coupons/user';

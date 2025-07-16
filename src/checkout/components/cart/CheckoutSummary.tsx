@@ -91,23 +91,6 @@ export default function CheckoutSummary({
               </Typography>
             </Box>
           </Stack>
-
-          {enableDiscount && onApplyDiscount && (
-            <TextField
-              fullWidth
-              placeholder="Mã giảm giá / Quà tặng"
-              value="DISCOUNT5"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Button onClick={() => onApplyDiscount(5)} sx={{ mr: -0.5 }}>
-                      Áp dụng
-                    </Button>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          )}
         </Stack>
       </CardContent>
     </Card>

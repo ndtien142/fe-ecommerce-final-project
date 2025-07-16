@@ -52,6 +52,10 @@ export const PATH_CUSTOMER = {
     view: (slug: string) => path(ROOTS_CUSTOMER, `/product/${slug}`),
     edit: (slug: string) => path(ROOTS_CUSTOMER, `/product/${slug}/edit`),
   },
+  coupon: {
+    root: path(ROOTS_CUSTOMER, '/coupons'),
+    list: path(ROOTS_CUSTOMER, '/coupons'),
+  },
 };
 
 export const PATH_DASHBOARD = {

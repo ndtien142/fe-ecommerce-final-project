@@ -312,6 +312,7 @@ export default function Router() {
       children: [
         { element: <HomePage />, index: true },
         { path: 'shop', element: <Shop /> },
+        { path: 'coupons', element: <CouponPage /> },
 
         { path: 'product/:slug', element: <ProductDetails /> },
         {
@@ -336,6 +337,7 @@ export default function Router() {
 // CUSTOMER ROUTES
 const HomePage = Loadable(lazy(() => import('../../home')));
 const Shop = Loadable(lazy(() => import('../../shop')));
+const CouponPage = Loadable(lazy(() => import('../../coupon')));
 
 // ----------------------------------------------------------------------
 
@@ -347,9 +349,6 @@ const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword'))
 const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
 
 // DASHBOARD
-
-// GENERAL
-const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
 
 // WORKFLOW DASHBOARD
 const WorkflowDashboard = Loadable(lazy(() => import('../../management/workflow-dashboard')));
