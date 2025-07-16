@@ -190,6 +190,37 @@ export default function Router() {
         },
 
         {
+          path: 'coupon',
+          children: [
+            { element: <Navigate to="/dashboard/coupon/list" replace />, index: true },
+            {
+              path: 'new',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CouponCreate />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CouponList />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: ':id/edit',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CouponEdit />
+                </RoleGuard>
+              ),
+            },
+          ],
+        },
+
+        {
           path: 'categories',
           children: [
             { element: <Navigate to="/dashboard/categories/list" replace />, index: true },
@@ -368,6 +399,11 @@ const OrderDetails = Loadable(lazy(() => import('../../order/detail')));
 // BRAND
 const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));
 const BrandList = Loadable(lazy(() => import('../../management-brand/list')));
+
+// COUPON
+const CouponCreate = Loadable(lazy(() => import('../../management-coupon/create')));
+const CouponList = Loadable(lazy(() => import('../../management-coupon/list')));
+const CouponEdit = Loadable(lazy(() => import('../../management-coupon/edit')));
 
 // CATEGORY
 const CategoryList = Loadable(lazy(() => import('../../management-categories/list')));

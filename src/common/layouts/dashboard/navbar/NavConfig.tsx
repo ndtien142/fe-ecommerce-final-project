@@ -1,8 +1,6 @@
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import Label from '../../../components/Label';
-import Iconify from '../../../components/Iconify';
 import SvgIconStyle from '../../../components/SvgIconStyle';
 
 // ----------------------------------------------------------------------
@@ -34,6 +32,7 @@ const ICONS = {
   transfer: getIcon('ic_transfer'),
   brand: getIcon('ic_star'),
   categories: getIcon('ic_categories'),
+  coupon: getIcon('ic_discount'),
 };
 
 const navConfig = [
@@ -73,6 +72,15 @@ const navConfig = [
         children: [
           { title: 'Danh sách', path: PATH_DASHBOARD.brand.list },
           { title: 'Tạo mới', path: PATH_DASHBOARD.brand.new },
+        ],
+      },
+      {
+        title: 'Mã giảm giá',
+        path: PATH_DASHBOARD.coupon.root,
+        icon: ICONS.coupon,
+        children: [
+          { title: 'Danh sách', path: PATH_DASHBOARD.coupon.list },
+          { title: 'Tạo mới', path: PATH_DASHBOARD.coupon.new },
         ],
       },
       {
