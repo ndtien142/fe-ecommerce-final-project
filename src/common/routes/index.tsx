@@ -190,6 +190,37 @@ export default function Router() {
         },
 
         {
+          path: 'coupon',
+          children: [
+            { element: <Navigate to="/dashboard/coupon/list" replace />, index: true },
+            {
+              path: 'new',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CouponCreate />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: 'list',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CouponList />
+                </RoleGuard>
+              ),
+            },
+            {
+              path: ':id/edit',
+              element: (
+                <RoleGuard allowedRoles={['admin']}>
+                  <CouponEdit />
+                </RoleGuard>
+              ),
+            },
+          ],
+        },
+
+        {
           path: 'categories',
           children: [
             { element: <Navigate to="/dashboard/categories/list" replace />, index: true },
@@ -312,6 +343,7 @@ export default function Router() {
       children: [
         { element: <HomePage />, index: true },
         { path: 'shop', element: <Shop /> },
+        { path: 'coupons', element: <CouponPage /> },
 
         { path: 'product/:slug', element: <ProductDetails /> },
         {
@@ -336,6 +368,7 @@ export default function Router() {
 // CUSTOMER ROUTES
 const HomePage = Loadable(lazy(() => import('../../home')));
 const Shop = Loadable(lazy(() => import('../../shop')));
+const CouponPage = Loadable(lazy(() => import('../../coupon')));
 
 // ----------------------------------------------------------------------
 
@@ -347,9 +380,6 @@ const ResetPassword = Loadable(lazy(() => import('../pages/auth/ResetPassword'))
 const NewPassword = Loadable(lazy(() => import('../pages/auth/NewPassword')));
 
 // DASHBOARD
-
-// GENERAL
-const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
 
 // WORKFLOW DASHBOARD
 const WorkflowDashboard = Loadable(lazy(() => import('../../management/workflow-dashboard')));
@@ -369,6 +399,11 @@ const OrderDetails = Loadable(lazy(() => import('../../order/detail')));
 // BRAND
 const BrandCreate = Loadable(lazy(() => import('../../management-brand/create')));
 const BrandList = Loadable(lazy(() => import('../../management-brand/list')));
+
+// COUPON
+const CouponCreate = Loadable(lazy(() => import('../../management-coupon/create')));
+const CouponList = Loadable(lazy(() => import('../../management-coupon/list')));
+const CouponEdit = Loadable(lazy(() => import('../../management-coupon/edit')));
 
 // CATEGORY
 const CategoryList = Loadable(lazy(() => import('../../management-categories/list')));

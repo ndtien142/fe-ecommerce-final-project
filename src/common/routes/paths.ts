@@ -52,6 +52,10 @@ export const PATH_CUSTOMER = {
     view: (slug: string) => path(ROOTS_CUSTOMER, `/product/${slug}`),
     edit: (slug: string) => path(ROOTS_CUSTOMER, `/product/${slug}/edit`),
   },
+  coupon: {
+    root: path(ROOTS_CUSTOMER, '/coupons'),
+    list: path(ROOTS_CUSTOMER, '/coupons'),
+  },
 };
 
 export const PATH_DASHBOARD = {
@@ -72,6 +76,13 @@ export const PATH_DASHBOARD = {
     reorder: path(ROOTS_DASHBOARD, '/categories/reorder'),
     view: (name: string) => path(ROOTS_DASHBOARD, `/categories/${name}`),
     edit: (id: number) => path(ROOTS_DASHBOARD, `/categories/${id}/edit`),
+  },
+  coupon: {
+    root: path(ROOTS_DASHBOARD, '/coupon'),
+    new: path(ROOTS_DASHBOARD, '/coupon/new'),
+    list: path(ROOTS_DASHBOARD, '/coupon/list'),
+    view: (id: string) => path(ROOTS_DASHBOARD, `/coupon/${id}`),
+    edit: (id: string) => path(ROOTS_DASHBOARD, `/coupon/${id}/edit`),
   },
   brand: {
     root: path(ROOTS_DASHBOARD, '/brand'),

@@ -13,11 +13,13 @@ import Scrollbar from '../../../common/components/Scrollbar';
 import EmptyContent from '../../../common/components/EmptyContent';
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutProductList from './CheckoutProductList';
+// coupon components
+import CheckoutCoupon from '../../../coupon/components/CheckoutCoupon';
 // routes
-import { PATH_CUSTOMER } from '../../../common/routes/paths';
 import { useDispatch } from 'src/common/redux/store';
 import { onNextStep, setCart } from 'src/checkout/checkout.slice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { ICouponValidationResult, IUserCoupon } from 'src/common/@types/coupon/coupon.interface';
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +31,9 @@ const CheckoutCart = () => {
   const plusItem = usePlusItemQuantity();
   const removeItem = useRemoveItemFromCart();
 
+  // Coupon state
+  const [appliedCoupon, setAppliedCoupon] = useState<ICouponValidationResult | null>(null);
+
   useEffect(() => {
     if (cartData?.metadata) {
       dispatch(setCart(cartData.metadata));
@@ -37,8 +42,13 @@ const CheckoutCart = () => {
 
   const cart = cartData?.metadata?.lineItems || [];
   const subtotal = cart.reduce((sum, item) => sum + Number(item.total), 0);
-  const total = subtotal; // Adjust if you have shipping/discount logic
-  const discount = 0; // Adjust if you have discount logic
+
+  // Calculate discount from applied coupon
+  const discount = appliedCoupon
+    ? appliedCoupon.discount.discountAmount + appliedCoupon.discount.shippingDiscount
+    : 0;
+
+  const total = subtotal - discount;
 
   const totalItems = sum(cart.map((item) => item.quantity));
   const isEmptyCart = cart.length === 0;
@@ -61,6 +71,44 @@ const CheckoutCart = () => {
 
   const handleNextStep = () => {
     dispatch(onNextStep());
+  };
+
+  // Coupon handlers
+  const handleCouponApplied = (coupon: IUserCoupon | ICouponValidationResult) => {
+    // Convert IUserCoupon to ICouponValidationResult if needed
+    if ('userId' in coupon) {
+      const userCoupon = coupon as IUserCoupon;
+
+      // Calculate discount based on coupon type
+      let discountAmount = 0;
+      let shippingDiscount = 0;
+
+      if (userCoupon.coupon.type === 'percent') {
+        discountAmount = Math.min(
+          (subtotal * userCoupon.coupon.value) / 100,
+          userCoupon.coupon.maxDiscountAmount || Infinity
+        );
+      } else if (userCoupon.coupon.type === 'fixed') {
+        discountAmount = userCoupon.coupon.value;
+      } else if (userCoupon.coupon.type === 'free_shipping') {
+        shippingDiscount = 30000; // Shipping fee
+      }
+
+      const validationResult: ICouponValidationResult = {
+        coupon: userCoupon.coupon,
+        discount: {
+          discountAmount: discountAmount,
+          shippingDiscount: shippingDiscount,
+        },
+      };
+      setAppliedCoupon(validationResult);
+    } else {
+      setAppliedCoupon(coupon as ICouponValidationResult);
+    }
+  };
+
+  const handleCouponRemoved = () => {
+    setAppliedCoupon(null);
   };
 
   // Map API cart line items to UI CartItem type if needed by CheckoutProductList
@@ -121,6 +169,24 @@ const CheckoutCart = () => {
       </Grid>
 
       <Grid item xs={12} md={4}>
+        {/* Coupon Section */}
+        <Card sx={{ mb: 3 }}>
+          <CheckoutCoupon
+            cartData={{
+              subtotal,
+              shippingFee: 30000,
+              items: cart.map((item) => ({
+                productId: item.productId,
+                quantity: item.quantity,
+                price: Number(item.price),
+              })),
+            }}
+            onCouponApplied={handleCouponApplied}
+            onCouponRemoved={handleCouponRemoved}
+            appliedCoupon={appliedCoupon}
+          />
+        </Card>
+
         <CheckoutSummary
           enableDiscount
           total={total}
