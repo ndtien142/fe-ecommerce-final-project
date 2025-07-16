@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { useSnackbar } from 'notistack';
 import { checkMoMoPaymentStatus } from '../service';
 import { QUERY_KEYS } from 'src/common/constant/queryKeys.constant';
+import { useSnackbar } from 'notistack';
 
-export function useCheckMoMoPaymentStatus() {
-  const { enqueueSnackbar } = useSnackbar();
+export function useCheckMoMoPaymentStatusMutation() {
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
 
-  return useMutation((orderId: number) => checkMoMoPaymentStatus(orderId), {
-    onSuccess: (data) => {
+  return useMutation({
+    mutationFn: (orderId: number) => checkMoMoPaymentStatus(orderId),    onSuccess: (data) => {
       const { resultCode, message } = data.metadata;
       const code = typeof resultCode === 'string' ? parseInt(resultCode) : resultCode;
       
@@ -43,18 +43,14 @@ export function useCheckMoMoPaymentStatus() {
       const statusInfo = getStatusMessage(code, message);
       enqueueSnackbar(statusInfo.message, { variant: statusInfo.variant });
 
-      // Invalidate và refetch order list để cập nhật trạng thái mới
+      // Invalidate and refetch order list
       queryClient.invalidateQueries([QUERY_KEYS.ORDER_LIST]);
-      queryClient.invalidateQueries([QUERY_KEYS.ORDER_ANALYTICS]);
-
-      // Log kết quả để debug
-      console.log('MoMo transaction status:', data);
+      queryClient.invalidateQueries([QUERY_KEYS.ORDER]);
     },
     onError: (error: any) => {
-      const errorMessage =
-        error?.response?.data?.message || 'Lỗi khi kiểm tra trạng thái thanh toán';
-      enqueueSnackbar(errorMessage, { variant: 'error' });
-      console.error('Check MoMo status error:', error);
+      enqueueSnackbar(error?.message || 'Có lỗi xảy ra khi kiểm tra trạng thái thanh toán', {
+        variant: 'error',
+      });
     },
   });
 }

@@ -53,6 +53,7 @@ const TABLE_HEAD = [
   { id: 'createDate', label: 'Created', align: 'left' },
   { id: 'totalAmount', label: 'Amount', align: 'center', width: 140 },
   { id: 'status', label: 'Status', align: 'left' },
+  { id: 'paymentStatus', label: 'Payment', align: 'left', width: 140 },
   { id: '' },
 ];
 

@@ -9,7 +9,13 @@ import {
   IWorkflowActionRequest,
   IWorkflowActionResponse,
 } from 'src/common/@types/order/workflow.interface';
-import { API_LOGS, API_ORDER, API_ORDER_WORKFLOW } from 'src/common/constant/api.constant';
+import { IMoMoStatusResponse } from 'src/common/@types/payment/momo.interface';
+import {
+  API_LOGS,
+  API_ORDER,
+  API_ORDER_WORKFLOW,
+  API_MOMO_STATUS,
+} from 'src/common/constant/api.constant';
 import axiosInstance from 'src/common/utils/axios';
 
 export const getListOrder = async (params: IOrderParams) =>
@@ -32,7 +38,7 @@ export const cancelOrderAdmin = async (orderId: number) =>
   axiosInstance.patch<unknown, any>(`${API_ORDER}/admin/${orderId}/cancel`);
 
 export const checkMoMoPaymentStatus = async (orderId: number) =>
-  axiosInstance.get<unknown, any>(`/v1/api/momo/status/${orderId}`);
+  axiosInstance.get<unknown, IMoMoStatusResponse>(`${API_MOMO_STATUS}/${orderId}`);
 
 export const processOrderRefund = async (orderId: number, amount?: number) =>
   axiosInstance.post<unknown, any>(`${API_ORDER}/admin/${orderId}/refund`, { amount });

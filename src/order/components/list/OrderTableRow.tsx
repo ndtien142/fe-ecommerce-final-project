@@ -20,6 +20,8 @@ import { IOrder } from '../../../common/@types/order/order.interface';
 import Label from '../../../common/components/Label';
 import Iconify from '../../../common/components/Iconify';
 import { TableMoreMenu } from '../../../common/components/table';
+import CheckMoMoStatusButton from './CheckMoMoStatusButton';
+import PaymentStatusChip from './PaymentStatusChip';
 
 // ----------------------------------------------------------------------
 
@@ -168,6 +170,13 @@ export default function OrderTableRow({
               {paymentMethodName}
             </Typography>
           )}
+        </Stack>
+      </TableCell>
+
+      <TableCell align="left">
+        <Stack direction="column" alignItems="center" spacing={1}>
+          <PaymentStatusChip payment={payment} />
+          <CheckMoMoStatusButton order={row} />
         </Stack>
       </TableCell>
 

@@ -4,7 +4,8 @@ import {
   IOrderParams,
   IOrderResponse,
 } from 'src/common/@types/order/order.interface';
-import { API_ORDER } from 'src/common/constant/api.constant';
+import { IMoMoStatusResponse } from 'src/common/@types/payment/momo.interface';
+import { API_MOMO_STATUS, API_ORDER } from 'src/common/constant/api.constant';
 import axiosInstance from 'src/common/utils/axios';
 
 export const getListOrder = async (params: IOrderParams) =>
@@ -26,7 +27,7 @@ export const updateOrderAddress = async (orderId: number, addressId: number) =>
   axiosInstance.patch<unknown, any>(`${API_ORDER}/user/${orderId}/address`, { addressId });
 
 export const checkMoMoPaymentStatus = async (orderId: number) =>
-  axiosInstance.get<unknown, any>(`/v1/api/momo/status/${orderId}`);
+  axiosInstance.get<unknown, IMoMoStatusResponse>(`${API_MOMO_STATUS}/${orderId}`);
 
 export const cancelOrder = async (orderId: number) =>
   axiosInstance.patch<unknown, any>(`${API_ORDER}/user/${orderId}/cancel`);
