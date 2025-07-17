@@ -1,4 +1,4 @@
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 // hooks
 import useAuth from '../hooks/useAuth';
@@ -7,8 +7,9 @@ import useAuth from '../hooks/useAuth';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import Login from 'src/auth/login/Login';
-import { useSelector } from '../redux/store';
+import { useSelector, useDispatch } from '../redux/store';
 import { selectIsAuthenticated } from 'src/auth/login/auth.slice';
+import { selectLastVisitedProduct, setLastVisitedProduct } from '../redux/slices/lastVisited';
 
 // ----------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
 import { sentenceCase } from 'change-case';
 import { useNavigate } from 'react-router-dom';
 // form
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Stack, Button, Typography, IconButton } from '@mui/material';
@@ -14,7 +14,11 @@ import Label from '../../common/components/Label';
 import Iconify from '../../common/components/Iconify';
 import { useAddToCart } from '../hooks/useAddToCart';
 import { default as useMessage } from 'src/common/hooks/useMessage';
-import { PATH_CUSTOMER } from 'src/common/routes/paths';
+import { PATH_CUSTOMER, PATH_AUTH } from 'src/common/routes/paths';
+import { useSelector, useDispatch } from 'src/common/redux/store';
+import { selectIsAuthenticated } from 'src/auth/login/auth.slice';
+import { setLastVisitedProduct } from 'src/common/redux/slices/lastVisited';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +45,8 @@ type FormValues = {
 export default function ProductSummary({ product }: Props) {
   const theme = useTheme();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
 
@@ -64,6 +70,13 @@ export default function ProductSummary({ product }: Props) {
   const values = watch();
 
   const handleAddCart = async (data: FormValues) => {
+    if (!isAuthenticated) {
+      // Save current product URL and redirect to login
+      dispatch(setLastVisitedProduct(window.location.pathname));
+      navigate(PATH_AUTH.login);
+      return;
+    }
+
     mutate(
       {
         productId: String(data.id),
@@ -84,6 +97,13 @@ export default function ProductSummary({ product }: Props) {
   };
 
   const handleBuyNow = async (data: FormValues) => {
+    if (!isAuthenticated) {
+      // Save current product URL and redirect to login
+      dispatch(setLastVisitedProduct(window.location.pathname));
+      navigate(PATH_AUTH.login);
+      return;
+    }
+
     console.log('Buy now:', data);
     mutate(
       {
@@ -104,6 +124,10 @@ export default function ProductSummary({ product }: Props) {
       }
     );
   };
+
+  useEffect(() => {
+    dispatch(setLastVisitedProduct(window.location.pathname));
+  }, []);
 
   return (
     <RootStyle>

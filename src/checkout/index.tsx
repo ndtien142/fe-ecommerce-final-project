@@ -11,7 +11,7 @@ import HeaderBreadcrumbs from '../common/components/HeaderBreadcrumbs';
 // sections
 import CheckoutCart from './components/cart/CheckoutCart';
 import { HEADER } from 'src/config';
-import { useDispatch, useSelector } from '../common/redux/store';
+import { useSelector } from '../common/redux/store';
 import CheckoutAndBillingAddress from './components/billing-address/CheckoutAndBillingAddress';
 import CheckoutPayment from './components/payment/CheckoutPayment';
 import CheckoutOrderComplete from './components/CheckoutOrderComplete';
@@ -70,8 +70,6 @@ function QontoStepIcon({ active, completed }: { active: boolean; completed: bool
 const CheckoutContainer = () => {
   const { themeStretch } = useSettings();
 
-  // Use checkout slice for activeStep
-  const dispatch = useDispatch();
   const activeStep = useSelector((state) => state.checkout.activeStep);
 
   const isComplete = activeStep === STEPS.length;
