@@ -79,6 +79,7 @@ export default function NewOrderDetailSection({ order }: Props) {
     queryClient.invalidateQueries([QUERY_KEYS.ORDER_LOGS, id]);
     queryClient.invalidateQueries(QUERY_KEYS.ORDER_LIST);
     queryClient.invalidateQueries(QUERY_KEYS.ORDER_ANALYTICS);
+    queryClient.invalidateQueries(QUERY_KEYS.ORDER_WORKFLOW_ACTIONS);
   };
 
   const statusColor =

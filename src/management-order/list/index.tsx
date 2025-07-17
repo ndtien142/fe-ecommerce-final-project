@@ -183,7 +183,7 @@ export default function OrderList() {
           heading="Danh sách đơn hàng"
           links={[
             { name: 'Dashboard', href: '/' },
-            { name: 'Đơn hàng', href: '/order' },
+            { name: 'Danh sách đơn hàng', href: PATH_DASHBOARD.order.list },
             { name: 'Danh sách' },
           ]}
         />
@@ -281,6 +281,7 @@ export default function OrderList() {
                         onSelectRow={() => onSelectRow(String(row.id))}
                         onViewRow={() => handleViewRow(String(row.id))}
                         onDeleteRow={() => handleDeleteRow(String(row.id))}
+                        hiddenCheckMomo={row.status === 'cancelled'}
                       />
                     ))
                   )}

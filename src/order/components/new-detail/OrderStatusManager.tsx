@@ -36,9 +36,6 @@ export default function OrderStatusManager({ order, onStatusUpdate }: Props) {
   const { data: workflowStatus } = useGetWorkFlowActions(order.id);
   const { executeAction, isLoading } = useUpdateOrderStatusActions(order.id);
 
-  console.log('Workflow Status:', workflowStatus);
-  console.log('order:', order);
-
   const [selectedAction, setSelectedAction] = useState<IActionConfig | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -129,8 +126,6 @@ export default function OrderStatusManager({ order, onStatusUpdate }: Props) {
   };
 
   const canExecuteActions = !['cancelled', 'returned'].includes(order.status);
-
-  console.log('Available Actions:', availableActions);
 
   return (
     <Card sx={{ p: 3, mb: 3 }}>

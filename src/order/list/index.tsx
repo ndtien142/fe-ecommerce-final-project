@@ -288,6 +288,7 @@ export default function OrderList() {
                         onSelectRow={() => onSelectRow(String(row.id))}
                         onViewRow={() => handleViewRow(String(row.id))}
                         onDeleteRow={() => handleDeleteRow(String(row.id))}
+                        hiddenCheckMomo={row.status === 'cancelled'}
                       />
                     ))
                   )}
