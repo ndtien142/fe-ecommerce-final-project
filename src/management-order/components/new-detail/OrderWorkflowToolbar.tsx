@@ -51,14 +51,6 @@ export default function OrderWorkflowToolbar({ order }: Props) {
         sx={{ mb: 5 }}
       >
         <Stack direction="row" spacing={1}>
-          {canEdit && (
-            <Tooltip title="Chỉnh sửa đơn hàng">
-              <IconButton onClick={handleEdit}>
-                <Iconify icon={'eva:edit-fill'} />
-              </IconButton>
-            </Tooltip>
-          )}
-
           {canViewPDF && (
             <Tooltip title="Xem PDF">
               <IconButton onClick={onOpen}>
