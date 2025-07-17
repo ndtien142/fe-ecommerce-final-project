@@ -13,7 +13,6 @@ import {
   ListItem,
   LinkProps,
   ListSubheader,
-  CardActionArea,
 } from '@mui/material';
 // components
 import Iconify from '../../components/Iconify';
@@ -173,7 +172,7 @@ function MenuDesktopItem({
               const { subheader, items } = list;
 
               return (
-                <Grid key={subheader} item xs={12} md={subheader === 'Dashboard' ? 6 : 2}>
+                <Grid key={subheader} item xs={12} md={subheader === 'Dashboard' ? 6 : 3}>
                   <List disablePadding>
                     <ListSubheader
                       disableSticky
@@ -207,33 +206,8 @@ function MenuDesktopItem({
                           }),
                         }}
                       >
-                        {item.title === 'Trang quản trị' ? (
-                          <CardActionArea
-                            sx={{
-                              // py: 5,
-                              // px: 10,
-                              borderRadius: 2,
-                              color: 'primary.main',
-                              bgcolor: 'background.neutral',
-                            }}
-                          >
-                            <Box
-                              component={m.img}
-                              whileTap="tap"
-                              whileHover="hover"
-                              variants={{
-                                hover: { scale: 1.02 },
-                                tap: { scale: 0.98 },
-                              }}
-                              src="/assets/illustrations/illustration_dashboard.png"
-                            />
-                          </CardActionArea>
-                        ) : (
-                          <>
-                            <IconBullet />
-                            {item.title}
-                          </>
-                        )}
+                        <IconBullet />
+                        {item.title}
                       </SubLinkStyle>
                     ))}
                   </List>
@@ -243,22 +217,6 @@ function MenuDesktopItem({
           </Grid>
         </Popover>
       </>
-    );
-  }
-
-  if (title === 'Documentation') {
-    return (
-      <LinkStyle
-        href={path}
-        target="_blank"
-        rel="noopener"
-        sx={{
-          ...(isHome && { color: 'common.white' }),
-          ...(isOffset && { color: 'text.primary' }),
-        }}
-      >
-        {title}
-      </LinkStyle>
     );
   }
 

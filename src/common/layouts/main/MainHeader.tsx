@@ -87,10 +87,7 @@ export default function MainHeader() {
           title: 'Danh mục sản phẩm',
           path: '/categories',
           icon: <Iconify icon={'eva:pricetags-fill'} />,
-          children: mapCategoriesToMenu(data.metadata).concat({
-            subheader: 'Trang quản trị',
-            items: [{ title: 'Trang quản trị', path: PATH_AFTER_LOGIN }],
-          }),
+          children: mapCategoriesToMenu(data.metadata),
         },
       ]);
     }
@@ -109,8 +106,6 @@ export default function MainHeader() {
       };
     });
   }
-
-  console.log('Menu Data:', menuData);
 
   // Handle add to cart from search
   const handleAddToCart = (productId: number) => {
