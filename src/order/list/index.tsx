@@ -1,8 +1,6 @@
-import sumBy from 'lodash/sumBy';
 import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Tab,
@@ -11,7 +9,6 @@ import {
   Table,
   Stack,
   Switch,
-  Button,
   Tooltip,
   Divider,
   TableBody,
@@ -22,9 +19,8 @@ import {
   FormControlLabel,
 } from '@mui/material';
 // hooks
-import useTabs from '../../common/hooks/useTabs';
 import useSettings from '../../common/hooks/useSettings';
-import useTable, { getComparator, emptyRows } from '../../common/hooks/useTable';
+import useTable, { emptyRows } from '../../common/hooks/useTable';
 // components
 import Page from '../../common/components/Page';
 import Label from '../../common/components/Label';
@@ -44,6 +40,7 @@ import OrderTableRow from '../components/list/OrderTableRow';
 import OrderTableToolbar from '../components/list/OrderTableToolbar';
 import OrderAnalytic from '../components/list/OrderAnalytic';
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
+import { useGetAnalyticsOrder } from '../hooks/useGetAnalyticsOrder';
 
 // ----------------------------------------------------------------------
 
@@ -60,8 +57,6 @@ const TABLE_HEAD = [
 // ----------------------------------------------------------------------
 
 export default function OrderList() {
-  const theme = useTheme();
-
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
@@ -97,13 +92,17 @@ export default function OrderList() {
     startDate: filterStartDate ? filterStartDate.toISOString() : undefined,
     endDate: filterEndDate ? filterEndDate.toISOString() : undefined,
     search: filterName || undefined,
-    page: page + 1,
+    page: page + 1, // API uses 1-based pagination
     limit: rowsPerPage,
   };
 
   // Fetch order list from API
-  const { data: orderData } = useGetListOrder(params);
+  const { data: orderData, isLoading } = useGetListOrder(params);
+  const { data: analyticsData } = useGetAnalyticsOrder();
   const tableData: IOrder[] = orderData?.metadata?.items || [];
+
+  // Use API data directly without client-side filtering/pagination
+  const dataFiltered = tableData;
 
   const handleFilterName = (filterName: string) => {
     setFilterName(filterName);
@@ -139,34 +138,30 @@ export default function OrderList() {
   };
 
   const handleViewRow = (id: string) => {
-    navigate(PATH_DASHBOARD.general.orders.view(id));
+    navigate(PATH_DASHBOARD.order.view(id));
   };
 
   const getLengthByStatus = (status: string) =>
-    tableData.filter((item) => item.status === status).length;
-
-  const getTotalAmountByStatus = (status: string) =>
-    sumBy(
-      tableData.filter((item) => item.status === status),
-      (item) => Number(item.totalAmount)
-    );
-
-  const getPercentByStatus = (status: string) =>
-    tableData.length > 0 ? (getLengthByStatus(status) / tableData.length) * 100 : 0;
+    analyticsData ? analyticsData.metadata[status] : 0;
 
   const TABS = [
-    { value: 'all', label: 'Tất cả', color: 'info', count: tableData.length },
+    {
+      value: 'all',
+      label: 'Tất cả',
+      color: 'info',
+      count: Object.values(analyticsData?.metadata ?? {}).reduce((acc, curr) => acc + curr, 0),
+    },
     {
       value: 'pending_confirmation',
       label: 'Chờ xác nhận',
       color: 'warning',
-      count: getLengthByStatus('pending_confirmation'),
+      count: getLengthByStatus('pendingConfirmation'),
     },
     {
       value: 'pending_pickup',
       label: 'Chờ lấy hàng',
       color: 'primary',
-      count: getLengthByStatus('pending_pickup'),
+      count: getLengthByStatus('pendingPickup'),
     },
     { value: 'shipping', label: 'Đang giao', color: 'info', count: getLengthByStatus('shipping') },
     {
@@ -183,13 +178,6 @@ export default function OrderList() {
     },
     { value: 'cancelled', label: 'Đã hủy', color: 'error', count: getLengthByStatus('cancelled') },
   ] as const;
-
-  const dataFiltered = applySortFilter({
-    tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
-  });
 
   const isNotFound = !dataFiltered.length && !!filterName;
 
@@ -239,9 +227,9 @@ export default function OrderList() {
             filterEndDate={filterEndDate}
             filterName={filterName}
             onFilterStatus={handleFilterStatus}
-            onFilterStartDate={setFilterStartDate}
-            onFilterEndDate={setFilterEndDate}
-            onFilterName={setFilterName}
+            onFilterStartDate={handleFilterStartDate}
+            onFilterEndDate={handleFilterEndDate}
+            onFilterName={handleFilterName}
           />
 
           <Scrollbar>
@@ -286,9 +274,13 @@ export default function OrderList() {
                 />
 
                 <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
+                  {isLoading ? (
+                    <TableEmptyRows
+                      height={denseHeight}
+                      emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                    />
+                  ) : (
+                    dataFiltered.map((row) => (
                       <OrderTableRow
                         key={row.id}
                         row={row}
@@ -297,8 +289,8 @@ export default function OrderList() {
                         onViewRow={() => handleViewRow(String(row.id))}
                         onDeleteRow={() => handleDeleteRow(String(row.id))}
                       />
-                    ))}
-
+                    ))
+                  )}
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -326,42 +318,4 @@ export default function OrderList() {
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({
-  tableData,
-  comparator,
-  filterName,
-  filterStatus,
-}: {
-  tableData: IOrder[];
-  comparator: (a: any, b: any) => number;
-  filterName: string;
-  filterStatus: string;
-}) {
-  const stabilizedThis = tableData.map((el, index) => [el, index] as const);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    tableData = tableData.filter(
-      (item: IOrder) =>
-        item.id.toString().includes(filterName) ||
-        item.address?.receiverName?.toLowerCase().includes(filterName.toLowerCase())
-    );
-  }
-
-  if (filterStatus !== 'all') {
-    tableData = tableData.filter((item: IOrder) => item.status === filterStatus);
-  }
-
-  return tableData;
 }
