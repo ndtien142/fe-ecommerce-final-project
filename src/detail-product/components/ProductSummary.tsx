@@ -1,7 +1,7 @@
 import { sentenceCase } from 'change-case';
 import { useNavigate } from 'react-router-dom';
 // form
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // @mui
 import { useTheme, styled } from '@mui/material/styles';
 import { Box, Stack, Button, Typography, IconButton } from '@mui/material';
@@ -14,7 +14,11 @@ import Label from '../../common/components/Label';
 import Iconify from '../../common/components/Iconify';
 import { useAddToCart } from '../hooks/useAddToCart';
 import { default as useMessage } from 'src/common/hooks/useMessage';
-import { PATH_CUSTOMER } from 'src/common/routes/paths';
+import { PATH_CUSTOMER, PATH_AUTH } from 'src/common/routes/paths';
+import { useSelector, useDispatch } from 'src/common/redux/store';
+import { selectIsAuthenticated } from 'src/auth/login/auth.slice';
+import { setLastVisitedProduct } from 'src/common/redux/slices/lastVisited';
+import { useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +45,8 @@ type FormValues = {
 export default function ProductSummary({ product }: Props) {
   const theme = useTheme();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
 
@@ -63,7 +69,54 @@ export default function ProductSummary({ product }: Props) {
   const { watch, setValue, handleSubmit } = methods;
   const values = watch();
 
+  const handleIncrementQuantity = () => {
+    if (values.quantity < available) {
+      setValue('quantity', values.quantity + 1);
+    } else {
+      showErrorSnackbar(`Số lượng tối đa là ${available}`);
+    }
+  };
+
+  const handleDecrementQuantity = () => {
+    if (values.quantity > 1) {
+      setValue('quantity', values.quantity - 1);
+    }
+  };
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Allow only numbers
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    if (value === '') {
+      setValue('quantity', 0);
+    } else {
+      const numValue = parseInt(value, 10);
+      if (!isNaN(numValue)) {
+        setValue('quantity', numValue);
+      }
+    }
+  };
+
+  const handleQuantityBlur = () => {
+    // Handle invalid or empty input
+    if (values.quantity < 1) {
+      setValue('quantity', 1);
+    }
+
+    // Check if value exceeds available stock
+    if (values.quantity > available) {
+      showErrorSnackbar(`Số lượng tối đa là ${available}`);
+      setValue('quantity', available);
+    }
+  };
+
   const handleAddCart = async (data: FormValues) => {
+    if (!isAuthenticated) {
+      // Save current product URL and redirect to login
+      dispatch(setLastVisitedProduct(window.location.pathname));
+      navigate(PATH_AUTH.login);
+      return;
+    }
+
     mutate(
       {
         productId: String(data.id),
@@ -84,6 +137,13 @@ export default function ProductSummary({ product }: Props) {
   };
 
   const handleBuyNow = async (data: FormValues) => {
+    if (!isAuthenticated) {
+      // Save current product URL and redirect to login
+      dispatch(setLastVisitedProduct(window.location.pathname));
+      navigate(PATH_AUTH.login);
+      return;
+    }
+
     console.log('Buy now:', data);
     mutate(
       {
@@ -104,6 +164,10 @@ export default function ProductSummary({ product }: Props) {
       }
     );
   };
+
+  useEffect(() => {
+    dispatch(setLastVisitedProduct(window.location.pathname));
+  }, [dispatch]);
 
   return (
     <RootStyle>
@@ -157,12 +221,48 @@ export default function ProductSummary({ product }: Props) {
         <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
           Số lượng
         </Typography>
-        <Incrementer
-          quantity={values.quantity}
-          available={available}
-          onIncrementQuantity={() => setValue('quantity', values.quantity + 1)}
-          onDecrementQuantity={() => setValue('quantity', values.quantity - 1)}
-        />
+
+        <Box
+          sx={{
+            py: 0.5,
+            px: 0.75,
+            border: 1,
+            lineHeight: 0,
+            borderRadius: 1,
+            display: 'flex',
+            alignItems: 'center',
+            borderColor: 'grey.50032',
+          }}
+        >
+          <IconButton
+            size="small"
+            color="inherit"
+            disabled={values.quantity <= 1}
+            onClick={handleDecrementQuantity}
+          >
+            <Iconify icon={'eva:minus-fill'} width={14} height={14} />
+          </IconButton>
+
+          <input
+            type="text"
+            value={values.quantity.toString()}
+            onChange={handleQuantityChange}
+            onBlur={handleQuantityBlur}
+            style={{
+              width: 40,
+              textAlign: 'center',
+              border: 'none',
+              outline: 'none',
+              padding: 0,
+              fontSize: '14px',
+            }}
+          />
+
+          <IconButton size="small" color="inherit" onClick={handleIncrementQuantity}>
+            <Iconify icon={'eva:plus-fill'} width={14} height={14} />
+          </IconButton>
+        </Box>
+
         <Typography variant="caption" component="div" sx={{ ml: 2, color: 'text.secondary' }}>
           Còn lại: {available}
         </Typography>
@@ -193,58 +293,5 @@ export default function ProductSummary({ product }: Props) {
         </Button>
       </Stack>
     </RootStyle>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-type IncrementerProps = {
-  quantity: number;
-  available: number;
-  onIncrementQuantity: VoidFunction;
-  onDecrementQuantity: VoidFunction;
-};
-
-function Incrementer({
-  available,
-  quantity,
-  onIncrementQuantity,
-  onDecrementQuantity,
-}: IncrementerProps) {
-  return (
-    <Box
-      sx={{
-        py: 0.5,
-        px: 0.75,
-        border: 1,
-        lineHeight: 0,
-        borderRadius: 1,
-        display: 'flex',
-        alignItems: 'center',
-        borderColor: 'grey.50032',
-      }}
-    >
-      <IconButton
-        size="small"
-        color="inherit"
-        disabled={quantity <= 1}
-        onClick={onDecrementQuantity}
-      >
-        <Iconify icon={'eva:minus-fill'} width={14} height={14} />
-      </IconButton>
-
-      <Typography variant="body2" component="span" sx={{ width: 40, textAlign: 'center' }}>
-        {quantity}
-      </Typography>
-
-      <IconButton
-        size="small"
-        color="inherit"
-        disabled={quantity >= available}
-        onClick={onIncrementQuantity}
-      >
-        <Iconify icon={'eva:plus-fill'} width={14} height={14} />
-      </IconButton>
-    </Box>
   );
 }

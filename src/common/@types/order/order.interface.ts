@@ -3,7 +3,6 @@ import { IAddress } from '../address/address.interface';
 import { IShippingMethod } from '../shipping/shipping.interface';
 import { IProductApiResponse } from '../product/product.interface';
 import { PaginationMeta } from '../common.interface';
-import { IPaymentMethod } from '../payment/payment.interface';
 
 export interface IOrderLineItem {
   id: number;
@@ -120,6 +119,7 @@ export interface IOrderAnalytics {
   delivered: number;
   returned: number;
   cancelled: number;
+  [key: string]: number;
 }
 
 export interface IOrderAnalyticsResponse {

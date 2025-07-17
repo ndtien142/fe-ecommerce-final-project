@@ -18,12 +18,17 @@ import { IFormLoginValuesProps } from '../interface/interface';
 import { setShowPassword, showPasswordSelector, setUsername } from '../login.slice';
 import { LoginSchema } from '../schema/login.schema';
 import useDeepEffect from 'src/common/hooks/useDeepEffect';
+import {
+  selectLastVisitedProduct,
+  clearLastVisitedProduct,
+} from 'src/common/redux/slices/lastVisited';
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const { useDeepCompareEffect } = useDeepEffect();
   const showPassword = useSelector(showPasswordSelector);
+  const lastVisitedProduct = useSelector(selectLastVisitedProduct);
   const dispatch = useDispatch();
   const methods = useForm<IFormLoginValuesProps>({
     resolver: yupResolver(LoginSchema),
@@ -40,8 +45,13 @@ export default function LoginForm() {
       variant: 'success',
       autoHideDuration: 1000,
     });
+
+    // Redirect to the last visited product page if exists
     if (roleName === 'admin') {
       navigate(PATH_DASHBOARD.root);
+    } else if (lastVisitedProduct) {
+      navigate(lastVisitedProduct);
+      dispatch(clearLastVisitedProduct());
     } else if (roleName === 'customer') {
       navigate('/');
     } else {

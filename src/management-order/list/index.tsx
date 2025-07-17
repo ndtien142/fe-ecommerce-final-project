@@ -40,6 +40,7 @@ import OrderTableRow from '../components/list/OrderTableRow';
 import OrderTableToolbar from '../components/list/OrderTableToolbar';
 import OrderAnalytic from '../components/list/OrderAnalytic';
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
+import { useGetAnalyticsOrder } from '../hooks/useGetAnalyticsOrder';
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +98,7 @@ export default function OrderList() {
 
   // Fetch order list from API
   const { data: orderData, isLoading } = useGetListOrder(params);
+  const { data: analyticsData } = useGetAnalyticsOrder();
   const tableData: IOrder[] = orderData?.metadata?.items || [];
 
   // Use API data directly without client-side filtering/pagination
@@ -140,21 +142,26 @@ export default function OrderList() {
   };
 
   const getLengthByStatus = (status: string) =>
-    tableData.filter((item) => item.status === status).length;
+    analyticsData ? analyticsData.metadata[status] : 0;
 
   const TABS = [
-    { value: 'all', label: 'Tất cả', color: 'info', count: tableData.length },
+    {
+      value: 'all',
+      label: 'Tất cả',
+      color: 'info',
+      count: Object.values(analyticsData?.metadata ?? {}).reduce((acc, curr) => acc + curr, 0),
+    },
     {
       value: 'pending_confirmation',
       label: 'Chờ xác nhận',
       color: 'warning',
-      count: getLengthByStatus('pending_confirmation'),
+      count: getLengthByStatus('pendingConfirmation'),
     },
     {
       value: 'pending_pickup',
       label: 'Chờ lấy hàng',
       color: 'primary',
-      count: getLengthByStatus('pending_pickup'),
+      count: getLengthByStatus('pendingPickup'),
     },
     { value: 'shipping', label: 'Đang giao', color: 'info', count: getLengthByStatus('shipping') },
     {
@@ -183,7 +190,7 @@ export default function OrderList() {
           heading="Danh sách đơn hàng"
           links={[
             { name: 'Dashboard', href: '/' },
-            { name: 'Đơn hàng', href: '/order' },
+            { name: 'Danh sách đơn hàng', href: PATH_DASHBOARD.order.list },
             { name: 'Danh sách' },
           ]}
         />
@@ -281,6 +288,7 @@ export default function OrderList() {
                         onSelectRow={() => onSelectRow(String(row.id))}
                         onViewRow={() => handleViewRow(String(row.id))}
                         onDeleteRow={() => handleDeleteRow(String(row.id))}
+                        hiddenCheckMomo={row.status === 'cancelled'}
                       />
                     ))
                   )}

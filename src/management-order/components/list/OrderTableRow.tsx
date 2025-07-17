@@ -31,6 +31,7 @@ type Props = {
   onSelectRow: VoidFunction;
   onViewRow: VoidFunction;
   onDeleteRow: VoidFunction;
+  hiddenCheckMomo?: boolean;
 };
 
 export default function OrderTableRow({
@@ -39,6 +40,7 @@ export default function OrderTableRow({
   onSelectRow,
   onViewRow,
   onDeleteRow,
+  hiddenCheckMomo,
 }: Props) {
   const theme = useTheme();
 
@@ -176,7 +178,7 @@ export default function OrderTableRow({
       <TableCell align="left">
         <Stack direction="column" alignItems="center" spacing={1}>
           <PaymentStatusChip payment={payment} />
-          <CheckMoMoStatusButton order={row} />
+          {hiddenCheckMomo ? null : <CheckMoMoStatusButton order={row} />}
         </Stack>
       </TableCell>
 
@@ -187,7 +189,7 @@ export default function OrderTableRow({
           onClose={handleCloseMenu}
           actions={
             <>
-              <MenuItem
+              {/* <MenuItem
                 onClick={() => {
                   onDeleteRow();
                   handleCloseMenu();
@@ -196,7 +198,7 @@ export default function OrderTableRow({
               >
                 <Iconify icon={'eva:trash-2-outline'} />
                 Xóa
-              </MenuItem>
+              </MenuItem> */}
 
               <MenuItem
                 onClick={() => {

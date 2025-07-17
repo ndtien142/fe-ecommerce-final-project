@@ -28,7 +28,7 @@ export default function OrderDetail() {
           heading="Chi tiết đơn hàng"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Đơn hàng', href: PATH_DASHBOARD.general.orders.list },
+            { name: 'Danh sách đơn hàng', href: PATH_DASHBOARD.order.list },
             { name: `Đơn #${order?.id}` || '' },
           ]}
         />

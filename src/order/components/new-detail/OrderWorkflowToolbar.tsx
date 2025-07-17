@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 // @mui
@@ -10,6 +10,11 @@ import {
   IconButton,
   DialogActions,
   CircularProgress,
+  DialogTitle,
+  DialogContent,
+  Typography,
+  Alert,
+  Button,
 } from '@mui/material';
 // hooks
 import useToggle from '../../../common/hooks/useToggle';
@@ -29,17 +34,18 @@ interface Props {
 export default function OrderWorkflowToolbar({ order }: Props) {
   const navigate = useNavigate();
 
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+
+  const handleContactSupport = () => {
+    setContactDialogOpen(true);
+  };
+
   // Workflow hooks
 
   // Dialog states
   const { toggle: open, onOpen, onClose } = useToggle();
 
-  const handleEdit = () => {
-    navigate(`/order/edit/${order.id}`);
-  };
-
   const canViewPDF = true;
-  const canEdit = order.status === 'pending_confirmation' || order.status === 'pending_pickup';
 
   return (
     <>
@@ -51,6 +57,11 @@ export default function OrderWorkflowToolbar({ order }: Props) {
         sx={{ mb: 5 }}
       >
         <Stack direction="row" spacing={1}>
+          <Tooltip title="Contact Support">
+            <IconButton onClick={handleContactSupport}>
+              <Iconify icon={'eva:message-circle-fill'} />
+            </IconButton>
+          </Tooltip>
           {canViewPDF && (
             <Tooltip title="Xem PDF">
               <IconButton onClick={onOpen}>
@@ -58,7 +69,6 @@ export default function OrderWorkflowToolbar({ order }: Props) {
               </IconButton>
             </Tooltip>
           )}
-
           <PDFDownloadLink
             document={<OrderPDF order={order} />}
             fileName={`ORDER-${order.id}.pdf`}
@@ -101,6 +111,48 @@ export default function OrderWorkflowToolbar({ order }: Props) {
             </PDFViewer>
           </Box>
         </Box>
+      </Dialog>
+      {/* Contact Support Dialog */}
+      <Dialog
+        open={contactDialogOpen}
+        onClose={() => setContactDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Liên hệ hỗ trợ</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" gutterBottom>
+            Bạn cần hỗ trợ cho đơn hàng #{order.id}?
+          </Typography>
+
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" gutterBottom>
+              📞 <strong>Hotline:</strong> 1900-xxxx
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              📧 <strong>Email:</strong> support@company.com
+            </Typography>
+            <Typography variant="body2" gutterBottom>
+              💬 <strong>Live Chat:</strong> Có sẵn 24/7
+            </Typography>
+          </Box>
+
+          <Alert severity="info" sx={{ mt: 2 }}>
+            Vui lòng cung cấp mã đơn hàng #{order.id} khi liên hệ để được hỗ trợ nhanh chóng.
+          </Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setContactDialogOpen(false)}>Đóng</Button>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon={'eva:message-circle-fill'} />}
+            onClick={() => {
+              window.open('tel:1900xxxx', '_self');
+            }}
+          >
+            Gọi ngay
+          </Button>
+        </DialogActions>
       </Dialog>
     </>
   );

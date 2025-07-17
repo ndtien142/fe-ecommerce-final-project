@@ -1,37 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
-import {
-  Box,
-  Card,
-  Container,
-  Typography,
-  CardHeader,
-  ToggleButton,
-  ToggleButtonGroup,
-} from '@mui/material';
+import { Box, Card, Container, Typography, CardHeader } from '@mui/material';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_AUTH } from '../../routes/paths';
 // components
 import Page from '../../components/Page';
-import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // guards
 import RoleBasedGuard from '../../guards/RoleBasedGuard';
 import { HEADER } from 'src/config';
+import { useNavigate } from 'react-router';
+import { useSelector } from 'src/common/redux/store';
 
 // ----------------------------------------------------------------------
 
 export default function PermissionDenied() {
   const { themeStretch } = useSettings();
 
-  const [role, setRole] = useState('admin');
+  const navigate = useNavigate();
+  // Use checkout slice for activeStep
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const handleChangeRole = (event: React.MouseEvent<HTMLElement>, newRole: string | null) => {
-    if (newRole !== null) {
-      setRole(newRole);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate(PATH_AUTH.login, { replace: true });
     }
-  };
+  }, []);
 
   return (
     <Box
@@ -50,7 +45,7 @@ export default function PermissionDenied() {
     >
       <Page title="Permission Denied">
         <Container maxWidth={themeStretch ? false : 'lg'}>
-          <RoleBasedGuard hasContent roles={[role]}>
+          <RoleBasedGuard hasContent roles={['admin', 'user']}>
             <Box
               sx={{
                 display: 'grid',
