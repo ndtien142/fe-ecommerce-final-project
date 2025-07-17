@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Grid, Button } from '@mui/material';
+import { Grid, Button, Box, CircularProgress, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from 'src/common/redux/store';
@@ -30,6 +30,7 @@ import { useCreateMoMoOrder } from 'src/checkout/hooks/useCreateMoMoOrder';
 import { default as useMessage } from 'src/common/hooks/useMessage';
 import { OrderUtils } from 'src/common/utils/orderUtils';
 import EnhancedPaymentButton from 'src/common/components/EnhancedPaymentButton';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,7 @@ type FormValuesProps = {
 export default function CheckoutPayment() {
   const dispatch = useDispatch();
   const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
+  const [loading, setLoading] = useState(false);
 
   const { cart, address } = useSelector((state) => state.checkout);
 
@@ -93,6 +95,7 @@ export default function CheckoutPayment() {
   } = methods;
 
   const onSubmit = async (data: FormValuesProps) => {
+    setLoading(true);
     if (!cart) {
       // Handle error or show a message to the user
       console.error('Cart is null');
@@ -158,6 +161,7 @@ export default function CheckoutPayment() {
         },
       });
     }
+    setLoading(false);
   };
 
   // Fetch shipping and payment methods from API
@@ -234,15 +238,31 @@ export default function CheckoutPayment() {
               }}
             />
           ) : (
-            <LoadingButton
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-              loading={isSubmitting}
-            >
-              Hoàn tất đơn hàng
-            </LoadingButton>
+            <>
+              <LoadingButton
+                fullWidth
+                sx={{
+                  backgroundColor: loading ? 'grey.400' : '',
+                  '&:hover': {
+                    backgroundColor: loading ? 'grey.400' : '',
+                  },
+                  py: 1.5,
+                }}
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={loading}
+              >
+                {isSubmitting ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <CircularProgress size={20} color="inherit" />
+                    <Typography>Đang tạo thanh toán...</Typography>
+                  </Box>
+                ) : (
+                  'Hoàn tất đơn hàng'
+                )}
+              </LoadingButton>
+            </>
           )}
         </Grid>
       </Grid>

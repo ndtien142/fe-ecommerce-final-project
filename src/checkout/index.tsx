@@ -17,6 +17,8 @@ import CheckoutPayment from './components/payment/CheckoutPayment';
 import CheckoutOrderComplete from './components/CheckoutOrderComplete';
 import { resetCheckout } from './checkout.slice';
 import { useEffect } from 'react';
+import { useQueryClient } from 'react-query';
+import { QUERY_KEYS } from 'src/common/constant/queryKeys.constant';
 
 // ----------------------------------------------------------------------
 
@@ -71,6 +73,7 @@ function QontoStepIcon({ active, completed }: { active: boolean; completed: bool
 
 const CheckoutContainer = () => {
   const { themeStretch } = useSettings();
+  const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
 
@@ -81,6 +84,8 @@ const CheckoutContainer = () => {
   useEffect(() => {
     return () => {
       dispatch(resetCheckout());
+      queryClient.invalidateQueries(QUERY_KEYS.CART);
+      queryClient.invalidateQueries(QUERY_KEYS.CART_COUNT);
     };
   }, []);
 
