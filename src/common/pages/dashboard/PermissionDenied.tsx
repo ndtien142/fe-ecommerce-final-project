@@ -45,7 +45,7 @@ export default function PermissionDenied() {
     >
       <Page title="Permission Denied">
         <Container maxWidth={themeStretch ? false : 'lg'}>
-          <RoleBasedGuard hasContent>
+          <RoleBasedGuard hasContent roles={['admin', 'user']}>
             <Box
               sx={{
                 display: 'grid',
