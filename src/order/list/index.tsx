@@ -39,7 +39,7 @@ import { useGetListOrder } from '../hooks/useGetOrderList';
 import OrderTableRow from '../components/list/OrderTableRow';
 import OrderTableToolbar from '../components/list/OrderTableToolbar';
 import OrderAnalytic from '../components/list/OrderAnalytic';
-import { PATH_DASHBOARD } from 'src/common/routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from 'src/common/routes/paths';
 import { useGetAnalyticsOrder } from '../hooks/useGetAnalyticsOrder';
 
 // ----------------------------------------------------------------------
@@ -138,7 +138,7 @@ export default function OrderList() {
   };
 
   const handleViewRow = (id: string) => {
-    navigate(PATH_DASHBOARD.order.view(id));
+    navigate(PATH_DASHBOARD.general.orders.view(id));
   };
 
   const getLengthByStatus = (status: string) =>

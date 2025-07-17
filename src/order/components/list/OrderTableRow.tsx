@@ -189,17 +189,6 @@ export default function OrderTableRow({
             <>
               <MenuItem
                 onClick={() => {
-                  onDeleteRow();
-                  handleCloseMenu();
-                }}
-                sx={{ color: 'error.main' }}
-              >
-                <Iconify icon={'eva:trash-2-outline'} />
-                Xóa
-              </MenuItem>
-
-              <MenuItem
-                onClick={() => {
                   onViewRow();
                   handleCloseMenu();
                 }}

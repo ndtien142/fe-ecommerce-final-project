@@ -187,7 +187,7 @@ export default function OrderTableRow({
           onClose={handleCloseMenu}
           actions={
             <>
-              <MenuItem
+              {/* <MenuItem
                 onClick={() => {
                   onDeleteRow();
                   handleCloseMenu();
@@ -196,7 +196,7 @@ export default function OrderTableRow({
               >
                 <Iconify icon={'eva:trash-2-outline'} />
                 Xóa
-              </MenuItem>
+              </MenuItem> */}
 
               <MenuItem
                 onClick={() => {
