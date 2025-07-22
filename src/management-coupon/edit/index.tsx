@@ -15,10 +15,12 @@ import { useGetCouponDetail } from '../common/hooks/useGetCouponDetail';
 
 export default function CouponEdit() {
   const { themeStretch } = useSettings();
-  const { name } = useParams();
-  const couponId = name || '';
+  const { id } = useParams();
+  const couponId = id || '';
 
   const { data: couponDetail, isLoading } = useGetCouponDetail(couponId);
+
+  console.log('couponDetail', couponDetail);
 
   if (isLoading) {
     return <div>Loading...</div>;

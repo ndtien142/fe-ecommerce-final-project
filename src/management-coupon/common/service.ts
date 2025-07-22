@@ -3,6 +3,7 @@ import {
   ICouponListResponse,
   ICouponValidationResult,
   ICouponParams,
+  IDetailCouponResponse,
 } from 'src/common/@types/coupon/coupon.interface';
 import { API_COUPON } from 'src/common/constant/api.constant';
 import axiosInstance from 'src/common/utils/axios';
@@ -14,7 +15,7 @@ export const getListCoupon = async (params: ICouponParams) =>
   axiosInstance.get<unknown, ICouponListResponse>(API_COUPON, { params });
 
 export const getCouponById = async (id: string) =>
-  axiosInstance.get<unknown, ICoupon>(`${API_COUPON}/${id}`);
+  axiosInstance.get<unknown, IDetailCouponResponse>(`${API_COUPON}/${id}`);
 
 export const updateCoupon = async (id: string, data: Omit<ICoupon, 'id'>) =>
   axiosInstance.put(`${API_COUPON}/${id}`, data);

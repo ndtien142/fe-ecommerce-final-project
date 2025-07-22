@@ -19,6 +19,14 @@ export interface ICoupon {
   applicableCategories?: number[];
 }
 
+export interface IDetailCouponResponse {
+  message: string;
+  status: number;
+  metadata: {
+    coupon: ICoupon;
+  };
+}
+
 export interface IUserCoupon {
   id: number;
   userId: number;

@@ -22,6 +22,7 @@ import useToggle from 'src/common/hooks/useToggle';
 import Iconify from 'src/common/components/Iconify';
 import FormSelectCategoriesId from './new-edit/FormSelectCategoriesId';
 import { useCreateNewCoupon } from '../hooks/useCreateNewCoupon';
+import { useUpdateCoupon } from '../hooks/useUpdateCoupon';
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -73,6 +74,7 @@ export default function FormNewEditCoupon({
   const navigate = useNavigate();
 
   const { mutate: createCoupon } = useCreateNewCoupon();
+  const { mutate: updateCoupon } = useUpdateCoupon();
 
   const {
     toggle: toggleSelectProduct,
@@ -117,7 +119,18 @@ export default function FormNewEditCoupon({
     };
 
     if (isEdit && couponId) {
-      // Update existing coupon
+      updateCoupon(
+        { id: couponId, data: formData },
+        {
+          onSuccess: () => {
+            showSuccessSnackbar('Coupon đã được cập nhật thành công');
+            navigate(PATH_DASHBOARD.coupon.root);
+          },
+          onError: (error: any) => {
+            showErrorSnackbar(error?.message || 'Đã xảy ra lỗi khi cập nhật coupon');
+          },
+        }
+      );
     } else {
       createCoupon(formData, {
         onSuccess: () => {
