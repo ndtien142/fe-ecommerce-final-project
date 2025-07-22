@@ -13,6 +13,8 @@ export interface ICoupon {
   endDate: string;
   isActive: boolean;
   firstOrderOnly?: boolean;
+  applicableProducts?: number[];
+  applicableCategories?: number[];
 }
 
 export interface IUserCoupon {

@@ -40,8 +40,6 @@ const Loadable = (Component: ElementType) => (props: any) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  console.log('is authenticated: ', isAuthenticated);
-
   const isDashboard = pathname.includes('/dashboard') && isAuthenticated;
 
   return (
