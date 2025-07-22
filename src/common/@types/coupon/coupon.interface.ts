@@ -1,3 +1,5 @@
+import { PaginationMeta } from '../common.interface';
+
 export interface ICoupon {
   id: number;
   code: string;
@@ -58,12 +60,11 @@ export interface ICouponParams {
 }
 
 export interface ICouponListResponse {
-  coupons: ICoupon[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
+  message: string;
+  status: number;
+  metadata: {
+    coupons: ICoupon[];
+    meta: PaginationMeta;
   };
 }
 

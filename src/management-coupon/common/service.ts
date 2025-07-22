@@ -27,5 +27,5 @@ export const validateCoupon = async (code: string, cartTotal: number) =>
     cartTotal,
   });
 
-export const toggleCouponStatus = async (id: string) =>
-  axiosInstance.patch(`${API_COUPON}/${id}/toggle-status`);
+export const toggleCouponStatus = async ({ id, isActive }: { id: string; isActive: boolean }) =>
+  axiosInstance.patch(`${API_COUPON}/${id}/toggle-status`, { isActive });

@@ -8,7 +8,7 @@ export const TABLE_COUPON_HEAD = [
   { id: 'startDate', label: 'Ngày bắt đầu', align: 'center' },
   { id: 'endDate', label: 'Ngày kết thúc', align: 'center' },
   { id: 'isActive', label: 'Trạng thái', align: 'center' },
-  { id: '', label: 'Thao tác', align: 'center' },
+  { id: '' },
 ];
 
 export const COUPON_TYPE_OPTIONS = [

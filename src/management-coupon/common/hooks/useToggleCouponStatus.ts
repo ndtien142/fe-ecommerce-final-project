@@ -8,6 +8,7 @@ export const useToggleCouponStatus = () => {
   return useMutation(toggleCouponStatus, {
     onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEYS.COUPON_LIST]);
+      queryClient.invalidateQueries([QUERY_KEYS.COUPON_DETAIL]);
     },
   });
 };

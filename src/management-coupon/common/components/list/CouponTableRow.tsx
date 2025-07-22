@@ -1,12 +1,12 @@
-import { Checkbox, TableCell, Typography, MenuItem, TableRow, Chip } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { TableCell, Typography, MenuItem, TableRow, Chip, Switch } from '@mui/material';
 import React, { useState } from 'react';
 import { ICoupon } from 'src/common/@types/coupon/coupon.interface';
 import Iconify from 'src/common/components/Iconify';
-import Label from 'src/common/components/Label';
 import { TableMoreMenu } from 'src/common/components/table';
 import { fCurrency } from 'src/common/utils/formatNumber';
 import { fDate } from 'src/common/utils/formatTime';
+import { useToggleCouponStatus } from '../../hooks/useToggleCouponStatus';
+import useMessage from 'src/common/hooks/useMessage';
 
 type Props = {
   row: ICoupon;
@@ -14,22 +14,19 @@ type Props = {
   onEditRow: VoidFunction;
   onSelectRow: VoidFunction;
   onDeleteRow: VoidFunction;
-  onToggleStatus: VoidFunction;
 };
 
-const CouponTableRow = ({
-  row,
-  selected,
-  onEditRow,
-  onSelectRow,
-  onDeleteRow,
-  onToggleStatus,
-}: Props) => {
-  const theme = useTheme();
-
+const CouponTableRow = ({ row, selected, onEditRow, onDeleteRow }: Props) => {
   const { code, name, type, value, minOrderAmount, usageLimit, startDate, endDate, isActive } = row;
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
+  const [checked, setChecked] = useState<boolean>(isActive);
+  const { mutate: toggleStatus } = useToggleCouponStatus();
+  const { showSuccessSnackbar, showErrorSnackbar } = useMessage();
+
+  React.useEffect(() => {
+    setChecked(isActive);
+  }, [isActive]);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenuActions(event.currentTarget);
@@ -37,6 +34,21 @@ const CouponTableRow = ({
 
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
+  };
+
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    toggleStatus(
+      { id: row.id.toString(), isActive: event.target.checked },
+      {
+        onSuccess: () => {
+          showSuccessSnackbar('Cập nhật trạng thái thành công');
+        },
+        onError: (error) => {
+          showErrorSnackbar('Đã xảy ra lỗi khi cập nhật trạng thái');
+        },
+      }
+    );
   };
 
   const renderTypeChip = () => {
@@ -62,10 +74,6 @@ const CouponTableRow = ({
 
   return (
     <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
-
       <TableCell>
         <Typography variant="subtitle2" noWrap>
           {code}
@@ -101,12 +109,7 @@ const CouponTableRow = ({
       </TableCell>
 
       <TableCell align="center">
-        <Label
-          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(isActive && 'success') || 'error'}
-        >
-          {isActive ? 'Hoạt động' : 'Tạm dừng'}
-        </Label>
+        <Switch checked={checked} onChange={handleSwitchChange} />
       </TableCell>
 
       <TableCell align="right">
@@ -125,17 +128,6 @@ const CouponTableRow = ({
                 <Iconify icon={'eva:edit-fill'} />
                 Chỉnh sửa
               </MenuItem>
-
-              <MenuItem
-                onClick={() => {
-                  onToggleStatus();
-                  handleCloseMenu();
-                }}
-              >
-                <Iconify icon={isActive ? 'eva:eye-off-fill' : 'eva:eye-fill'} />
-                {isActive ? 'Tắt' : 'Bật'}
-              </MenuItem>
-
               <MenuItem
                 onClick={() => {
                   onDeleteRow();
