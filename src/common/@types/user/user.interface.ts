@@ -8,6 +8,7 @@ export interface IUser {
   lastName: string;
   phoneNumber: string;
   address: string;
+  isVerified: boolean;
   role: {
     id: string;
     name: string;
@@ -17,6 +18,7 @@ export interface IUser {
   profile: {
     firstName: string;
     lastName: string;
+    phoneNumber: string;
     avatarUrl: string;
     nickname: string;
     dateOfBirth: string;

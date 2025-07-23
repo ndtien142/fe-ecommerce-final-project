@@ -420,8 +420,8 @@ const ManagementOrderDetails = Loadable(lazy(() => import('../../management-orde
 const UserAccount = Loadable(lazy(() => import('../../account')));
 
 // MANAGEMENT USER
-const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
-const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+const UserList = Loadable(lazy(() => import('../../management-user/list/UserList')));
+const UserCreate = Loadable(lazy(() => import('../../management-user/create')));
 
 // MAIN
 const About = Loadable(lazy(() => import('../../marketing/pages/About')));
