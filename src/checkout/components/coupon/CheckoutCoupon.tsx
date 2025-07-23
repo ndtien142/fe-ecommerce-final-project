@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Card, CardContent, Typography, Button, Stack, Divider } from '@mui/material';
-import { IUserCoupon, ICouponValidationResult } from '../../common/@types/coupon/coupon.interface';
-import CouponSelector from './CouponSelector';
+import { fCurrency } from 'src/common/utils/formatNumber';
+import Iconify from 'src/common/components/Iconify';
+import ModalSelectCoupon from './ModalSelectCoupon';
 import CartCouponApply from './CartCouponApply';
-import { fCurrency } from '../../common/utils/formatNumber';
-import Iconify from '../../common/components/Iconify';
-
+import { dispatch, useSelector } from 'src/common/redux/store';
+import { setAppliedCoupon, setCoupon } from 'src/checkout/checkout.slice';
 // ----------------------------------------------------------------------
 
 interface CheckoutCouponProps {
@@ -18,18 +18,12 @@ interface CheckoutCouponProps {
       price: number;
     }>;
   };
-  onCouponApplied: (coupon: IUserCoupon | ICouponValidationResult) => void;
-  onCouponRemoved: () => void;
-  appliedCoupon?: IUserCoupon | ICouponValidationResult | null;
 }
 
-export default function CheckoutCoupon({
-  cartData,
-  onCouponApplied,
-  onCouponRemoved,
-  appliedCoupon,
-}: CheckoutCouponProps) {
+export default function CheckoutCoupon({ cartData }: CheckoutCouponProps) {
   const [openSelector, setOpenSelector] = useState(false);
+
+  const { coupon: selectedCoupon, appliedCoupon } = useSelector((state) => state.checkout);
 
   const handleOpenSelector = () => {
     setOpenSelector(true);
@@ -39,35 +33,10 @@ export default function CheckoutCoupon({
     setOpenSelector(false);
   };
 
-  const handleCouponSelect = (userCoupon: IUserCoupon | null) => {
-    if (userCoupon) {
-      onCouponApplied(userCoupon);
-    } else {
-      onCouponRemoved();
-    }
-    setOpenSelector(false);
+  const handleCouponRemoved = () => {
+    dispatch(setCoupon(null));
+    dispatch(setAppliedCoupon(null));
   };
-
-  const handleCouponValidationApplied = (validationResult: ICouponValidationResult) => {
-    onCouponApplied(validationResult);
-  };
-
-  const getCouponInfo = () => {
-    if (!appliedCoupon) return null;
-
-    // Check if it's a user coupon or validation result
-    if ('coupon' in appliedCoupon) {
-      return {
-        code: appliedCoupon.coupon.code,
-        name: appliedCoupon.coupon.name,
-        discount: 'discount' in appliedCoupon ? appliedCoupon.discount : null,
-      };
-    }
-
-    return null;
-  };
-
-  const couponInfo = getCouponInfo();
 
   return (
     <Card>
@@ -80,7 +49,7 @@ export default function CheckoutCoupon({
           </Stack>
 
           {/* Applied Coupon Display */}
-          {couponInfo && (
+          {selectedCoupon && (
             <Box>
               <Stack
                 direction="row"
@@ -96,38 +65,28 @@ export default function CheckoutCoupon({
               >
                 <Stack>
                   <Typography variant="subtitle2" color="success.main">
-                    ✓ {couponInfo.code}
+                    ✓ {selectedCoupon.code}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {couponInfo.name}
+                    {selectedCoupon.name}
                   </Typography>
-                  {couponInfo.discount && (
+                  {appliedCoupon?.metadata?.discount && (
                     <Typography variant="body2" color="success.main">
-                      Giảm: {fCurrency(couponInfo.discount.discountAmount)}
+                      Giảm: {fCurrency(appliedCoupon?.metadata?.discount?.discountAmount || 0)}
                     </Typography>
                   )}
                 </Stack>
-                <Button
-                  size="small"
-                  color="inherit"
-                  onClick={onCouponRemoved}
-                  startIcon={<Iconify icon="eva:close-fill" width={16} height={16} />}
-                >
-                  Bỏ
+                <Button size="small" color="inherit" onClick={handleCouponRemoved}>
+                  <Iconify icon="eva:trash-outline" color={'red'} width={16} height={16} />
                 </Button>
               </Stack>
             </Box>
           )}
 
-          {/* Coupon Actions */}
-          {!appliedCoupon && (
+          {!selectedCoupon && (
             <Stack spacing={2}>
               {/* Manual Input */}
-              <CartCouponApply
-                cartData={cartData}
-                onCouponApplied={handleCouponValidationApplied}
-                onCouponRemoved={onCouponRemoved}
-              />
+              <CartCouponApply cartData={cartData} />
 
               <Divider>
                 <Typography variant="caption" color="text.secondary">
@@ -150,13 +109,7 @@ export default function CheckoutCoupon({
       </CardContent>
 
       {/* Coupon Selector Modal */}
-      <CouponSelector
-        open={openSelector}
-        onClose={handleCloseSelector}
-        onCouponSelect={handleCouponSelect}
-        selectedCoupon={appliedCoupon as IUserCoupon}
-        cartData={cartData}
-      />
+      <ModalSelectCoupon open={openSelector} onClose={handleCloseSelector} cartData={cartData} />
     </Card>
   );
 }

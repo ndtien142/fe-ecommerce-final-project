@@ -14,6 +14,7 @@ import {
 import { fCurrency } from '../../../common/utils/formatNumber';
 // components
 import Iconify from '../../../common/components/Iconify';
+import { useSelector } from 'src/common/redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ export default function CheckoutSummary({
   enableDiscount = false,
 }: Props) {
   const displayShipping = shipping !== null && shipping !== undefined ? 'Miễn phí' : '-';
+  const { appliedCoupon } = useSelector((state) => state.checkout);
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -62,12 +64,18 @@ export default function CheckoutSummary({
             <Typography variant="subtitle2">{fCurrency(subtotal)}</Typography>
           </Stack>
 
-          {/* <Stack direction="row" justifyContent="space-between">
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Giảm giá
-            </Typography>
-            <Typography variant="subtitle2">{discount ? fCurrency(-discount) : '-'}</Typography>
-          </Stack> */}
+          {appliedCoupon && (
+            <Stack direction="row" justifyContent="space-between">
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                Giảm giá
+              </Typography>
+              <Typography variant="subtitle2">
+                {appliedCoupon?.metadata?.discount?.discountAmount
+                  ? fCurrency(-appliedCoupon.metadata.discount.discountAmount)
+                  : '-'}
+              </Typography>
+            </Stack>
+          )}
 
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -84,7 +92,9 @@ export default function CheckoutSummary({
             <Typography variant="subtitle1">Tổng cộng</Typography>
             <Box sx={{ textAlign: 'right' }}>
               <Typography variant="subtitle1" sx={{ color: 'error.main' }}>
-                {fCurrency(total)}
+                {appliedCoupon?.metadata?.discount?.discountAmount
+                  ? fCurrency(total - appliedCoupon.metadata.discount.discountAmount)
+                  : fCurrency(total)}
               </Typography>
               <Typography variant="caption" sx={{ fontStyle: 'italic' }}>
                 (Đã bao gồm VAT nếu có)

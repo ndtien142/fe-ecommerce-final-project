@@ -24,7 +24,7 @@ export default function UserTableRow({
 }: Props) {
   const theme = useTheme();
 
-  const { username, role, isActive, isBlock } = row;
+  const { username, role, isActive, isBlock, isVerified, profile, email } = row;
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
@@ -43,19 +43,26 @@ export default function UserTableRow({
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={username} src={''} sx={{ mr: 2 }} />
+        <Avatar alt={username} src={profile?.avatarUrl || ''} sx={{ mr: 2 }} />
         <Typography variant="subtitle2" noWrap>
           {username}
         </Typography>
       </TableCell>
 
-      {/* <TableCell align="left">{company}</TableCell> */}
+      <TableCell align="left">
+        {row?.profile?.firstName && row?.profile?.lastName
+          ? row?.profile?.firstName + ' ' + row?.profile?.lastName
+          : ''}
+      </TableCell>
+      <TableCell align="left">{email}</TableCell>
+
+      <TableCell align="left">{row.profile?.phoneNumber}</TableCell>
 
       <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {role?.name}
       </TableCell>
 
-      {/* <TableCell align="center">
+      <TableCell align="center">
         <Iconify
           icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
           sx={{
@@ -65,9 +72,9 @@ export default function UserTableRow({
             ...(!isVerified && { color: 'warning.main' }),
           }}
         />
-      </TableCell> */}
+      </TableCell>
 
-      <TableCell align="left">
+      <TableCell align="center">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
           color={(isBlock && 'error') || 'success'}

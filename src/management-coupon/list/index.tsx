@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Mui
 import {
   Button,
   Container,
   Table,
   TableContainer,
-  Tooltip,
-  IconButton,
   TableBody,
   Card,
   Box,
@@ -29,12 +27,7 @@ import { paramCase } from 'change-case';
 import { useGetListCoupon } from '../common/hooks/useGetListCoupon';
 import { ICoupon } from 'src/common/@types/coupon/coupon.interface';
 import useMessage from 'src/common/hooks/useMessage';
-import {
-  TableEmptyRows,
-  TableHeadCustom,
-  TableNoData,
-  TableSelectedActions,
-} from 'src/common/components/table';
+import { TableEmptyRows, TableHeadCustom, TableNoData } from 'src/common/components/table';
 import { TABLE_COUPON_HEAD } from '../common/constant';
 import CouponTableRow from '../common/components/list/CouponTableRow';
 
@@ -49,7 +42,6 @@ const ListCouponContainer = () => {
     order,
     orderBy,
     rowsPerPage,
-    setPage,
     onSort,
     onChangeDense,
     onChangePage,
@@ -57,10 +49,7 @@ const ListCouponContainer = () => {
     //
     selected,
     onSelectRow,
-    onSelectAllRows,
   } = useTable();
-
-  const [filterName, setFilterName] = useState('');
 
   const { data } = useGetListCoupon({
     page: page + 1,
@@ -78,28 +67,13 @@ const ListCouponContainer = () => {
     }
   };
 
-  const handleDeleteRows = (selected: string[]) => {
-    if (window.confirm(`Bạn có chắc chắn muốn xóa ${selected.length} coupon được chọn không?`)) {
-      // Implement bulk delete if needed
-    }
-  };
-
   const handleEditRow = (id: string) => {
     navigate(PATH_DASHBOARD.coupon.edit(paramCase(id)));
   };
 
-  const handleToggleStatus = (id: string) => {
-    try {
-      console.log('Toggle status coupon:', id);
-      showSuccessSnackbar('Cập nhật trạng thái thành công');
-    } catch (error: any) {
-      showErrorSnackbar('Đã xảy ra lỗi khi cập nhật trạng thái');
-    }
-  };
+  const dataFiltered = data?.metadata?.items || [];
 
-  const dataFiltered = data?.coupons || [];
-
-  const isNotFound = !dataFiltered.length && !!filterName;
+  const isNotFound = !dataFiltered.length;
 
   return (
     <Page title="Danh sách coupon">
@@ -124,25 +98,6 @@ const ListCouponContainer = () => {
         />
 
         <Card>
-          <TableSelectedActions
-            dense={dense}
-            numSelected={selected.length}
-            rowCount={dataFiltered.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                dataFiltered.map((row) => row.id.toString())
-              )
-            }
-            actions={
-              <Tooltip title="Xóa">
-                <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                  <Iconify icon={'eva:trash-2-outline'} />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table size={dense ? 'small' : 'medium'}>
@@ -151,30 +106,20 @@ const ListCouponContainer = () => {
                   orderBy={orderBy}
                   headLabel={TABLE_COUPON_HEAD}
                   rowCount={dataFiltered.length}
-                  numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      dataFiltered.map((row) => row.id.toString())
-                    )
-                  }
                 />
 
                 <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row: ICoupon) => (
-                      <CouponTableRow
-                        key={row.id}
-                        row={row}
-                        selected={selected.includes(row.id.toString())}
-                        onSelectRow={() => onSelectRow(row.id.toString())}
-                        onDeleteRow={() => handleDeleteRow(row.id.toString())}
-                        onEditRow={() => handleEditRow(row.id.toString())}
-                        onToggleStatus={() => handleToggleStatus(row.id.toString())}
-                      />
-                    ))}
+                  {dataFiltered.map((row: ICoupon) => (
+                    <CouponTableRow
+                      key={row.id}
+                      row={row}
+                      selected={selected.includes(row.id.toString())}
+                      onSelectRow={() => onSelectRow(row.id.toString())}
+                      onDeleteRow={() => handleDeleteRow(row.id.toString())}
+                      onEditRow={() => handleEditRow(row.id.toString())}
+                    />
+                  ))}
 
                   <TableEmptyRows
                     height={dense ? 52 : 72}
@@ -191,7 +136,7 @@ const ListCouponContainer = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={data?.pagination?.total || 0}
+              count={data?.metadata?.meta?.totalItems || 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage}

@@ -1,27 +1,44 @@
 import React from 'react';
 import { Card, CardContent, Typography, Button, Chip, Box, Stack } from '@mui/material';
-import { ICoupon } from '../../common/@types/coupon/coupon.interface';
-import { fDate } from '../../common/utils/formatTime';
-import { fCurrency } from '../../common/utils/formatNumber';
-import Iconify from '../../common/components/Iconify';
+import { fCurrency } from 'src/common/utils/formatNumber';
+import { ICoupon, ICouponValidationResult } from 'src/common/@types/coupon/coupon.interface';
+import Iconify from 'src/common/components/Iconify';
+import { fDate } from 'src/common/utils/formatTime';
+import { useDispatch, useSelector } from 'src/common/redux/store';
+import { setAppliedCoupon, setCoupon } from 'src/checkout/checkout.slice';
+import { useValidateCoupons } from './hooks/useValidateCoupons';
+import { default as useMessage } from 'src/common/hooks/useMessage';
 
 // ----------------------------------------------------------------------
 
 interface CouponCardProps {
+  cartData: {
+    subtotal: number;
+    shippingFee: number;
+    items: Array<{
+      productId: number;
+      quantity: number;
+      price: number;
+    }>;
+  };
   coupon: ICoupon;
-  onSelect?: (coupon: ICoupon) => void;
-  isSelected?: boolean;
   canUse?: boolean;
   disabled?: boolean;
+  onSelect?: (coupon: ICoupon) => void; // Add this prop
 }
 
-export default function CouponCard({
+export default function SystemCardCoupon({
   coupon,
-  onSelect,
-  isSelected = false,
+  cartData,
   canUse = true,
   disabled = false,
+  onSelect,
 }: CouponCardProps) {
+  const dispatch = useDispatch();
+  const { coupon: selectedCoupon, cart } = useSelector((state) => state.checkout);
+  const { mutate: validateCoupons } = useValidateCoupons();
+  const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
+
   const formatDiscount = (type: string, value: number) => {
     switch (type) {
       case 'percent':
@@ -61,9 +78,33 @@ export default function CouponCard({
     }
   };
 
-  const handleClick = () => {
-    if (canUse && !disabled && onSelect) {
-      onSelect(coupon);
+  const isSelected = selectedCoupon?.id === coupon.id;
+
+  const handleSelect = () => {
+    if (canUse && !disabled && !isSelected) {
+      validateCoupons(
+        {
+          code: coupon.code,
+          subtotal: cartData.subtotal,
+          shippingFee: cartData.shippingFee,
+          items: cartData.items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            price: Number(item.price),
+          })),
+        },
+        {
+          onSuccess: (result: ICouponValidationResult) => {
+            dispatch(setCoupon(coupon));
+            dispatch(setAppliedCoupon(result));
+            if (onSelect) onSelect(coupon);
+            showSuccessSnackbar(`Mã giảm giá ${coupon.code} đã được áp dụng`);
+          },
+          onError: (error: any) => {
+            showErrorSnackbar(error?.response?.data?.message || 'Áp dụng mã giảm giá thất bại');
+          },
+        }
+      );
     }
   };
 
@@ -84,7 +125,6 @@ export default function CouponCard({
             }),
         },
       }}
-      onClick={handleClick}
     >
       <CardContent>
         {/* Header */}
@@ -126,17 +166,17 @@ export default function CouponCard({
         <Stack spacing={0.5} mb={2}>
           {coupon.minOrderAmount && (
             <Typography variant="caption" color="text.secondary">
-              • Đơn tối thiểu: {fCurrency(coupon.minOrderAmount)}
+              • Đơn tối thiểu: {fCurrency(coupon?.minOrderAmount)}
             </Typography>
           )}
           {coupon.maxDiscountAmount && coupon.type === 'percent' && (
             <Typography variant="caption" color="text.secondary">
-              • Giảm tối đa: {fCurrency(coupon.maxDiscountAmount)}
+              • Giảm tối đa: {fCurrency(coupon?.maxDiscountAmount)}
             </Typography>
           )}
           {coupon.usageLimitPerUser && (
             <Typography variant="caption" color="text.secondary">
-              • Số lần sử dụng: {coupon.usageLimitPerUser}
+              • Số lần sử dụng: {coupon?.usageLimitPerUser}
             </Typography>
           )}
           {coupon.firstOrderOnly && (
@@ -152,11 +192,11 @@ export default function CouponCard({
             HSD: {fDate(coupon.endDate)}
           </Typography>
 
-          {canUse && onSelect && (
+          {canUse && (
             <Button
               variant={isSelected ? 'contained' : 'outlined'}
               size="small"
-              disabled={disabled}
+              disabled={disabled || isSelected}
               startIcon={
                 isSelected ? (
                   <Iconify icon="eva:checkmark-circle-2-fill" width={16} height={16} />
@@ -164,6 +204,7 @@ export default function CouponCard({
                   <Iconify icon="eva:plus-circle-outline" width={16} height={16} />
                 )
               }
+              onClick={handleSelect}
             >
               {isSelected ? 'Đã chọn' : 'Chọn'}
             </Button>

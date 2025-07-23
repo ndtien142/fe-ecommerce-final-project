@@ -157,64 +157,7 @@ const ListProductContainer = () => {
     navigate(PATH_DASHBOARD.product.edit(slug));
   };
 
-  // Reset functions for filters
-  const handleResetFilter = () => {
-    setFilterName('');
-    setFilterBrand('all');
-    setFilterCategory('all');
-    setFilterStatus('all');
-    setFilterFlag('all');
-    setFilterStartDate(null);
-    setFilterEndDate(null);
-    setPage(0);
-  };
-
-  const handleRemoveName = () => {
-    setFilterName('');
-    setPage(0);
-  };
-
-  const handleRemoveBrand = () => {
-    setFilterBrand('all');
-    setPage(0);
-  };
-
-  const handleRemoveCategory = () => {
-    setFilterCategory('all');
-    setPage(0);
-  };
-
-  const handleRemoveStatus = () => {
-    setFilterStatus('all');
-    setPage(0);
-  };
-
-  const handleRemoveFlag = () => {
-    setFilterFlag('all');
-    setPage(0);
-  };
-
-  const handleRemoveStartDate = () => {
-    setFilterStartDate(null);
-    setPage(0);
-  };
-
-  const handleRemoveEndDate = () => {
-    setFilterEndDate(null);
-    setPage(0);
-  };
-
   const isNotFound = !products.length && !!filterName;
-
-  // Check if any filter is applied
-  const isFiltered =
-    filterName !== '' ||
-    filterBrand !== 'all' ||
-    filterCategory !== 'all' ||
-    filterStatus !== 'all' ||
-    filterFlag !== 'all' ||
-    filterStartDate !== null ||
-    filterEndDate !== null;
 
   return (
     <Page title="Quản lý: Danh sách sản phẩm">

@@ -110,6 +110,7 @@ export interface IFormCreateNewOrder {
   shippingMethodId: number;
   note?: string;
   shippingFee?: number;
+  couponCode?: string;
 }
 
 export interface IOrderAnalytics {

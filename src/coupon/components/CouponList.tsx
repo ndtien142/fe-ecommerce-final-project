@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import { ICoupon } from '../../common/@types/coupon/coupon.interface';
 import { useCoupon } from '../hooks/useCoupon';
-import CouponCard from './CouponCard';
 
 // ----------------------------------------------------------------------
 
@@ -101,14 +100,7 @@ export default function CouponList({
         <>
           <Grid container spacing={3}>
             {coupons.map((coupon) => (
-              <Grid item xs={12} sm={6} md={4} key={coupon.id}>
-                <CouponCard
-                  coupon={coupon}
-                  onSelect={onSelectCoupon}
-                  isSelected={selectedCoupon?.id === coupon.id}
-                  canUse={coupon.isActive}
-                />
-              </Grid>
+              <Grid item xs={12} sm={6} md={4} key={coupon.id}></Grid>
             ))}
           </Grid>
 

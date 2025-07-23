@@ -8,11 +8,20 @@ export interface IUser {
   lastName: string;
   phoneNumber: string;
   address: string;
+  isVerified: boolean;
   role: {
     id: string;
     name: string;
     description?: string;
     permissions: string[];
+  };
+  profile: {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    avatarUrl: string;
+    nickname: string;
+    dateOfBirth: string;
   };
   isBlock: boolean;
   isDeleted: boolean;

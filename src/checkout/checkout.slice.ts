@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ICart } from '../common/@types/cart/cart.interface';
 import { IAddress } from '../common/@types/address/address.interface';
+import { ICoupon, ICouponValidationResult } from 'src/common/@types/coupon/coupon.interface';
+import { set } from 'lodash';
 
 interface CheckoutState {
   activeStep: number;
@@ -10,6 +12,8 @@ interface CheckoutState {
   address: IAddress | null;
   paymentMethodId: number | null; // Optional field for payment method
   shippingMethodId: number | null; // Optional field for shipping method
+  coupon: ICoupon | null;
+  appliedCoupon: ICouponValidationResult | null; // Optional field for applied coupon
 }
 
 const initialState: CheckoutState = {
@@ -20,6 +24,8 @@ const initialState: CheckoutState = {
   address: null,
   paymentMethodId: null,
   shippingMethodId: null,
+  coupon: null,
+  appliedCoupon: null,
 };
 
 const checkoutSlice = createSlice({
@@ -55,6 +61,12 @@ const checkoutSlice = createSlice({
     setShippingMethodId(state, action: PayloadAction<number | null>) {
       state.shippingMethodId = action.payload;
     },
+    setCoupon(state, action: PayloadAction<ICoupon | null>) {
+      state.coupon = action.payload;
+    },
+    setAppliedCoupon(state, action: PayloadAction<ICouponValidationResult | null>) {
+      state.appliedCoupon = action.payload;
+    },
     // Reset checkout state to initial values
     resetCheckout(state) {
       state.activeStep = 0;
@@ -64,6 +76,8 @@ const checkoutSlice = createSlice({
       state.address = null;
       state.paymentMethodId = null;
       state.shippingMethodId = null;
+      state.coupon = null;
+      state.appliedCoupon = null;
     },
   },
 });
@@ -79,6 +93,8 @@ export const {
   resetCheckout,
   setPaymentMethodId,
   setShippingMethodId,
+  setCoupon,
+  setAppliedCoupon,
 } = checkoutSlice.actions;
 
 export default checkoutSlice.reducer;

@@ -26,7 +26,6 @@ export interface IParamsUser {
   page: number;
   limit: number;
   search?: string;
-  roleId?: number;
-  isActive?: boolean;
-  isBlock?: boolean;
+  status?: string;
+  roleName?: string;
 }

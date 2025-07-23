@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -13,12 +13,12 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import MyAvatar from '../../../components/MyAvatar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
-import { useDispatch } from 'src/common/redux/store';
+import { useDispatch, useSelector } from 'src/common/redux/store';
 import { setLogout } from 'src/auth/login/auth.slice';
 
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
+const BASE_MENU_OPTIONS = [
   {
     label: 'Trang chủ',
     linkTo: '/',
@@ -27,10 +27,6 @@ const MENU_OPTIONS = [
     label: 'Thông tin cá nhân',
     linkTo: PATH_DASHBOARD.general.account,
   },
-  // {
-  //   label: 'Settings',
-  //   linkTo: PATH_DASHBOARD.user.account,
-  // },
 ];
 
 // ----------------------------------------------------------------------
@@ -40,13 +36,16 @@ export default function AccountPopover() {
 
   const dispatch = useDispatch();
 
-  const { user, logout } = useAuth();
+  const { user } = useSelector((state) => state.auth);
+
+  const { logout } = useAuth();
 
   const isMountedRef = useIsMountedRef();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState<HTMLElement | null>(null);
+  const [menuOptions, setMenuOptions] = useState(BASE_MENU_OPTIONS);
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(event.currentTarget);
@@ -55,6 +54,26 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  useEffect(() => {
+    let options = [...BASE_MENU_OPTIONS];
+    if (user && user?.role?.name === 'admin') {
+      options.unshift({
+        label: 'Trang quản trị',
+        linkTo: PATH_DASHBOARD.general.app,
+      });
+    } else {
+      options.push({
+        label: 'Đơn hàng của tôi',
+        linkTo: PATH_DASHBOARD.general.orders.root,
+      });
+    }
+    // Remove duplicates
+    options = Array.from(new Set(options.map((item) => JSON.stringify(item)))).map((item) =>
+      JSON.parse(item)
+    );
+    setMenuOptions(options);
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -109,17 +128,14 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {user?.profile?.firstName + ' ' + (user?.profile?.lastName || user?.email)}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user?.email}
           </Typography>
         </Box>
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
         <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
+          {menuOptions.map((option) => (
             <MenuItem
               key={option.label}
               to={option.linkTo}

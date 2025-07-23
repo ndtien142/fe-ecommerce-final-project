@@ -40,8 +40,6 @@ const Loadable = (Component: ElementType) => (props: any) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
-  console.log('is authenticated: ', isAuthenticated);
-
   const isDashboard = pathname.includes('/dashboard') && isAuthenticated;
 
   return (
@@ -422,8 +420,8 @@ const ManagementOrderDetails = Loadable(lazy(() => import('../../management-orde
 const UserAccount = Loadable(lazy(() => import('../../account')));
 
 // MANAGEMENT USER
-const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
-const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+const UserList = Loadable(lazy(() => import('../../management-user/list/UserList')));
+const UserCreate = Loadable(lazy(() => import('../../management-user/create')));
 
 // MAIN
 const About = Loadable(lazy(() => import('../../marketing/pages/About')));

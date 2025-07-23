@@ -2,7 +2,12 @@ import { OrderManagementService } from '../services/orderManagementService';
 import { mapOldStatusToNew } from './orderStatusMigration';
 
 export class OrderUtils {
-  static storePendingOrder(orderData: { orderId: string; amount: number; paymentMethod: string }) {
+  static storePendingOrder(orderData: {
+    orderId: string;
+    amount: number;
+    paymentMethod: string;
+    couponCode?: string;
+  }) {
     localStorage.setItem('pendingOrder', JSON.stringify(orderData));
   }
 

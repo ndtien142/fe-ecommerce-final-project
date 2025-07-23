@@ -21,31 +21,34 @@ import {
 } from '@mui/material';
 import useTabs from 'src/common/hooks/useTabs';
 import useSettings from 'src/common/hooks/useSettings';
-import useTable, { emptyRows, getComparator } from 'src/common/hooks/useTable';
+import useTable from 'src/common/hooks/useTable';
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
 import HeaderBreadcrumbs from 'src/common/components/HeaderBreadcrumbs';
 import Page from 'src/common/components/Page';
 import Iconify from 'src/common/components/Iconify';
 import Scrollbar from 'src/common/components/Scrollbar';
-import {
-  TableEmptyRows,
-  TableHeadCustom,
-  TableNoData,
-  TableSelectedActions,
-} from 'src/common/components/table';
+import { TableHeadCustom, TableNoData, TableSelectedActions } from 'src/common/components/table';
 import UserTableRow from './components/UserTableRow';
 import UserTableToolbar from './components/UserTableToolbar';
 import useGetListUser from '../common/hooks/useGetListUser';
 import { IUser } from 'src/common/@types/user/user.interface';
 
-const STATUS_OPTIONS = ['all', 'active', 'banned'];
+const STATUS_OPTIONS = [
+  { value: 'all', label: 'Tất cả' },
+  { value: 'normal', label: 'Hoạt động' },
+  { value: 'blocked', label: 'Bị chặn' },
+];
 
 const ROLE_OPTIONS = ['all', 'admin', 'customer', 'staff'];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Tên đăng nhập', align: 'left' },
+  { id: 'username', label: 'Tên đăng nhập', align: 'left' },
+  { id: 'fullname', label: 'Họ và tên', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'phoneNumber', label: 'Số điện thoại', align: 'left' },
   { id: 'role', label: 'Vai trò', align: 'left' },
-  { id: 'status', label: 'Trạng thái', align: 'left' },
+  { id: 'isVerified', label: 'Đã xác thực', align: 'center' },
+  { id: 'isActive', label: 'Trạng thái', align: 'center' },
   { id: '' },
 ];
 
@@ -65,7 +68,6 @@ export default function UserList() {
     onSelectRow,
     onSelectAllRows,
     //
-    onSort,
     onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
@@ -74,8 +76,6 @@ export default function UserList() {
   const { themeStretch } = useSettings();
 
   const navigate = useNavigate();
-
-  const { data } = useGetListUser({ page: page, limit: rowsPerPage });
 
   const [tableData, setTableData] = useState<IUser[]>([]);
 
@@ -89,6 +89,14 @@ export default function UserList() {
     setFilterName(filterName);
     setPage(0);
   };
+
+  const { data } = useGetListUser({
+    page: page + 1,
+    limit: rowsPerPage,
+    status: filterStatus !== 'all' ? filterStatus : undefined,
+    search: filterName,
+    roleName: filterRole !== 'all' ? filterRole : undefined,
+  });
 
   const handleFilterRole = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterRole(event.target.value);
@@ -110,26 +118,13 @@ export default function UserList() {
     navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
   };
 
-  const dataFiltered = applySortFilter({
-    tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterRole,
-    filterStatus,
-  });
-
-  const denseHeight = dense ? 52 : 72;
-
   useEffect(() => {
     if (data?.metadata?.items) {
       setTableData(data.metadata.items);
     }
   }, [data]);
 
-  const isNotFound =
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterRole) ||
-    (!dataFiltered.length && !!filterStatus);
+  const isNotFound = !data?.metadata?.items?.length;
 
   return (
     <Page title="Người dùng: Danh sách">
@@ -163,7 +158,7 @@ export default function UserList() {
             sx={{ px: 2, bgcolor: 'background.neutral' }}
           >
             {STATUS_OPTIONS.map((tab) => (
-              <Tab disableRipple key={tab} label={tab} value={tab} />
+              <Tab disableRipple key={tab.value} label={tab.label} value={tab.value} />
             ))}
           </Tabs>
 
@@ -207,7 +202,6 @@ export default function UserList() {
                   headLabel={TABLE_HEAD}
                   rowCount={tableData.length}
                   numSelected={selected.length}
-                  // onSort={onSort}
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
@@ -217,24 +211,16 @@ export default function UserList() {
                 />
 
                 <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <UserTableRow
-                        key={row.userId}
-                        row={row}
-                        selected={selected.includes(String(row.userId))}
-                        onSelectRow={() => onSelectRow(String(row.userId))}
-                        onDeleteRow={() => handleDeleteRow(String(row.userId))}
-                        onEditRow={() => handleEditRow(String(row.userId))}
-                      />
-                    ))}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
+                  {data?.metadata?.items?.map((row) => (
+                    <UserTableRow
+                      key={row.userId}
+                      row={row}
+                      selected={selected.includes(String(row.userId))}
+                      onSelectRow={() => onSelectRow(String(row.userId))}
+                      onDeleteRow={() => handleDeleteRow(String(row.userId))}
+                      onEditRow={() => handleEditRow(String(row.userId))}
+                    />
+                  ))}
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -245,7 +231,7 @@ export default function UserList() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={dataFiltered.length}
+              count={data?.metadata?.meta?.totalItems || 0}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={onChangePage}
@@ -262,47 +248,4 @@ export default function UserList() {
       </Container>
     </Page>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applySortFilter({
-  tableData,
-  comparator,
-  filterName,
-  filterStatus,
-  filterRole,
-}: {
-  tableData: IUser[];
-  comparator: (a: any, b: any) => number;
-  filterName: string;
-  filterStatus: string;
-  filterRole: string;
-}) {
-  const stabilizedThis = tableData.map((el, index) => [el, index] as const);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  tableData = stabilizedThis.map((el) => el[0]);
-
-  if (filterName) {
-    tableData = tableData.filter(
-      (item: Record<string, any>) =>
-        item.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
-  }
-
-  if (filterStatus !== 'all') {
-    tableData = tableData.filter((item: Record<string, any>) => item.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    tableData = tableData.filter((item: Record<string, any>) => item.role === filterRole);
-  }
-
-  return tableData;
 }
