@@ -1,36 +1,23 @@
-import { useState, useEffect } from 'react';
 import { getMyAvailableCoupons } from '../services/couponService';
-import { IUserCoupon, ICouponParams } from '../../common/@types/coupon/coupon.interface';
+import { ICouponParams } from '../../common/@types/coupon/coupon.interface';
+import { useQuery } from 'react-query';
+import { QUERY_KEYS } from 'src/common/constant/queryKeys.constant';
 
-export const useUserCoupons = () => {
-  const [userCoupons, setUserCoupons] = useState<IUserCoupon[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [pagination, setPagination] = useState<{
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  } | null>(null);
+export const useUserCoupons = (params: ICouponParams = {}) => {
+  const {
+    data,
+    isLoading: loading,
+    error,
+    refetch,
+  } = useQuery([QUERY_KEYS.COUPON_MY_AVAILABLE, params], () => getMyAvailableCoupons(params), {
+    keepPreviousData: true,
+  });
 
-  const fetchUserCoupons = async (params: ICouponParams = {}) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await getMyAvailableCoupons(params);
-      setUserCoupons(response.userCoupons);
-      setPagination(response.pagination);
-      return response;
-    } catch (err: any) {
-      setError(err.response?.data?.message || err.message);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+  const userCoupons = data?.metadata?.items ?? [];
+  const pagination = data?.metadata?.meta ?? null;
 
   const refreshUserCoupons = () => {
-    fetchUserCoupons();
+    refetch();
   };
 
   return {
@@ -38,7 +25,7 @@ export const useUserCoupons = () => {
     loading,
     error,
     pagination,
-    fetchUserCoupons,
+    fetchUserCoupons: refetch,
     refreshUserCoupons,
   };
 };

@@ -27,6 +27,15 @@ export interface IDetailCouponResponse {
   };
 }
 
+export interface ICouponListResponse {
+  message: string;
+  status: number;
+  metadata: {
+    items: ICoupon[];
+    meta: PaginationMeta;
+  };
+}
+// ========= INTERFACES FOR USER COUPON =========
 export interface IUserCoupon {
   id: number;
   userId: number;
@@ -54,10 +63,14 @@ export interface ICouponValidationData {
 }
 
 export interface ICouponValidationResult {
-  coupon: ICoupon;
-  discount: {
-    discountAmount: number;
-    shippingDiscount: number;
+  message: string;
+  status: number;
+  metadata: {
+    coupon: ICoupon;
+    discount: {
+      discountAmount: number;
+      shippingDiscount: number;
+    };
   };
 }
 
@@ -67,23 +80,10 @@ export interface ICouponParams {
   type?: 'percent' | 'fixed' | 'free_shipping';
 }
 
-export interface ICouponListResponse {
+export interface IUserCouponListResponse {
   message: string;
   status: number;
-  metadata: {
-    coupons: ICoupon[];
-    meta: PaginationMeta;
-  };
-}
-
-export interface IUserCouponListResponse {
-  userCoupons: IUserCoupon[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+  metadata: { items: IUserCoupon[]; meta: PaginationMeta };
 }
 
 export interface ICouponGrantData {

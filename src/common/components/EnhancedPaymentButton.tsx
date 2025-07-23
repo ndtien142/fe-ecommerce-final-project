@@ -63,6 +63,7 @@ interface EnhancedPaymentButtonProps {
     items: any[];
     deliveryInfo?: any;
     referenceId?: string;
+    couponCode?: string;
   };
   customer?: {
     name: string;
@@ -123,6 +124,7 @@ export default function EnhancedPaymentButton({
       const paymentData = {
         internalOrderId: order.id,
         amount: order.total,
+        couponCodes: order.couponCode ? [order.couponCode] : [],
         orderInfo: EnhancedMoMoService.generateOrderInfo(order.id, customer?.name),
         items: formattedItems,
         deliveryInfo,
@@ -136,8 +138,6 @@ export default function EnhancedPaymentButton({
         note,
         shippingFee,
       };
-
-      console.log('Creating MoMo payment with data:', paymentData);
 
       const response = await EnhancedMoMoService.createPayment(paymentData);
 

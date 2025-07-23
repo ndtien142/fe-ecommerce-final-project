@@ -14,19 +14,19 @@ import EmptyContent from '../../../common/components/EmptyContent';
 import CheckoutSummary from './CheckoutSummary';
 import CheckoutProductList from './CheckoutProductList';
 // coupon components
-import CheckoutCoupon from '../../../coupon/components/CheckoutCoupon';
 // routes
 import { useDispatch } from 'src/common/redux/store';
 import { onNextStep, setCart } from 'src/checkout/checkout.slice';
 import { useEffect, useState } from 'react';
 import { ICouponValidationResult, IUserCoupon } from 'src/common/@types/coupon/coupon.interface';
+import CheckoutCoupon from '../coupon/CheckoutCoupon';
 
 // ----------------------------------------------------------------------
 
 const CheckoutCart = () => {
   const dispatch = useDispatch();
   // Get cart data from API
-  const { data: cartData, isLoading } = useGetCart();
+  const { data: cartData } = useGetCart();
   const minusItem = useMinusItemQuantity();
   const plusItem = usePlusItemQuantity();
   const removeItem = useRemoveItemFromCart();
@@ -45,7 +45,8 @@ const CheckoutCart = () => {
 
   // Calculate discount from applied coupon
   const discount = appliedCoupon
-    ? appliedCoupon.discount.discountAmount + appliedCoupon.discount.shippingDiscount
+    ? appliedCoupon?.metadata?.discount?.discountAmount +
+      appliedCoupon?.metadata?.discount?.shippingDiscount
     : 0;
 
   const total = subtotal - discount;
@@ -73,53 +74,15 @@ const CheckoutCart = () => {
     dispatch(onNextStep());
   };
 
-  // Coupon handlers
-  const handleCouponApplied = (coupon: IUserCoupon | ICouponValidationResult) => {
-    // Convert IUserCoupon to ICouponValidationResult if needed
-    if ('userId' in coupon) {
-      const userCoupon = coupon as IUserCoupon;
-
-      // Calculate discount based on coupon type
-      let discountAmount = 0;
-      let shippingDiscount = 0;
-
-      if (userCoupon.coupon.type === 'percent') {
-        discountAmount = Math.min(
-          (subtotal * userCoupon.coupon.value) / 100,
-          userCoupon.coupon.maxDiscountAmount || Infinity
-        );
-      } else if (userCoupon.coupon.type === 'fixed') {
-        discountAmount = userCoupon.coupon.value;
-      } else if (userCoupon.coupon.type === 'free_shipping') {
-        shippingDiscount = 30000; // Shipping fee
-      }
-
-      const validationResult: ICouponValidationResult = {
-        coupon: userCoupon.coupon,
-        discount: {
-          discountAmount: discountAmount,
-          shippingDiscount: shippingDiscount,
-        },
-      };
-      setAppliedCoupon(validationResult);
-    } else {
-      setAppliedCoupon(coupon as ICouponValidationResult);
-    }
-  };
-
-  const handleCouponRemoved = () => {
-    setAppliedCoupon(null);
-  };
-
   // Map API cart line items to UI CartItem type if needed by CheckoutProductList
   const uiCart = cart.map((item) => ({
     id: String(item.productId),
     name: item.product.name,
-    cover: item.product.thumbnail ?? '', // Ensure cover is always a string
+    cover: item.product.thumbnail ?? '',
     available: item.product.stock,
     price: Number(item.price),
-    color: '', // Not in API, fallback to empty
-    size: '', // Not in API, fallback to empty
+    color: '',
+    size: '',
     quantity: item.quantity,
     subtotal: Number(item.total),
   }));
@@ -181,9 +144,6 @@ const CheckoutCart = () => {
                 price: Number(item.price),
               })),
             }}
-            onCouponApplied={handleCouponApplied}
-            onCouponRemoved={handleCouponRemoved}
-            appliedCoupon={appliedCoupon}
           />
         </Card>
 

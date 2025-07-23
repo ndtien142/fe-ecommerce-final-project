@@ -38,6 +38,7 @@ export class EnhancedMoMoService {
     paymentMethodId: number;
     shippingMethodId: number;
     note?: string;
+    couponCode?: string;
     shippingFee?: number;
   }) {
     try {

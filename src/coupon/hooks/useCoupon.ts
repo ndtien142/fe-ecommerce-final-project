@@ -14,7 +14,7 @@ export const useCoupon = () => {
     setError(null);
     try {
       const response = await getAvailableCoupons(params);
-      setCoupons(response.metadata.coupons);
+      setCoupons(response.metadata.items);
       setPagination(response.metadata.meta);
       return response;
     } catch (err: any) {

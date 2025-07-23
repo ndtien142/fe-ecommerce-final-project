@@ -44,11 +44,11 @@ export default function CheckoutPayment() {
   const { showErrorSnackbar, showSuccessSnackbar } = useMessage();
   const [loading, setLoading] = useState(false);
 
-  const { cart, address } = useSelector((state) => state.checkout);
+  const { cart, address, appliedCoupon } = useSelector((state) => state.checkout);
 
   const subtotal = cart?.lineItems?.reduce((sum, item) => sum + Number(item.total), 0) || 0;
   const total = subtotal; // Adjust if you have shipping/discount logic
-  const discount = 0; // Adjust if you have discount logic
+  const discount = appliedCoupon?.metadata?.discount?.discountAmount || 0;
   const shipping = 0; // Adjust if you have shipping logic
 
   const handleNextStep = () => {
@@ -110,6 +110,7 @@ export default function CheckoutPayment() {
 
     if (isMoMoPayment) {
       // Handle MoMo payment
+
       const momoPayload: IFormCreateMoMoOrder = {
         cart: cart,
         addressId: address?.id || 0,
@@ -117,9 +118,9 @@ export default function CheckoutPayment() {
         shippingMethodId: Number(data.delivery),
         note: '', // You can add a note field if needed
         shippingFee: 0,
+        couponCode: appliedCoupon?.metadata?.coupon?.code || '',
         orderInfo: OrderUtils.generateOrderInfo(cart.id?.toString() || 'unknown'),
       };
-
       createMoMoOrder(momoPayload, {
         onSuccess: (response) => {
           // Store order info for later reference
@@ -147,6 +148,7 @@ export default function CheckoutPayment() {
         shippingMethodId: Number(data.delivery),
         note: '', // You can add a note field if needed
         shippingFee: 0,
+        couponCode: appliedCoupon?.metadata?.coupon?.code || '',
       };
 
       mutate(payload, {
@@ -209,6 +211,7 @@ export default function CheckoutPayment() {
               order={{
                 id: cart?.id?.toString() || 'unknown',
                 total: total,
+                couponCode: appliedCoupon?.metadata?.coupon?.code || '',
                 items: cart?.lineItems || [],
                 deliveryInfo: {
                   address: address

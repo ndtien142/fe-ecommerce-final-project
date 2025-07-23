@@ -71,7 +71,7 @@ const ListCouponContainer = () => {
     navigate(PATH_DASHBOARD.coupon.edit(paramCase(id)));
   };
 
-  const dataFiltered = data?.metadata?.coupons || [];
+  const dataFiltered = data?.metadata?.items || [];
 
   const isNotFound = !dataFiltered.length;
 
