@@ -106,9 +106,9 @@ const navConfig = [
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
         children: [
-          { title: 'list', path: PATH_DASHBOARD.user.list },
-          { title: 'create', path: PATH_DASHBOARD.user.new },
-          { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
+          { title: 'Danh sách', path: PATH_DASHBOARD.user.list },
+          { title: 'Tạo mới', path: PATH_DASHBOARD.user.new },
+          { title: 'Chỉnh sửa', path: PATH_DASHBOARD.user.demoEdit },
         ],
       },
       // INVOICE
@@ -116,7 +116,7 @@ const navConfig = [
         title: 'Đơn đặt hàng',
         path: PATH_DASHBOARD.order.root,
         icon: ICONS.invoice,
-        children: [{ title: 'list', path: PATH_DASHBOARD.order.list }],
+        children: [{ title: 'Danh sách', path: PATH_DASHBOARD.order.list }],
       },
 
       // {
