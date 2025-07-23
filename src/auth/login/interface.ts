@@ -35,6 +35,13 @@ export interface IResLogin {
         refreshToken: string;
       };
       user: IUser;
+      profile: {
+        firstName: string;
+        lastName: string;
+        avatarUrl: string;
+        nickname: string;
+        dateOfBirth: string;
+      };
     };
   };
 }

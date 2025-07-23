@@ -14,6 +14,13 @@ export interface IUser {
     description?: string;
     permissions: string[];
   };
+  profile: {
+    firstName: string;
+    lastName: string;
+    avatarUrl: string;
+    nickname: string;
+    dateOfBirth: string;
+  };
   isBlock: boolean;
   isDeleted: boolean;
   createdAt: Date;
