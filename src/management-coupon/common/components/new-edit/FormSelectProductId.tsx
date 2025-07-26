@@ -74,6 +74,7 @@ const FormSelectProductId = ({
     onChangeRowsPerPage,
   } = useTable({
     defaultSelected,
+    defaultDense: true,
   });
 
   // Filter states
@@ -160,6 +161,7 @@ const FormSelectProductId = ({
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: themeStretch ? '100%' : { xs: 1, sm: 720, md: 960, lg: 1140 },
+          overflow: 'scroll',
         }}
       >
         <Stack spacing={2}>
