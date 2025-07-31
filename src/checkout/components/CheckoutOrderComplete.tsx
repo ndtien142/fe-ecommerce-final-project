@@ -55,7 +55,7 @@ export default function CheckoutOrderComplete({ open }: DialogProps) {
 
           <Typography align="left" paragraph>
             Cảm ơn bạn đã đặt hàng &nbsp;
-            <Link href="#">01dc1370-3df6-11eb-b378-0242ac130002</Link>
+            <Link href="#"></Link>
           </Typography>
 
           <Typography align="left" sx={{ color: 'text.secondary' }}>

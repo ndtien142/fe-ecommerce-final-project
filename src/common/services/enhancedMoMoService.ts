@@ -42,9 +42,6 @@ export class EnhancedMoMoService {
     shippingFee?: number;
   }) {
     try {
-      const orderId =
-        paymentData.orderId || this.generateUniqueOrderId(paymentData.internalOrderId);
-
       const momoPayload: IFormCreateMoMoOrder = {
         cart: paymentData.cart,
         addressId: paymentData.addressId,
@@ -60,6 +57,7 @@ export class EnhancedMoMoService {
         storeName: paymentData.storeName || 'Your Store',
         subPartnerCode: paymentData.subPartnerCode || undefined,
         internalOrderId: paymentData.internalOrderId,
+        couponCode: paymentData.couponCode || '',
       };
 
       const response = await createOrderWithMoMo(momoPayload);

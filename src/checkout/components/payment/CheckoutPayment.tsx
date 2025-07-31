@@ -24,13 +24,11 @@ import CheckoutSummary from '../cart/CheckoutSummary';
 import { useGetListShippingMethod } from '../../hooks/useGetListShippingMethod';
 import { useGetListPaymentMethod } from '../../hooks/useGetListPaymentMethod';
 import { IFormCreateNewOrder } from 'src/common/@types/order/order.interface';
-import { IFormCreateMoMoOrder } from 'src/common/@types/payment/momo.interface';
 import { useCreateOrder } from 'src/checkout/hooks/useCreateOrder';
-import { useCreateMoMoOrder } from 'src/checkout/hooks/useCreateMoMoOrder';
 import { default as useMessage } from 'src/common/hooks/useMessage';
-import { OrderUtils } from 'src/common/utils/orderUtils';
 import EnhancedPaymentButton from 'src/common/components/EnhancedPaymentButton';
 import { useState } from 'react';
+import { OrderUtils } from 'src/common/utils/orderUtils';
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +49,11 @@ export default function CheckoutPayment() {
   const discount = appliedCoupon?.metadata?.discount?.discountAmount || 0;
   const shipping = 0; // Adjust if you have shipping logic
 
+  // Ensure couponCode is always a string (never null/undefined)
+  const couponCode = appliedCoupon?.metadata?.coupon?.code
+    ? String(appliedCoupon.metadata.coupon.code)
+    : '';
+
   const handleNextStep = () => {
     dispatch(onNextStep());
   };
@@ -70,7 +73,6 @@ export default function CheckoutPayment() {
   };
 
   const { mutate } = useCreateOrder();
-  const { mutate: createMoMoOrder } = useCreateMoMoOrder();
 
   const PaymentSchema = Yup.object().shape({
     payment: Yup.string().required('Vui lòng chọn phương thức thanh toán!'),
@@ -99,48 +101,14 @@ export default function CheckoutPayment() {
     if (!cart) {
       // Handle error or show a message to the user
       console.error('Cart is null');
+      setLoading(false);
       return;
     }
-
-    // Find the selected payment method to check if it's MoMo
+    // Chỉ xử lý đơn hàng thường, MoMo đã xử lý qua EnhancedPaymentButton
     const selectedPaymentMethod = paymentMethods?.find(
       (method) => method.id === Number(data.payment)
     );
-    const isMoMoPayment = selectedPaymentMethod?.provider === 'momo';
-
-    if (isMoMoPayment) {
-      // Handle MoMo payment
-
-      const momoPayload: IFormCreateMoMoOrder = {
-        cart: cart,
-        addressId: address?.id || 0,
-        paymentMethodId: Number(data.payment),
-        shippingMethodId: Number(data.delivery),
-        note: '', // You can add a note field if needed
-        shippingFee: 0,
-        couponCode: appliedCoupon?.metadata?.coupon?.code || '',
-        orderInfo: OrderUtils.generateOrderInfo(cart.id?.toString() || 'unknown'),
-      };
-      createMoMoOrder(momoPayload, {
-        onSuccess: (response) => {
-          // Store order info for later reference
-          OrderUtils.storePendingOrder({
-            orderId: response.metadata.order.id,
-            amount: response.metadata.order.totalAmount,
-            paymentMethod: 'momo',
-          });
-
-          // Redirect to MoMo payment
-          window.location.href = response.metadata.momoPayment.payUrl;
-        },
-        onError: (error: any) => {
-          showErrorSnackbar(
-            error?.response?.data?.message || 'Tạo đơn hàng MoMo thất bại! Vui lòng thử lại sau.'
-          );
-        },
-      });
-    } else {
-      // Handle regular payment (cash, etc.)
+    if (selectedPaymentMethod?.provider !== 'momo') {
       const payload: IFormCreateNewOrder = {
         cart: cart,
         addressId: address?.id || 0,
@@ -148,22 +116,24 @@ export default function CheckoutPayment() {
         shippingMethodId: Number(data.delivery),
         note: '', // You can add a note field if needed
         shippingFee: 0,
-        couponCode: appliedCoupon?.metadata?.coupon?.code || '',
+        couponCode: couponCode,
       };
-
       mutate(payload, {
         onSuccess: () => {
           showSuccessSnackbar('Đặt hàng thành công!');
           handleNextStep();
+          setLoading(false);
         },
         onError: (error: any) => {
           showErrorSnackbar(
             error?.response?.data?.message || 'Đặt hàng thất bại! Vui lòng thử lại sau.'
           );
+          setLoading(false);
         },
       });
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   // Fetch shipping and payment methods from API
@@ -211,7 +181,7 @@ export default function CheckoutPayment() {
               order={{
                 id: cart?.id?.toString() || 'unknown',
                 total: total,
-                couponCode: appliedCoupon?.metadata?.coupon?.code || '',
+                couponCode,
                 items: cart?.lineItems || [],
                 deliveryInfo: {
                   address: address
@@ -232,9 +202,17 @@ export default function CheckoutPayment() {
               shippingMethodId={Number(methods.watch('delivery'))}
               note=""
               shippingFee={shipping}
-              onSuccess={() => {
-                showSuccessSnackbar('Thanh toán MoMo thành công!');
+              onSuccess={(response) => {
+                showSuccessSnackbar(
+                  `Đặt hàng MoMo thành công! ${response.metadata.momoPayment.payUrl}`
+                );
+                OrderUtils.storePendingOrder({
+                  orderId: response.metadata.order.id,
+                  amount: response.metadata.order.totalAmount,
+                  paymentMethod: 'momo',
+                });
                 handleNextStep();
+                window.location.href = response.metadata.momoPayment.payUrl;
               }}
               onError={(error: any) => {
                 showErrorSnackbar(`Lỗi thanh toán MoMo: ${error.message}`);

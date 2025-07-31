@@ -1,59 +1,9 @@
-import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Typography,
-  CircularProgress,
-  Alert,
-  Paper,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { QRCodeCanvas as QRCode } from 'qrcode.react';
+import { useState } from 'react';
+import { Box, Button, Typography, CircularProgress, Alert } from '@mui/material';
 import { EnhancedMoMoService } from '../services/enhancedMoMoService';
 import { OrderUtils } from '../utils/orderUtils';
 import Iconify from './Iconify';
-
-// ----------------------------------------------------------------------
-
-const PaymentMethodCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  borderRadius: theme.spacing(1),
-  border: `1px solid ${theme.palette.divider}`,
-  cursor: 'pointer',
-  transition: 'all 0.2s',
-  '&:hover': {
-    borderColor: theme.palette.primary.main,
-    boxShadow: theme.customShadows.z8,
-  },
-  '&.selected': {
-    borderColor: theme.palette.primary.main,
-    backgroundColor: theme.palette.primary.lighter,
-  },
-}));
-
-const QRCodeContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  padding: theme.spacing(3),
-  backgroundColor: theme.palette.background.neutral,
-  borderRadius: theme.spacing(1),
-  '& canvas': {
-    padding: theme.spacing(1),
-    backgroundColor: 'white',
-    borderRadius: theme.spacing(0.5),
-  },
-}));
-
+import { useSelector } from '../redux/store';
 // ----------------------------------------------------------------------
 
 interface EnhancedPaymentButtonProps {
@@ -81,8 +31,6 @@ interface EnhancedPaymentButtonProps {
   className?: string;
 }
 
-type PaymentMethod = 'web' | 'app' | 'qr' | 'miniapp';
-
 export default function EnhancedPaymentButton({
   order,
   customer,
@@ -97,10 +45,12 @@ export default function EnhancedPaymentButton({
   className = '',
 }: EnhancedPaymentButtonProps) {
   const [loading, setLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('web');
-  const [showQRDialog, setShowQRDialog] = useState(false);
-  const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const { appliedCoupon } = useSelector((state) => state.checkout);
+
+  const couponCode = appliedCoupon?.metadata?.coupon?.code
+    ? String(appliedCoupon.metadata.coupon.code)
+    : '';
 
   const handlePayment = async () => {
     if (loading) return;
@@ -124,7 +74,7 @@ export default function EnhancedPaymentButton({
       const paymentData = {
         internalOrderId: order.id,
         amount: order.total,
-        couponCodes: order.couponCode ? [order.couponCode] : [],
+        couponCode,
         orderInfo: EnhancedMoMoService.generateOrderInfo(order.id, customer?.name),
         items: formattedItems,
         deliveryInfo,
@@ -142,12 +92,7 @@ export default function EnhancedPaymentButton({
       const response = await EnhancedMoMoService.createPayment(paymentData);
 
       if (response.success && response.data?.metadata) {
-        const {
-          payUrl,
-          deeplink,
-          qrCodeUrl: qrUrl,
-          deeplinkMiniApp,
-        } = response.data.metadata.momoPayment;
+        const { payUrl } = response.data.metadata.momoPayment;
 
         // Store pending order
         OrderUtils.storePendingOrder({
@@ -156,42 +101,12 @@ export default function EnhancedPaymentButton({
           paymentMethod: 'momo',
         });
 
-        // Handle different payment methods
-        switch (paymentMethod) {
-          case 'app':
-            if (deeplink) {
-              window.location.href = deeplink;
-            } else {
-              throw new Error('Deeplink không khả dụng');
-            }
-            break;
-
-          case 'qr':
-            if (qrUrl) {
-              setQrCodeUrl(qrUrl);
-              setShowQRDialog(true);
-            } else {
-              throw new Error('QR code không khả dụng');
-            }
-            break;
-
-          case 'miniapp':
-            if (deeplinkMiniApp) {
-              window.location.href = deeplinkMiniApp;
-            } else {
-              throw new Error('Mini app deeplink không khả dụng');
-            }
-            break;
-
-          default: // web
-            if (payUrl) {
-              window.location.href = payUrl;
-            } else {
-              throw new Error('URL thanh toán không khả dụng');
-            }
+        if (payUrl) {
+          // Không redirect, chỉ trả về payUrl qua callback
+          onSuccess?.({ ...response.data, payUrl });
+        } else {
+          throw new Error('Không có phương thức thanh toán web khả dụng');
         }
-
-        onSuccess?.(response.data);
       } else {
         throw new Error(response.error || 'Tạo thanh toán thất bại');
       }
@@ -205,108 +120,8 @@ export default function EnhancedPaymentButton({
     }
   };
 
-  const renderPaymentMethods = () => (
-    <FormControl component="fieldset" sx={{ width: '100%', mb: 2 }}>
-      <FormLabel component="legend" sx={{ mb: 1, fontWeight: 'bold' }}>
-        Chọn phương thức thanh toán:
-      </FormLabel>
-      <RadioGroup
-        value={paymentMethod}
-        onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-        sx={{ gap: 1 }}
-      >
-        <PaymentMethodCard className={paymentMethod === 'web' ? 'selected' : ''}>
-          <FormControlLabel
-            value="web"
-            control={<Radio />}
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Iconify icon="eva:browser-outline" width={24} height={24} />
-                <Box>
-                  <Typography variant="subtitle2">Thanh toán trên Web</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Chuyển hướng đến trang web MoMo
-                  </Typography>
-                </Box>
-              </Box>
-            }
-            sx={{ width: '100%', m: 0 }}
-          />
-        </PaymentMethodCard>
-
-        <PaymentMethodCard className={paymentMethod === 'app' ? 'selected' : ''}>
-          <FormControlLabel
-            value="app"
-            control={<Radio />}
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Iconify icon="eva:smartphone-outline" width={24} height={24} />
-                <Box>
-                  <Typography variant="subtitle2">Ứng dụng MoMo</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Mở trực tiếp ứng dụng MoMo
-                  </Typography>
-                </Box>
-              </Box>
-            }
-            sx={{ width: '100%', m: 0 }}
-          />
-        </PaymentMethodCard>
-
-        <PaymentMethodCard className={paymentMethod === 'qr' ? 'selected' : ''}>
-          <FormControlLabel
-            value="qr"
-            control={<Radio />}
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Iconify icon="eva:qr-code-outline" width={24} height={24} />
-                <Box>
-                  <Typography variant="subtitle2">Quét mã QR</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Sử dụng ứng dụng MoMo để quét mã QR
-                  </Typography>
-                </Box>
-              </Box>
-            }
-            sx={{ width: '100%', m: 0 }}
-          />
-        </PaymentMethodCard>
-      </RadioGroup>
-    </FormControl>
-  );
-
-  const renderQRDialog = () => (
-    <Dialog open={showQRDialog} onClose={() => setShowQRDialog(false)} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Iconify icon="eva:qr-code-outline" width={24} height={24} />
-          Quét mã QR để thanh toán
-        </Box>
-      </DialogTitle>
-      <DialogContent>
-        <QRCodeContainer>
-          <QRCode value={qrCodeUrl} size={200} level="M" includeMargin />
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
-            Mở ứng dụng MoMo và quét mã QR để thanh toán
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, textAlign: 'center' }}>
-            Số tiền: {OrderUtils.formatCurrency(order.total)}
-          </Typography>
-        </QRCodeContainer>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setShowQRDialog(false)} variant="outlined">
-          Đóng
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-
   return (
     <Box className={className}>
-      {/* Payment Method Selection */}
-      {renderPaymentMethods()}
-
       {/* Error Display */}
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
@@ -343,9 +158,6 @@ export default function EnhancedPaymentButton({
           </Box>
         )}
       </Button>
-
-      {/* QR Code Dialog */}
-      {renderQRDialog()}
     </Box>
   );
 }
