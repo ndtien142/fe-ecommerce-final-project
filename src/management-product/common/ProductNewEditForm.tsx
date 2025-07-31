@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -218,6 +218,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
         images: urls,
       };
 
+      delete payload.inStock;
+      delete payload.taxes;
+
       mutate(payload, {
         onSuccess: () => {
           enqueueSnackbar(!isEdit ? 'Tạo sản phẩm thành công!' : 'Cập nhật sản phẩm thành công!', {
@@ -250,6 +253,9 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
         brandId: data.brandId ? Number(data.brandId) : null,
         images: urls,
       };
+
+      delete payload.inStock;
+      delete payload.taxes;
 
       updateProduct(payload, {
         onSuccess: () => {

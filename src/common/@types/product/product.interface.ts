@@ -210,8 +210,8 @@ export interface IParamsProduct {
 }
 
 export interface FormValuesProps extends Omit<Product, 'images' | 'brand' | 'categories'> {
-  taxes: boolean;
-  inStock: boolean;
+  taxes?: boolean;
+  inStock?: boolean;
   images: (CustomFile | string)[];
   categories: ICategoryForm['id'][];
 }
