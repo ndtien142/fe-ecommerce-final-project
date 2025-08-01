@@ -23,6 +23,24 @@ export interface WorkflowStatistics {
     totalAmount: number;
     percentage: number;
   }>;
+  trends?: {
+    totalOrders?: {
+      percentage: number;
+      isIncrease: boolean;
+    };
+    newOrders?: {
+      percentage: number;
+      isIncrease: boolean;
+    };
+    processingOrders?: {
+      percentage: number;
+      isIncrease: boolean;
+    };
+    completedOrders?: {
+      percentage: number;
+      isIncrease: boolean;
+    };
+  };
 }
 
 export interface DashboardOverview {
@@ -72,6 +90,8 @@ export interface TimeSeriesDataPoint {
   revenue?: number;
   actions?: number;
   completionRate?: number;
+  momoSuccess?: number;
+  cashSuccess?: number;
 }
 
 export interface TimeSeriesData {
@@ -85,24 +105,60 @@ export interface TimeSeriesData {
 }
 
 export interface RealtimeMetrics {
-  timestamp: string;
-  activeOrders: number;
-  totalUsers: number;
-  pendingActions: number;
-  systemHealth: {
-    status: string;
-    responseTime: number;
-    uptime: number;
-  };
+  activeUsers: number;
+  recentOrders: number;
   recentActivities: Array<{
-    id: number;
-    orderId: number;
-    action: string;
-    actorType: string;
-    actorName: string;
-    timestamp: string;
-    description: string;
+    id: string;
+    title: string;
+    description?: string;
+    time: string;
+    type: string;
+    actor?: {
+      name: string;
+      role: string;
+    };
+    metadata?: Record<string, any>;
   }>;
+}
+
+export interface RecentOrder {
+  id: string;
+  total_amount: number;
+  status: string;
+  create_time: string;
+  user?: {
+    id: string;
+    user_nickname: string;
+    user_email: string;
+  };
+  payments?: Array<{
+    payment_method: string;
+    status: string;
+    amount: number;
+  }>;
+}
+
+export interface RecentOrdersParams {
+  page?: number;
+  limit?: number;
+  status?: string;
+  userId?: number;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface RecentOrdersResponse {
+  orders: RecentOrder[];
+  pagination: PaginationInfo;
 }
 
 // API Response Interface
@@ -168,6 +224,12 @@ export const getRealtimeMetrics = () =>
 export const clearCache = () =>
   axiosInstance.delete<unknown, ApiResponse<void>>('/dashboard/workflow/cache');
 
+// Get recent orders
+export const getRecentOrders = (params: RecentOrdersParams = {}) =>
+  axiosInstance.get<unknown, ApiResponse<RecentOrdersResponse>>('/dashboard/recent-orders', {
+    params,
+  });
+
 // Service object for backward compatibility (if needed)
 export const workflowDashboardService = {
   getWorkflowStatistics,
@@ -175,4 +237,5 @@ export const workflowDashboardService = {
   getTimeSeriesData,
   getRealtimeMetrics,
   clearCache,
+  getRecentOrders,
 };

@@ -13,3 +13,11 @@ export { default as ActorPerformance } from './ActorPerformance';
 export { default as PaymentMethods } from './PaymentMethods';
 export { default as TimeSeriesChart } from './TimeSeriesChart';
 export { default as RecentActivities } from './RecentActivities';
+
+// Enhanced Analytics Components (inspired by common/sections/@dashboard/general/analytics)
+export { default as DateRangeFilter } from './DateRangeFilter';
+export { default as WorkflowAnalyticsChart } from './WorkflowAnalyticsChart';
+export { default as WorkflowDonutChart } from './WorkflowDonutChart';
+export { default as WorkflowWidgetSummary } from './WorkflowWidgetSummary';
+export { default as WorkflowActivityTimeline } from './WorkflowActivityTimeline';
+export { default as RecentOrdersList } from './RecentOrdersList';

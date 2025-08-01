@@ -4,11 +4,13 @@ import {
   getDashboardOverview,
   getTimeSeriesData,
   getRealtimeMetrics,
+  getRecentOrders,
   clearCache,
   WorkflowStatistics,
   DashboardOverview,
   TimeSeriesData,
   RealtimeMetrics,
+  RecentOrdersResponse,
   DateRangeParams,
   TimeSeriesParams,
   ApiResponse,
@@ -82,14 +84,27 @@ export const useGetRealtimeMetrics = () =>
 // Hook for clearing cache
 export const useClearCache = () => {
   const queryClient = useQueryClient();
-
-  return useMutation(() => clearCache(), {
+  return useMutation({
+    mutationFn: () => clearCache(),
     onSuccess: () => {
-      // Invalidate all dashboard queries
-      queryClient.invalidateQueries(['workflow-statistics']);
-      queryClient.invalidateQueries(['dashboard-overview']);
-      queryClient.invalidateQueries(['time-series-data']);
-      queryClient.invalidateQueries(['realtime-metrics']);
+      // Invalidate and refetch related queries
+      queryClient.invalidateQueries(['dashboard']);
+      queryClient.invalidateQueries(['workflow']);
+      queryClient.invalidateQueries(['timeseries']);
+      queryClient.invalidateQueries(['realtime']);
+      queryClient.invalidateQueries(['recent-orders']);
     },
   });
 };
+
+// Get recent orders with pagination
+export const useGetRecentOrders = (params: import('../service').RecentOrdersParams = {}) =>
+  useQuery<ApiResponse<RecentOrdersResponse>>(
+    ['recent-orders', params],
+    () => getRecentOrders(params),
+    {
+      staleTime: 30 * 1000, // 30 seconds
+      refetchInterval: 60 * 1000, // 1 minute
+      keepPreviousData: true, // For pagination
+    }
+  );
