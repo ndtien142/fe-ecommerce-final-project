@@ -18,7 +18,7 @@ import { PATH_CUSTOMER, PATH_AUTH } from 'src/common/routes/paths';
 import { useSelector, useDispatch } from 'src/common/redux/store';
 import { selectIsAuthenticated } from 'src/auth/login/auth.slice';
 import { setLastVisitedProduct } from 'src/common/redux/slices/lastVisited';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +62,8 @@ export default function ProductSummary({ product }: Props) {
     quantity: available < 1 ? 0 : 1,
   };
 
+  const [quantityError, setQuantityError] = useState<string | null>(null);
+
   const methods = useForm<FormValues>({
     defaultValues,
   });
@@ -72,8 +74,9 @@ export default function ProductSummary({ product }: Props) {
   const handleIncrementQuantity = () => {
     if (values.quantity < available) {
       setValue('quantity', values.quantity + 1);
+      setQuantityError(null);
     } else {
-      showErrorSnackbar(`Số lượng tối đa là ${available}`);
+      setQuantityError(`Số lượng tối đa là ${available}`);
     }
   };
 
@@ -88,10 +91,18 @@ export default function ProductSummary({ product }: Props) {
     const value = e.target.value.replace(/[^0-9]/g, '');
     if (value === '') {
       setValue('quantity', 0);
+      setQuantityError('Số lượng phải lớn hơn 0');
     } else {
       const numValue = parseInt(value, 10);
       if (!isNaN(numValue)) {
         setValue('quantity', numValue);
+        if (numValue > available) {
+          setQuantityError(`Số lượng tối đa là ${available}`);
+        } else if (numValue < 1) {
+          setQuantityError('Số lượng phải lớn hơn 0');
+        } else {
+          setQuantityError(null);
+        }
       }
     }
   };
@@ -100,16 +111,17 @@ export default function ProductSummary({ product }: Props) {
     // Handle invalid or empty input
     if (values.quantity < 1) {
       setValue('quantity', 1);
-    }
-
-    // Check if value exceeds available stock
-    if (values.quantity > available) {
-      showErrorSnackbar(`Số lượng tối đa là ${available}`);
+      setQuantityError('Số lượng phải lớn hơn 0');
+    } else if (values.quantity > available) {
       setValue('quantity', available);
+      setQuantityError(`Số lượng tối đa là ${available}`);
+    } else {
+      setQuantityError(null);
     }
   };
 
   const handleAddCart = async (data: FormValues) => {
+    if (quantityError) return;
     if (!isAuthenticated) {
       // Save current product URL and redirect to login
       dispatch(setLastVisitedProduct(window.location.pathname));
@@ -222,45 +234,53 @@ export default function ProductSummary({ product }: Props) {
           Số lượng
         </Typography>
 
-        <Box
-          sx={{
-            py: 0.5,
-            px: 0.75,
-            border: 1,
-            lineHeight: 0,
-            borderRadius: 1,
-            display: 'flex',
-            alignItems: 'center',
-            borderColor: 'grey.50032',
-          }}
-        >
-          <IconButton
-            size="small"
-            color="inherit"
-            disabled={values.quantity <= 1}
-            onClick={handleDecrementQuantity}
-          >
-            <Iconify icon={'eva:minus-fill'} width={14} height={14} />
-          </IconButton>
-
-          <input
-            type="text"
-            value={values.quantity.toString()}
-            onChange={handleQuantityChange}
-            onBlur={handleQuantityBlur}
-            style={{
-              width: 40,
-              textAlign: 'center',
-              border: 'none',
-              outline: 'none',
-              padding: 0,
-              fontSize: '14px',
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Box
+            sx={{
+              py: 0.5,
+              px: 0.75,
+              border: 1,
+              lineHeight: 0,
+              borderRadius: 1,
+              display: 'flex',
+              alignItems: 'center',
+              borderColor: quantityError ? 'error.main' : 'grey.50032',
             }}
-          />
+          >
+            <IconButton
+              size="small"
+              color="inherit"
+              disabled={values.quantity <= 1}
+              onClick={handleDecrementQuantity}
+            >
+              <Iconify icon={'eva:minus-fill'} width={14} height={14} />
+            </IconButton>
 
-          <IconButton size="small" color="inherit" onClick={handleIncrementQuantity}>
-            <Iconify icon={'eva:plus-fill'} width={14} height={14} />
-          </IconButton>
+            <input
+              type="text"
+              value={values.quantity.toString()}
+              onChange={handleQuantityChange}
+              onBlur={handleQuantityBlur}
+              style={{
+                width: 40,
+                textAlign: 'center',
+                border: 'none',
+                outline: 'none',
+                padding: 0,
+                fontSize: '14px',
+                color: quantityError ? '#d32f2f' : undefined,
+              }}
+            />
+
+            <IconButton size="small" color="inherit" onClick={handleIncrementQuantity}>
+              <Iconify icon={'eva:plus-fill'} width={14} height={14} />
+            </IconButton>
+          </Box>
+          {quantityError && (
+            <Typography variant="caption" sx={{ color: 'error.main', mt: 0.5 }}>
+              {quantityError}
+            </Typography>
+          )}
         </Box>
 
         <Typography variant="caption" component="div" sx={{ ml: 2, color: 'text.secondary' }}>
@@ -277,7 +297,7 @@ export default function ProductSummary({ product }: Props) {
           startIcon={<Iconify icon={'ic:round-add-shopping-cart'} />}
           onClick={handleSubmit(handleAddCart)}
           sx={{ whiteSpace: 'nowrap' }}
-          disabled={available < 1}
+          disabled={available < 1 || !!quantityError}
         >
           Thêm vào giỏ hàng
         </Button>
@@ -286,7 +306,7 @@ export default function ProductSummary({ product }: Props) {
           size="large"
           type="submit"
           variant="contained"
-          disabled={available < 1}
+          disabled={available < 1 || !!quantityError}
           onClick={handleSubmit(handleBuyNow)}
         >
           Mua ngay
