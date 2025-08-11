@@ -21,7 +21,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function Contact() {
   return (
-    <Page title="Liên hệ - Mini Furniture">
+    <Page title="Liên hệ - Peracta Furniture">
       <RootStyle>
         <ContactHero />
 

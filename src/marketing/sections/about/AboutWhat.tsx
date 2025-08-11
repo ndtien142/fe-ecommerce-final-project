@@ -50,7 +50,7 @@ export default function AboutWhat() {
                 <Grid item xs={6}>
                   <m.div variants={varFade().inUp}>
                     <Image
-                      alt="Mini Furniture showroom"
+                      alt="Peracta Furniture showroom"
                       src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                       ratio="3/4"
                       sx={{
@@ -63,7 +63,7 @@ export default function AboutWhat() {
                 <Grid item xs={6}>
                   <m.div variants={varFade().inUp}>
                     <Image
-                      alt="Mini Furniture products"
+                      alt="Peracta Furniture products"
                       src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1158&q=80"
                       ratio="1/1"
                       sx={{ borderRadius: 2 }}
@@ -88,11 +88,11 @@ export default function AboutWhat() {
                     theme.palette.mode === 'light' ? 'text.secondary' : 'common.white',
                 }}
               >
-                Mini Furniture chuyên tạo ra những sản phẩm nội thất đẹp và tiện dụng, biến ngôi nhà
-                thành không gian sống lý tưởng. Với hơn 15 năm kinh nghiệm, chúng tôi đã giúp hàng
-                nghìn khách hàng tìm được những món đồ hoàn hảo cho không gian sống. Từ thiết kế
-                hiện đại tối giản đến phong cách cổ điển truyền thống, bộ sưu tập đa dạng của chúng
-                tôi phù hợp với mọi sở thích và ngân sách.
+                Peracta Furniture chuyên tạo ra những sản phẩm nội thất đẹp và tiện dụng, biến ngôi
+                nhà thành không gian sống lý tưởng. Với hơn 15 năm kinh nghiệm, chúng tôi đã giúp
+                hàng nghìn khách hàng tìm được những món đồ hoàn hảo cho không gian sống. Từ thiết
+                kế hiện đại tối giản đến phong cách cổ điển truyền thống, bộ sưu tập đa dạng của
+                chúng tôi phù hợp với mọi sở thích và ngân sách.
               </Typography>
             </m.div>
 

@@ -19,7 +19,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function Faqs() {
   return (
-    <Page title="Câu hỏi thường gặp - Mini Furniture">
+    <Page title="Câu hỏi thường gặp - Peracta Furniture">
       <RootStyle>
         <FaqsHero />
 

@@ -70,7 +70,7 @@ export const defaultSettings: SettingsValueProps = {
   themeDirection: 'ltr',
   themeContrast: 'default',
   themeLayout: 'horizontal',
-  themeColorPresets: 'default',
+  themeColorPresets: 'cyan',
   themeStretch: false,
 };
 

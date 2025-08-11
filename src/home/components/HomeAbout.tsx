@@ -42,7 +42,7 @@ export default function HomeAbout() {
                 15 năm kinh nghiệm trong ngành nội thất
               </Typography>
               <Typography variant="h6" sx={{ mb: 4, opacity: 0.8 }}>
-                Mini Furniture đã đồng hành cùng hàng nghìn gia đình Việt Nam tạo nên không gian
+                Peracta Furniture đã đồng hành cùng hàng nghìn gia đình Việt Nam tạo nên không gian
                 sống lý tưởng. Chúng tôi tự hào là một trong những thương hiệu nội thất uy tín hàng
                 đầu.
               </Typography>
@@ -101,7 +101,7 @@ export default function HomeAbout() {
             <m.div variants={varFade().inRight}>
               <Image
                 src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1158&q=80"
-                alt="Mini Furniture showroom"
+                alt="Peracta Furniture showroom"
                 sx={{
                   width: { xs: 300, md: 400 },
                   height: { xs: 200, md: 300 },

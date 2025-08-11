@@ -12,7 +12,7 @@ import SocialsButton from '../../components/SocialsButton';
 
 const LINKS = [
   {
-    headline: 'Mini Furniture',
+    headline: 'Peracta Furniture',
     children: [
       { name: 'Về chúng tôi', href: PATH_PAGE.about },
       { name: 'Liên hệ', href: PATH_PAGE.contact },
@@ -39,7 +39,7 @@ const LINKS = [
   {
     headline: 'Liên hệ',
     children: [
-      { name: 'hotline@Minifurniture.vn', href: '#' },
+      { name: 'hotline@peractafurniture.vn', href: '#' },
       { name: '1900 1234 - Hotline 24/7', href: '#' },
       { name: 'Hà Nội, Số 8 Tôn Thất Thuyết', href: '#' },
     ],
@@ -70,9 +70,9 @@ export default function MainFooter() {
 
           <Grid item xs={8} md={3}>
             <Typography variant="body2" sx={{ pr: { md: 5 } }}>
-              Mini Furniture - Điểm đến tin cậy cho mọi nhu cầu nội thất của bạn. Chúng tôi cung cấp
-              các sản phẩm nội thất chất lượng cao với thiết kế hiện đại, phù hợp với mọi không gian
-              sống và làm việc.
+              Peracta Furniture - Điểm đến tin cậy cho mọi nhu cầu nội thất của bạn. Chúng tôi cung
+              cấp các sản phẩm nội thất chất lượng cao với thiết kế hiện đại, phù hợp với mọi không
+              gian sống và làm việc.
             </Typography>
 
             <Stack
@@ -124,7 +124,7 @@ export default function MainFooter() {
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          © 2024 Mini Furniture. Tất cả quyền được bảo lưu
+          © 2024 Peracta Furniture. Tất cả quyền được bảo lưu
         </Typography>
       </Container>
     </RootStyle>

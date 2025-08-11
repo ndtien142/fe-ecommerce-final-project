@@ -60,7 +60,7 @@ export default function HomeHero() {
               </Typography>
               <Typography variant="h6" sx={{ opacity: 0.9, mb: 4 }}>
                 Mang đến sự tinh tế, tiện nghi và phong cách cho ngôi nhà của bạn với bộ sưu tập nội
-                thất cao cấp từ Mini Furniture.
+                thất cao cấp từ Peracta Furniture.
               </Typography>
             </m.div>
 

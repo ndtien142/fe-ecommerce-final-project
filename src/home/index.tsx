@@ -17,7 +17,7 @@ import HomeContact from './components/HomeContact';
 export default function HomePage() {
   const { themeStretch } = useSettings();
   return (
-    <Page title="Mini Furniture - Nội thất chất lượng cho mọi gia đình">
+    <Page title="Peracta Furniture - Nội thất chất lượng cho mọi gia đình">
       <HomeHero />
       <HomeCategories />
       <HomeFeatures />

@@ -11,7 +11,7 @@ export default function ContactForm() {
     <Stack component={MotionViewport} spacing={5}>
       <m.div variants={varFade().inUp}>
         <Typography variant="h3">
-          Có thắc mắc về nội thất Mini Furniture? <br />
+          Có thắc mắc về nội thất Peracta Furniture? <br />
           Chúng tôi sẵn sàng giúp bạn tìm được những món đồ hoàn hảo cho ngôi nhà.
         </Typography>
       </m.div>

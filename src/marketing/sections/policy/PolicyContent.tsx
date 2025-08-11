@@ -43,9 +43,9 @@ export default function PolicyContent() {
                 Chính sách bảo mật
               </Typography>
               <Typography variant="body1" paragraph>
-                Mini Furniture tôn trọng quyền riêng tư và cam kết bảo vệ thông tin cá nhân của bạn.
-                Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ dữ liệu
-                của bạn khi bạn truy cập cửa hàng nội thất hoặc mua hàng.
+                Peracta Furniture tôn trọng quyền riêng tư và cam kết bảo vệ thông tin cá nhân của
+                bạn. Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ dữ
+                liệu của bạn khi bạn truy cập cửa hàng nội thất hoặc mua hàng.
               </Typography>
               <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
                 Thông tin chúng tôi thu thập:
@@ -83,8 +83,8 @@ export default function PolicyContent() {
                 Điều khoản dịch vụ
               </Typography>
               <Typography variant="body1" paragraph>
-                Bằng cách sử dụng website và dịch vụ của Mini Furniture, bạn đồng ý tuân thủ và bị
-                ràng buộc bởi các điều khoản và điều kiện sau.
+                Bằng cách sử dụng website và dịch vụ của Peracta Furniture, bạn đồng ý tuân thủ và
+                bị ràng buộc bởi các điều khoản và điều kiện sau.
               </Typography>
               <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
                 Trách nhiệm tài khoản:
