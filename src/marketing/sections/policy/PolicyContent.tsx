@@ -224,7 +224,8 @@ export default function PolicyContent() {
               Có thắc mắc về chính sách của chúng tôi?
             </Typography>
             <Typography variant="body1" sx={{ color: 'grey.500' }}>
-              Liên hệ đội ngũ chăm sóc khách hàng tại support@Minifurniture.com hoặc gọi 1800-1234
+              Liên hệ đội ngũ chăm sóc khách hàng tại support@peractafurniture.com hoặc gọi
+              1800-1234
             </Typography>
           </Box>
         </m.div>

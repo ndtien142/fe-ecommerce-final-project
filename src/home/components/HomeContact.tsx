@@ -18,7 +18,7 @@ const CONTACT_INFO = [
   {
     icon: 'eva:email-outline',
     title: 'Email',
-    value: 'support@Minifurniture.com',
+    value: 'support@peractafurniture.com',
     description: 'Phản hồi trong 2 giờ',
   },
   {

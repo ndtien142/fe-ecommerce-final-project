@@ -43,7 +43,7 @@ export default function HomeHero() {
           <Stack spacing={5} sx={{ maxWidth: 600 }}>
             <div>
               <TextAnimate
-                text="Mini"
+                text="Peracta"
                 sx={{ color: 'primary.light' }}
                 variants={varFade().inRight}
               />
