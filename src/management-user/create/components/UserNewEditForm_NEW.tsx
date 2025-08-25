@@ -135,10 +135,9 @@ export default function UserNewEditForm({ isEdit, currentUser }: Props) {
         let avatarUrl = '';
         if (data.avatarUrl && typeof data.avatarUrl !== 'string') {
           const res = await uploadImage(data.avatarUrl);
-          avatarUrl = res;
+          avatarUrl = res as string;
         } else if (typeof data.avatarUrl === 'string') {
-          const { avatarUrl: avatar } = data;
-          avatarUrl = avatar;
+          avatarUrl = data.avatarUrl;
         }
 
         if (!isEdit) {

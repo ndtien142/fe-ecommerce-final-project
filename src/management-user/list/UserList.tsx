@@ -1,4 +1,3 @@
-import { paramCase } from 'change-case';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -22,6 +21,7 @@ import {
 import useTabs from 'src/common/hooks/useTabs';
 import useSettings from 'src/common/hooks/useSettings';
 import useTable from 'src/common/hooks/useTable';
+import { useDebounce } from 'src/common/hooks/useDebounce';
 import { PATH_DASHBOARD } from 'src/common/routes/paths';
 import HeaderBreadcrumbs from 'src/common/components/HeaderBreadcrumbs';
 import Page from 'src/common/components/Page';
@@ -30,6 +30,7 @@ import Scrollbar from 'src/common/components/Scrollbar';
 import { TableHeadCustom, TableNoData, TableSelectedActions } from 'src/common/components/table';
 import UserTableRow from './components/UserTableRow';
 import UserTableToolbar from './components/UserTableToolbar';
+import UserTableSkeleton from './components/UserTableSkeleton';
 import useGetListUser from '../common/hooks/useGetListUser';
 import { IUser } from 'src/common/@types/user/user.interface';
 
@@ -37,6 +38,9 @@ const STATUS_OPTIONS = [
   { value: 'all', label: 'Tất cả' },
   { value: 'normal', label: 'Hoạt động' },
   { value: 'blocked', label: 'Bị chặn' },
+  { value: 'deleted', label: 'Đã xóa' },
+  { value: 'pending', label: 'Chờ duyệt' },
+  { value: 'suspended', label: 'Tạm ngừng' },
 ];
 
 const ROLE_OPTIONS = ['all', 'admin', 'customer', 'staff'];
@@ -47,8 +51,8 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'phoneNumber', label: 'Số điện thoại', align: 'left' },
   { id: 'role', label: 'Vai trò', align: 'left' },
-  { id: 'isVerified', label: 'Đã xác thực', align: 'center' },
-  { id: 'isActive', label: 'Trạng thái', align: 'center' },
+  { id: 'emailVerified', label: 'Đã xác thực', align: 'center' },
+  { id: 'userStatus', label: 'Trạng thái', align: 'center' },
   { id: '' },
 ];
 
@@ -80,48 +84,63 @@ export default function UserList() {
   const [tableData, setTableData] = useState<IUser[]>([]);
 
   const [filterName, setFilterName] = useState('');
+  const debouncedFilterName = useDebounce(filterName, 500);
+  const [isTyping, setIsTyping] = useState(false);
 
   const [filterRole, setFilterRole] = useState('all');
+  const [isRoleChanging, setIsRoleChanging] = useState(false);
 
   const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
   const handleFilterName = (filterName: string) => {
     setFilterName(filterName);
+    setIsTyping(true);
     setPage(0);
   };
 
-  const { data } = useGetListUser({
+  const { data, isLoading, isFetching } = useGetListUser({
     page: page + 1,
     limit: rowsPerPage,
     status: filterStatus !== 'all' ? filterStatus : undefined,
-    search: filterName,
+    search: debouncedFilterName,
     roleName: filterRole !== 'all' ? filterRole : undefined,
   });
 
   const handleFilterRole = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterRole(event.target.value);
+    setIsRoleChanging(true);
+    setPage(0);
   };
 
-  const handleDeleteRow = (userId: string) => {
-    const deleteRow = tableData?.filter((row) => String(row.userId) !== String(userId));
+  const handleDeleteRow = (userId: number) => {
+    const deleteRow = tableData?.filter((row) => row.userId !== userId);
     setSelected([]);
     setTableData(deleteRow);
   };
 
   const handleDeleteRows = (selected: string[]) => {
-    const deleteRows = tableData?.filter((row) => !selected.includes(String(row.userId)));
+    const selectedIds = selected.map((id) => parseInt(id));
+    const deleteRows = tableData?.filter((row) => !selectedIds.includes(row.userId));
     setSelected([]);
     setTableData(deleteRows);
   };
 
-  const handleEditRow = (id: string) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+  const handleEditRow = (id: number) => {
+    navigate(PATH_DASHBOARD.user.edit(String(id)));
   };
 
   useEffect(() => {
     if (data?.metadata?.items) {
       setTableData(data.metadata.items);
     }
+  }, [data]);
+
+  useEffect(() => {
+    setIsTyping(false);
+  }, [debouncedFilterName]);
+
+  useEffect(() => {
+    setIsRoleChanging(false);
   }, [data]);
 
   const isNotFound = !data?.metadata?.items?.length;
@@ -211,17 +230,25 @@ export default function UserList() {
                 />
 
                 <TableBody>
-                  {data?.metadata?.items?.map((row) => (
-                    <UserTableRow
-                      key={row.userId}
-                      row={row}
-                      selected={selected.includes(String(row.userId))}
-                      onSelectRow={() => onSelectRow(String(row.userId))}
-                      onDeleteRow={() => handleDeleteRow(String(row.userId))}
-                      onEditRow={() => handleEditRow(String(row.userId))}
-                    />
-                  ))}
-                  <TableNoData isNotFound={isNotFound} />
+                  {isLoading || isFetching || isTyping || isRoleChanging ? (
+                    <UserTableSkeleton rowsNum={rowsPerPage} />
+                  ) : (
+                    data?.metadata?.items?.map((row) => (
+                      <UserTableRow
+                        key={row.userId}
+                        row={row}
+                        selected={selected.includes(String(row.userId))}
+                        onSelectRow={() => onSelectRow(String(row.userId))}
+                        onDeleteRow={() => handleDeleteRow(row.userId)}
+                        onEditRow={() => handleEditRow(row.userId)}
+                      />
+                    ))
+                  )}
+                  <TableNoData
+                    isNotFound={
+                      !isLoading && !isFetching && !isTyping && !isRoleChanging && isNotFound
+                    }
+                  />
                 </TableBody>
               </Table>
             </TableContainer>

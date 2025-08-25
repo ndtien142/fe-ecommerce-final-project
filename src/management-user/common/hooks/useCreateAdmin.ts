@@ -1,10 +1,10 @@
 import { useMutation } from 'react-query';
-import { updateUser } from '../user.service';
 import { ICallbackMutation } from 'src/common/@types/common.interface';
-import { IUpdateUserData } from '../user.interface';
+import { createAdmin } from '../user.service';
+import { ICreateAdminData } from '../user.interface';
 
-const useUpdateUser = (callback: ICallbackMutation) =>
-  useMutation((data: IUpdateUserData) => updateUser(data), {
+const useCreateAdmin = (callback: ICallbackMutation) =>
+  useMutation((data: ICreateAdminData) => createAdmin(data), {
     onSuccess: () => {
       callback.onSuccess();
     },
@@ -14,4 +14,4 @@ const useUpdateUser = (callback: ICallbackMutation) =>
     },
   });
 
-export default useUpdateUser;
+export default useCreateAdmin;

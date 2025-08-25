@@ -24,7 +24,7 @@ export default function UserTableRow({
 }: Props) {
   const theme = useTheme();
 
-  const { username, role, isActive, isBlock, isVerified, profile, email } = row;
+  const { username, role, userStatus, emailVerified, profile, email } = row;
 
   const [openMenu, setOpenMenuActions] = useState<HTMLElement | null>(null);
 
@@ -64,12 +64,12 @@ export default function UserTableRow({
 
       <TableCell align="center">
         <Iconify
-          icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
+          icon={emailVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
           sx={{
             width: 20,
             height: 20,
             color: 'success.main',
-            ...(!isVerified && { color: 'warning.main' }),
+            ...(!emailVerified && { color: 'warning.main' }),
           }}
         />
       </TableCell>
@@ -77,10 +77,14 @@ export default function UserTableRow({
       <TableCell align="center">
         <Label
           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-          color={(isBlock && 'error') || 'success'}
+          color={
+            (userStatus === 'blocked' && 'error') ||
+            (userStatus === 'deleted' && 'error') ||
+            'success'
+          }
           sx={{ textTransform: 'capitalize' }}
         >
-          {isBlock ? 'banned' : 'active'}
+          {userStatus === 'blocked' ? 'banned' : userStatus === 'deleted' ? 'deleted' : 'active'}
         </Label>
       </TableCell>
 

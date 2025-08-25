@@ -4,31 +4,22 @@ export interface IUser {
   userId: number;
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  address: string;
-  isVerified: boolean;
+  userStatus: 'normal' | 'pending' | 'blocked' | 'deleted' | 'suspended';
+  emailVerified: boolean;
+  userRegistered: string;
   role: {
-    id: string;
+    id: number;
     name: string;
-    description?: string;
-    permissions: string[];
   };
   profile: {
+    id: number;
     firstName: string;
     lastName: string;
     phoneNumber: string;
+    address: string;
     avatarUrl: string;
-    nickname: string;
-    dateOfBirth: string;
-  };
-  isBlock: boolean;
-  isDeleted: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  isActive: boolean;
-  profilePictureUrl?: string;
+    createTime: string;
+  } | null;
 }
 export interface ILoginResponse {
   token: {

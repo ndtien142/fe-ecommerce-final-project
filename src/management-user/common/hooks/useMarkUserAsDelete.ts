@@ -3,7 +3,7 @@ import { markUserAsDeleted } from '../user.service';
 import { ICallbackMutation } from 'src/common/@types/common.interface';
 
 const useMarkUserAsDeleted = (callback: ICallbackMutation) =>
-  useMutation(markUserAsDeleted, {
+  useMutation((userId: number) => markUserAsDeleted(userId), {
     onSuccess: () => {
       callback.onSuccess();
     },

@@ -17,7 +17,8 @@ export default function UserCreate() {
 
   const isEdit = pathname.includes('edit');
 
-  const { data } = useGetUser(name);
+  const userId = name ? parseInt(name, 10) : undefined;
+  const { data } = useGetUser(userId!);
 
   return (
     <Page title="User: Create a new user">
