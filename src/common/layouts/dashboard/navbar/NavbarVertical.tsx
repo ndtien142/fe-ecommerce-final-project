@@ -54,7 +54,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
   // Filter navConfig by role
   const filteredNavConfig = navConfig
     .map((section) => {
-      // Only show "Quản lý sản phẩm" and "management" for admin
+      // Ẩn cả "Quản lý sản phẩm" và "management" nếu không phải admin
       if (
         (section.subheader === 'Quản lý sản phẩm' ||
           section.subheader === 'management' ||
@@ -63,14 +63,28 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }: Props)
       ) {
         return undefined;
       }
-      // For "general", remove "đơn hàng của tôi" for non-customer
-      if (section.subheader === 'general' && userRole !== 'customer') {
+
+      // Xử lý riêng cho "general"
+      if (section.subheader === 'general') {
+        let filteredItems = [...section.items];
+
+        // Nếu không phải admin thì bỏ "app"
+        if (userRole !== 'admin') {
+          filteredItems = filteredItems.filter((item) => item.title !== 'app');
+        }
+
+        // Nếu không phải customer thì bỏ "đơn hàng của tôi"
+        if (userRole !== 'customer') {
+          filteredItems = filteredItems.filter((item) => item.title !== 'đơn hàng của tôi');
+        }
+
         return {
           ...section,
-          items: section.items.filter((item) => item.title !== 'đơn hàng của tôi'),
+          items: filteredItems,
         };
       }
-      // Otherwise, keep section as is
+
+      // Giữ nguyên các section khác
       return section;
     })
     .filter((section): section is { subheader: string; items: any[] } => !!section);
