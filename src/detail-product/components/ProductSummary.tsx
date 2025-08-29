@@ -189,32 +189,47 @@ export default function ProductSummary({ product }: Props) {
       >
         {sentenceCase(inventoryType || '')}
       </Label>
-      {isSale && priceSale ? (
-        <Typography
-          variant="overline"
-          sx={{
-            mt: 2,
-            mb: 1,
-            fontSize: '0.75rem',
-            display: 'block',
-            color: 'error.main',
-          }}
-        >
-          Đang giảm giá ({Math.round(((Number(price) - Number(priceSale)) / Number(price)) * 100)}%)
-        </Typography>
-      ) : (
-        <Typography
-          variant="overline"
-          sx={{
-            mt: 2,
-            mb: 1,
-            display: 'block',
-            color: flag === ('sale' as typeof flag) ? 'error.main' : 'info.main',
-          }}
-        >
-          {flag}
-        </Typography>
-      )}
+      <Box sx={{ mt: 2, mb: 3, w: 5 }}>
+        {isSale && priceSale ? (
+          <Typography
+            variant="overline"
+            color="error"
+            sx={{
+              mt: 2,
+              mb: 1,
+              fontSize: '0.75rem',
+              display: 'block',
+              textTransform: 'uppercase',
+            }}
+          >
+            giảm giá ({Math.round(((Number(price) - Number(priceSale)) / Number(price)) * 100)}%)
+          </Typography>
+        ) : flag ? (
+          (() => {
+            const flagConfig: Record<
+              string,
+              { color: 'success' | 'info' | 'warning'; label: string }
+            > = {
+              new: { color: 'success', label: 'Mới' },
+              popular: { color: 'info', label: 'Phổ biến' },
+              featured: { color: 'warning', label: 'Nổi bật' },
+            };
+            return (
+              flagConfig[flag] && (
+                <Label
+                  variant="ghost"
+                  color={flagConfig[flag].color}
+                  sx={{
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {flagConfig[flag].label}
+                </Label>
+              )
+            );
+          })()
+        ) : null}
+      </Box>
 
       <Typography variant="h5" paragraph>
         {name}

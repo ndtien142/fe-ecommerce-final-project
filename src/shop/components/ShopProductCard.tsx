@@ -29,13 +29,19 @@ export default function ShopProductCard({ product }: Props) {
   const colors: string[] = []; // Not in API, fallback to empty
   const linkTo = PATH_CUSTOMER.eCommerce.view(paramCase(product.slug));
 
+  const flagConfig: Record<string, { color: 'success' | 'info' | 'warning'; label: string }> = {
+    new: { color: 'success', label: 'Mới' },
+    popular: { color: 'info', label: 'Phổ biến' },
+    featured: { color: 'warning', label: 'Nổi bật' },
+  };
+
   return (
     <Card>
       <Box sx={{ position: 'relative' }}>
         {isSale && priceSale ? (
           <Label
             variant="filled"
-            color={'error'}
+            color="error"
             sx={{
               top: 16,
               right: 16,
@@ -44,13 +50,12 @@ export default function ShopProductCard({ product }: Props) {
               textTransform: 'uppercase',
             }}
           >
-            giảm giá ({Math.round(((Number(price) - Number(priceSale)) / Number(price)) * 100)}
-            %)
+            giảm giá ({Math.round(((Number(price) - Number(priceSale)) / Number(price)) * 100)}%)
           </Label>
-        ) : (
+        ) : status && flagConfig[status] ? (
           <Label
             variant="filled"
-            color={status?.toString() === 'new' ? 'success' : 'info'}
+            color={flagConfig[status].color}
             sx={{
               top: 16,
               right: 16,
@@ -59,9 +64,9 @@ export default function ShopProductCard({ product }: Props) {
               textTransform: 'uppercase',
             }}
           >
-            {status}
+            {flagConfig[status].label}
           </Label>
-        )}
+        ) : null}
 
         <Image alt={name} src={cover} ratio="1/1" />
       </Box>
