@@ -26,6 +26,7 @@ import { fCurrency } from '../../../common/utils/formatNumber';
 // components
 import Iconify from '../../../common/components/Iconify';
 import Scrollbar from '../../../common/components/Scrollbar';
+import { useNavigate } from 'react-router';
 
 // ----------------------------------------------------------------------
 
@@ -108,6 +109,7 @@ export default function RecentOrdersList({
   onViewOrder,
   ...other
 }: Props) {
+  const navigate = useNavigate();
   const handleViewOrder = (orderId: string) => {
     if (onViewOrder) {
       onViewOrder(orderId);
@@ -115,6 +117,7 @@ export default function RecentOrdersList({
       // Default action - you can customize this
       console.log('View order:', orderId);
       // Example: window.open(`/order/${orderId}`, '_blank');
+      navigate(`/dashboard/management-order/${orderId}`);
     }
   };
 
