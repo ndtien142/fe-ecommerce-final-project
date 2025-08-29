@@ -14,7 +14,6 @@ export const TABLE_COUPON_HEAD = [
 export const COUPON_TYPE_OPTIONS = [
   { value: 'percent', label: 'Phần trăm' },
   { value: 'fixed', label: 'Số tiền cố định' },
-  { value: 'free_shipping', label: 'Miễn phí vận chuyển' },
 ];
 
 export const COUPON_STATUS_OPTIONS = [
