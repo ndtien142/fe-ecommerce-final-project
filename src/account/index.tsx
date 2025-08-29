@@ -37,12 +37,6 @@ export default function UserAccount() {
       component: <AccountBilling />,
     },
     {
-      value: 'notifications',
-      label: 'Thông báo',
-      icon: <Iconify icon={'eva:bell-fill'} width={20} height={20} />,
-      component: <AccountNotifications />,
-    },
-    {
       value: 'change_password',
       label: 'Đổi mật khẩu',
       icon: <Iconify icon={'ic:round-vpn-key'} width={20} height={20} />,
