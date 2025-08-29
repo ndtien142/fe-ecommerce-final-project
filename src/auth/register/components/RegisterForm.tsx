@@ -37,7 +37,11 @@ export default function RegisterForm() {
     username: Yup.string()
       .required('Tên đăng nhập là bắt buộc')
       .min(8, 'Tên đăng nhập phải có ít nhất 8 ký tự'),
-    dateOfBirth: Yup.string().required('Ngày sinh là bắt buộc'),
+    dateOfBirth: Yup.date()
+      .typeError('Ngày sinh không hợp lệ')
+      .required('Ngày sinh là bắt buộc')
+      .max(new Date(), 'Ngày sinh không được lớn hơn ngày hiện tại')
+      .min(new Date(1900, 0, 1), 'Ngày sinh không được nhỏ hơn năm 1900'),
     firstName: Yup.string().required('Họ là bắt buộc'),
     lastName: Yup.string().required('Tên là bắt buộc'),
     email: Yup.string().email('Email không hợp lệ').required('Email là bắt buộc'),
@@ -90,7 +94,10 @@ export default function RegisterForm() {
       onError: (error: any) => {
         console.error(error);
         if (isMountedRef.current) {
-          setError('afterSubmit', { ...error, message: error.message });
+          setError('afterSubmit', {
+            ...error,
+            message: error?.response?.data?.message || 'Đăng ký thất bại!',
+          });
         }
         showErrorSnackbar(error?.response?.data?.message || 'Đăng ký thất bại!');
       },

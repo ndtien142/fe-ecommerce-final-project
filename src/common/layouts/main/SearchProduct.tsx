@@ -242,7 +242,7 @@ export default function SearchProduct({ onAddToCart }: SearchProductProps) {
                     )}
                   </Stack>
                 </Box>
-                <IconButton
+                {/* <IconButton
                   size="small"
                   color="primary"
                   onClick={(event) => handleAddToCart(product.id, event)}
@@ -256,7 +256,7 @@ export default function SearchProduct({ onAddToCart }: SearchProductProps) {
                   }}
                 >
                   <Iconify icon="eva:plus-fill" width={16} height={16} />
-                </IconButton>
+                </IconButton> */}
               </Box>
             </li>
           );

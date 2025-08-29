@@ -58,10 +58,13 @@ export default function LoginForm() {
       navigate('/');
     }
   };
-  const onError = (message: string) => {
-    enqueueSnackbar(message || 'Đăng nhập thất bại ! xin kiểm tra lại thông tin', {
-      variant: 'error',
-    });
+  const onError = (error: any) => {
+    enqueueSnackbar(
+      error?.response?.data?.message || 'Đăng nhập thất bại ! xin kiểm tra lại thông tin',
+      {
+        variant: 'error',
+      }
+    );
   };
 
   const { login, loading } = useAuthLogin({ onSuccess, onError });
