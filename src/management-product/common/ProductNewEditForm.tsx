@@ -335,12 +335,12 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
               <Stack spacing={3}>
                 <LabelStyle>chi tiết sản phẩm</LabelStyle>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <RHFTextField name="weight" label="Cân nặng" type="number" />
-                  <RHFTextField name="width" label="Chiều rộng" type="number" />
+                  <RHFTextField name="weight" label="Cân nặng (kg)" type="number" />
+                  <RHFTextField name="width" label="Chiều rộng (m)" type="number" />
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <RHFTextField name="height" label="Chiều cao" type="number" />
-                  <RHFTextField name="length" label="Chiều dài" type="number" />
+                  <RHFTextField name="height" label="Chiều cao (m)" type="number" />
+                  <RHFTextField name="length" label="Chiều dài (m)" type="number" />
                 </Stack>
               </Stack>
             </Card>
