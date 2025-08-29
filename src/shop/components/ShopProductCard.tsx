@@ -32,10 +32,25 @@ export default function ShopProductCard({ product }: Props) {
   return (
     <Card>
       <Box sx={{ position: 'relative' }}>
-        {status && (
+        {isSale && priceSale ? (
           <Label
             variant="filled"
-            color={status?.toString() === 'sale' ? 'error' : 'info'}
+            color={'error'}
+            sx={{
+              top: 16,
+              right: 16,
+              zIndex: 9,
+              position: 'absolute',
+              textTransform: 'uppercase',
+            }}
+          >
+            giảm giá ({Math.round(((Number(price) - Number(priceSale)) / Number(price)) * 100)}
+            %)
+          </Label>
+        ) : (
+          <Label
+            variant="filled"
+            color={status?.toString() === 'new' ? 'success' : 'info'}
             sx={{
               top: 16,
               right: 16,
