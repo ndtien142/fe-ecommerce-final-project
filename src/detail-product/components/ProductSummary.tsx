@@ -52,7 +52,7 @@ export default function ProductSummary({ product }: Props) {
 
   const { mutate } = useAddToCart();
 
-  const { id, name, price, priceSale, flag, inventoryType, stock } = product;
+  const { id, name, price, priceSale, flag, inventoryType, stock, isSale } = product;
 
   const available = stock;
   const defaultValues = {
@@ -133,7 +133,7 @@ export default function ProductSummary({ product }: Props) {
       {
         productId: String(data.id),
         quantity: data.quantity,
-        price: priceSale ? Number(priceSale) : data.price,
+        price: isSale && priceSale ? Number(priceSale) : data.price,
       },
       {
         onError: (error: any) => {
@@ -156,12 +156,11 @@ export default function ProductSummary({ product }: Props) {
       return;
     }
 
-    console.log('Buy now:', data);
     mutate(
       {
         productId: String(data.id),
         quantity: data.quantity,
-        price: data.price,
+        price: isSale && priceSale ? Number(priceSale) : data.price,
       },
       {
         onError: (error: any) => {
@@ -190,18 +189,32 @@ export default function ProductSummary({ product }: Props) {
       >
         {sentenceCase(inventoryType || '')}
       </Label>
-
-      <Typography
-        variant="overline"
-        sx={{
-          mt: 2,
-          mb: 1,
-          display: 'block',
-          color: flag === ('sale' as typeof flag) ? 'error.main' : 'info.main',
-        }}
-      >
-        {flag}
-      </Typography>
+      {isSale && priceSale ? (
+        <Typography
+          variant="overline"
+          sx={{
+            mt: 2,
+            mb: 1,
+            fontSize: '0.75rem',
+            display: 'block',
+            color: 'error.main',
+          }}
+        >
+          Đang giảm giá ({Math.round(((Number(price) - Number(priceSale)) / Number(price)) * 100)}%)
+        </Typography>
+      ) : (
+        <Typography
+          variant="overline"
+          sx={{
+            mt: 2,
+            mb: 1,
+            display: 'block',
+            color: flag === ('sale' as typeof flag) ? 'error.main' : 'info.main',
+          }}
+        >
+          {flag}
+        </Typography>
+      )}
 
       <Typography variant="h5" paragraph>
         {name}
@@ -214,7 +227,7 @@ export default function ProductSummary({ product }: Props) {
       /> */}
 
       <Typography variant="h4" sx={{ mb: 3 }}>
-        {priceSale ? (
+        {isSale && priceSale ? (
           <>
             <Box
               component="span"

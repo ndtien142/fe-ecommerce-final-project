@@ -23,11 +23,10 @@ export default function OrderPDF({ order }: Props) {
     deliveredDate,
     address,
     shippingMethod,
-    payment,
+    discountAmount,
     lineItems,
     note,
     totalAmount,
-    shippingFee,
     createTime,
   } = order;
 
@@ -83,6 +82,9 @@ export default function OrderPDF({ order }: Props) {
                 <Text style={styles.subtitle2}>#</Text>
               </View>
               <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Hình ảnh</Text>
+              </View>
+              <View style={styles.tableCell_2}>
                 <Text style={styles.subtitle2}>Sản phẩm</Text>
               </View>
               <View style={styles.tableCell_3}>
@@ -103,9 +105,16 @@ export default function OrderPDF({ order }: Props) {
                 <View style={styles.tableCell_1}>
                   <Text>{index + 1}</Text>
                 </View>
+                <View style={styles.tableCell_1}>
+                  {item.product?.thumbnail && (
+                    <Image
+                      src={item.product.thumbnail}
+                      style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 4 }}
+                    />
+                  )}
+                </View>
                 <View style={styles.tableCell_2}>
                   <Text style={styles.subtitle2}>{item.product?.name}</Text>
-                  <Text>{item.product?.description}</Text>
                 </View>
                 <View style={styles.tableCell_3}>
                   <Text>{item.quantity}</Text>
@@ -136,10 +145,10 @@ export default function OrderPDF({ order }: Props) {
               <View style={styles.tableCell_2} />
               <View style={styles.tableCell_3} />
               <View style={styles.tableCell_3}>
-                <Text>Phí vận chuyển</Text>
+                <Text>Giảm giá</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{shippingFee ? fCurrency(shippingFee) : 'Miễn phí'}</Text>
+                <Text>{discountAmount ? fCurrency(discountAmount) : 0}</Text>
               </View>
             </View>
 

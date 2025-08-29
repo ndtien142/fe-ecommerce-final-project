@@ -83,6 +83,7 @@ export type Product = {
   sold?: number | null;
   categories: ICategory[] | null;
   inventoryType: ProductInventoryType;
+  isSale?: boolean;
 };
 
 export type CartItem = {
@@ -179,6 +180,7 @@ export interface IProductApiResponse {
   brand: ProductBrand;
   images: ProductImage[];
   categories: ICategory[];
+  isSale: boolean;
 }
 
 export interface IProductListResponse {

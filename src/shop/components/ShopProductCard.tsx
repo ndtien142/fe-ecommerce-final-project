@@ -25,6 +25,7 @@ export default function ShopProductCard({ product }: Props) {
   const price = Number(product.price);
   const priceSale = product.priceSale ? Number(product.priceSale) : undefined;
   const status = product.flag || '';
+  const isSale = product?.isSale || false;
   const colors: string[] = []; // Not in API, fallback to empty
   const linkTo = PATH_CUSTOMER.eCommerce.view(paramCase(product.slug));
 
@@ -61,7 +62,7 @@ export default function ShopProductCard({ product }: Props) {
           <ColorPreview colors={colors} />
 
           <Stack direction="row" spacing={0.5}>
-            {priceSale ? (
+            {isSale && priceSale ? (
               <>
                 <Typography
                   component="span"

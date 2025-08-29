@@ -49,7 +49,6 @@ const FLAG_OPTIONS = [
   { value: 'new', label: 'Mới' },
   { value: 'popular', label: 'Phổ biến' },
   { value: 'featured', label: 'Nổi bật' },
-  { value: 'on_sale', label: 'Đang giảm giá' },
   { value: 'none', label: 'Không có nhãn' },
 ];
 
@@ -121,6 +120,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
       .min(0, 'Chiều dài không được nhỏ hơn 0')
       .nullable(),
     slug: Yup.string().required('Slug là bắt buộc'),
+    isSale: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -155,6 +155,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
           ? Number(currentProduct.brandId)
           : null,
       slug: currentProduct?.slug || '',
+      isSale: currentProduct?.isSale || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentProduct]
@@ -428,6 +429,7 @@ export default function ProductNewEditForm({ isEdit, currentProduct }: Props) {
 
             <Card sx={{ p: 3 }}>
               <Stack spacing={3} mb={2}>
+                <RHFSwitch name="isSale" label="Đang giảm giá" />
                 <RHFTextField
                   name="price"
                   label="Giá thường"

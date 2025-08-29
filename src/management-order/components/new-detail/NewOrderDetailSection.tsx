@@ -67,7 +67,7 @@ export default function NewOrderDetailSection({ order }: Props) {
     lineItems,
     note,
     totalAmount,
-    shippingFee,
+    discountAmount,
     trackingNumber,
     shippedBy,
   } = order;
@@ -293,10 +293,12 @@ export default function NewOrderDetailSection({ order }: Props) {
                   <RowResultStyle>
                     <TableCell colSpan={3} />
                     <TableCell align="right">
-                      <Typography variant="body1">Phí vận chuyển</Typography>
+                      <Typography variant="body1">Giảm giá</Typography>
                     </TableCell>
                     <TableCell align="right">
-                      <Typography variant="body1">{fCurrency(shippingFee)}</Typography>
+                      <Typography variant="body1">
+                        {fCurrency(discountAmount ? discountAmount : 0)}
+                      </Typography>
                     </TableCell>
                   </RowResultStyle>
 

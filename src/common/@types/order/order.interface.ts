@@ -77,6 +77,7 @@ export interface IOrder {
   address: IAddress;
   shippingMethod: IShippingMethod;
   payment: IOrderPayment;
+  discountAmount: number;
 }
 
 export interface IOrderListResponse {
